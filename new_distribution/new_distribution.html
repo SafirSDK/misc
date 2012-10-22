@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Designa och implementera nytt distributionskoncept</title>
+<style type="text/css">
+    li { list-style: none;  margin: 0; }
+    p { margin: 0; }
+
+    span.l { color: red; font-weight: bold; }
+
+    a.mapnode:link {text-decoration: none; color: black; }
+    a.mapnode:visited {text-decoration: none; color: black; }
+    a.mapnode:active {text-decoration: none; color: black; }
+    a.mapnode:hover {text-decoration: none; color: black; background: #eeeee0; }
+
+</style>
+<!-- ^ Position is not set to relative / absolute here because of Mozilla -->
+</head>
+<body>
+<p><span style="color: #000000;font-size: 166%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">Designa och implementera
+<br>
+nytt distributionskoncept</span>
+<ul><li><span style="color: #0033ff;font-size: 150%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">Persistens</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">Hur passar ghostarna in i allt det h&auml;r?</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">Redundans</span>
+
+</li>
+<li><span style="color: #0033ff;font-size: 150%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">Test</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">Vi beh&ouml;ver en teststrategi</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Vi beh&ouml;ver ett testsystem</span>
+<ul><li><span style="color: #990000;font-size: 116%;">j&auml;mf&ouml;ra med gamla dose_com</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;font-family: Aharoni, sans-serif; ">vad f&ouml;r h&#229;rdvara</span>
+
+</li>
+
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">Heterogena n&auml;tverk</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">l&#229;ngsamma noder</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">skakigt n&auml;tverk</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">utfrysning</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Utnyttja objektcachen f&ouml;r oms&auml;ndningar,
+<br>
+istf separata k&ouml;er</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Nod som inte startar om ska inte smitta 
+<br>
+med d&#229;ligt data - Inkarnationsbegrepp</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Detektera n&auml;tverkstopologi (och visa upp den)</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Routing</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Forwarding</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">&Ouml;vriga features</span>
+<ul><li><span style="color: #00b439;font-size: 133%;font-family: Aharoni, sans-serif; ">Hantera krypterade n&auml;tverk</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Ska klara anrop fr&#229;n flera tr&#229;dar</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Flera instanser p&#229; samma dator</span>
+<ul><li><span style="color: #990000;font-size: 116%;">Underl&auml;ttar testning av m&#229;nga noder</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Ska kunna stoppas snyggt</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">IPv6</span>
+<ul><li><span style="color: #990000;font-size: 116%;">om inte annat s&#229; ska vi dokumentera vad vi klarar av</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Olika dou-upps&auml;ttningar p&#229; noderna</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;font-family: Aharoni, sans-serif; ">Ta bort standalone mode</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">Dokumentation</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">Tydligt kravdokument</span>
+<ul><li><span style="color: #990000;font-size: 116%;">Det m&#229;ste vara tydligt vad
+<br>
+vi klarar och inte klarar</span>
+<ul><li><span style="color: #111111;">Oavsett f&#229;r systemet inte bli korrupt</span>
+
+</li>
+
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Beskriv system vs system av system</span>
+<ul><li><span style="color: #990000;font-size: 116%;">latens vs bandbredd</span>
+<ul><li><span style="color: #111111;">iex st&ouml;djer h&ouml;g latens och l&#229;g bandbredd</span>
+
+</li>
+<li><span style="color: #111111;">doben st&ouml;djer allt fr&#229;n l&#229;g till h&ouml;g latens 
+<br>
+men f&ouml;rv&auml;ntar sig h&ouml;g bandbredd</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #990000;font-size: 116%;">iex skickar deltan</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">doben skickar hela state</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">doben har singel&auml;garskap</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">iex har delat &auml;garskap</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">Att koda mot injektionsdeltan &auml;r komplicerat</span>
+<ul><li><p><span style="color: #111111;">ett rent dobsystem &auml;r l&auml;ttare att koda f&ouml;r</span>
+<p><span style="color: #111111;">iex anv&auml;nder man bara n&auml;r man verkligen beh&ouml;ver det och 
+<br>
+bara p&#229; de typer som beh&ouml;ver skickas &ouml;ver iex-kanalen</span>
+</li>
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Latensmodell</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;font-family: Liberation Sans, sans-serif; font-weight: bold; ">Tredjepartsprodukter</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">DDS</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Bittorrent</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">MessageQ</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">ReliableMC</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Spread</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Databasreplikering</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">PGM</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Protobuf</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;">dose_com features
+<br>
+av idag</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">pooldistribution</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">nodstatus</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">prioritetskanaler</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">distributionskanaler</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">ackad/oackad</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">multicast m unicast-ack</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">sliding window - fast storlek</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">max 64 noder</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">designad f&ouml;r "stabilt" LAN</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">inga l&#229;s</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">f&#229; kopieringar</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">little/big endian detektion</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">"k&auml;nd" latency</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Magic byte f&ouml;r detektering av annan trafik</span>
+<ul><li><span style="color: #990000;font-size: 116%;">obs, detta kanske &auml;r r&auml;tt underm&#229;ligt...</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">multihome:ade maskiner</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;">Konfiguration</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">"Det ska bara funka"</span>
+<ul><li><span style="color: #990000;font-size: 116%;">Utan explicit konfiguration f&#229;r man IS-beteende</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">F&ouml;r RT-beteende m&#229;ste man konfigurera</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Enklare med brandv&auml;ggar</span>
+<ul><li><span style="color: #990000;font-size: 116%;font-family: Aharoni, sans-serif; ">F&auml;rre portar</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;font-family: Aharoni, sans-serif; ">Holepunching</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Olika nodtyper</span>
+<ul><li><span style="color: #990000;font-size: 116%;">Olika beteende p&#229; n&auml;tverket RT/IS</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">nodtyp som kastar ghostar</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">Entiteter som inte f&ouml;rsvinner utan explicit delete/unregister</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">Ta bort de h&#229;rda nod-id:na som begr&auml;nsar oss till 64 noder</span>
+
+</li>
+<li><span style="color: #990000;font-size: 116%;">anv&auml;ndardefinierade "nodtyper" med olika beteendeparametrar</span>
+
+</li>
+
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;">Aktiviteter</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">Ta fram n&#229;gra typsystem</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Kolla p&#229; tredjepartsprodukter</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Dela upp i funktionsomr&#229;den</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">L&auml;s SSS</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;">Split/Join</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">Definiera vad en anv&auml;ndbar split/join m&#229;ste g&ouml;ra</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;">Skalbarhet/prestanda</span>
+<ul><li><span style="color: #00b439;font-size: 133%;">dose_main b&ouml;r kunna vara flertr&#229;dad</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">cache-lokalitet b&ouml;r tas h&auml;nsyn till</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #0033ff;font-size: 150%;">S&auml;kerhet/Robusthet</span>
+<ul><li><span style="color: #00b439;font-size: 133%;font-family: Aharoni, sans-serif; ">Signering</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;font-family: Aharoni, sans-serif; ">Kryptering</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Checksummering</span>
+<ul><li><span style="color: #990000;font-size: 116%;">g&#229;r vi p&#229; n&auml;tverk d&auml;r vi kan f&#229; korruption?</span>
+
+</li>
+
+</ul>
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Tydligg&ouml;r att det delade minnet ej &auml;r krypterat</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Eller s&auml;ga att man f&#229;r k&ouml;ra VPN ist&auml;llet</span>
+
+</li>
+<li><span style="color: #00b439;font-size: 133%;">Signering kan ju stoppa MITM-attacker, vilket kan 
+<br>
+ge robusthet oavsett &ouml;vriga s&auml;kerhetsl&ouml;sningar.</span>
+
+</li>
+
+</ul>
+</li>
+
+</ul></body>
+</html>
