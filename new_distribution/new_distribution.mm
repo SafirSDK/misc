@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1351670083940" COLOR="#000000" STYLE="fork">
+<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1351670257173" COLOR="#000000" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="20" BOLD="true"/>
 <hook NAME="MapStyle" zoom="0.75" max_node_width="600"/>
 <edge STYLE="bezier" COLOR="#808080" WIDTH="thin"/>
@@ -29,6 +29,14 @@
 <node TEXT="Redundans" POSITION="left" ID="ID_328888544" CREATED="1350384393082" MODIFIED="1350385241579" COLOR="#0033ff" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="18" BOLD="true"/>
 <edge STYLE="sharp_bezier" COLOR="#808080" WIDTH="8"/>
+<node TEXT="Ska vi ha nodvis redundans" ID="ID_1126118256" CREATED="1351671390217" MODIFIED="1351671411214" COLOR="#00b439">
+<font NAME="Aharoni" SIZE="12"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<icon BUILTIN="help"/>
+<node TEXT="Har snac st&#xf6;d f&#xf6;r detta?" ID="ID_1619640296" CREATED="1351671413666" MODIFIED="1351671452080" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+</node>
 </node>
 <node TEXT="Test" POSITION="right" ID="ID_1507078929" CREATED="1350384523933" MODIFIED="1350385241582" COLOR="#0033ff" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="18" BOLD="true"/>
@@ -146,6 +154,11 @@
 </node>
 <node TEXT="Ta bort standalone mode" ID="ID_246152748" CREATED="1350386858602" MODIFIED="1350387095714" COLOR="#00b439">
 <font NAME="Aharoni" SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<icon BUILTIN="help"/>
+</node>
+<node TEXT="Ska SNAC kunna anv&#xe4;nda denna mekanism direkt" ID="ID_1319657920" CREATED="1351671512484" MODIFIED="1351671540593" COLOR="#00b439">
+<font NAME="Aharoni" SIZE="12"/>
 <edge STYLE="bezier" WIDTH="thin"/>
 <icon BUILTIN="help"/>
 </node>
@@ -505,6 +518,10 @@
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
+</node>
+<node TEXT="Typsystem" POSITION="left" ID="ID_661653783" CREATED="1351670269027" MODIFIED="1351670293130" COLOR="#0033ff" LINK="typical_systems.mm">
+<font SIZE="18"/>
+<edge STYLE="sharp_bezier" WIDTH="8"/>
 </node>
 </node>
 </map>

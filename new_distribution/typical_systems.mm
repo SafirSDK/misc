@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Typsystem" ID="ID_648319391" CREATED="1350898570764" MODIFIED="1350903750441" COLOR="#000000">
+<node TEXT="Typsystem" ID="ID_648319391" CREATED="1350898570764" MODIFIED="1351685410205" COLOR="#000000">
 <font SIZE="20"/>
 <hook NAME="MapStyle" zoom="0.75" max_node_width="600"/>
 <hook NAME="accessories/plugins/AutomaticLayout.properties"/>
@@ -29,10 +29,9 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
 </node>
-<node TEXT="Enkelt client/server" POSITION="left" ID="ID_697931466" CREATED="1350898915316" MODIFIED="1350903712770" COLOR="#0033ff">
+<node TEXT="Enkelt client/server" POSITION="left" ID="ID_697931466" CREATED="1350898915316" MODIFIED="1351685766233" COLOR="#0033ff">
 <font SIZE="18"/>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
-<hook URI="client-server.svg" SIZE="1.0" NAME="ExternalObject"/>
 <node TEXT="En server" ID="ID_1429971611" CREATED="1350898933052" MODIFIED="1350899007982" COLOR="#00b439">
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
@@ -65,10 +64,28 @@
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
+<node TEXT="Schematisk bild" ID="ID_1467654558" CREATED="1351685746323" MODIFIED="1351685779970" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<icon BUILTIN="attach"/>
+<node TEXT="" ID="ID_611864397" CREATED="1351685752918" MODIFIED="1351685757930" COLOR="#990000">
+<font SIZE="14"/>
+<hook URI="client-server.svg" SIZE="1.0" NAME="ExternalObject"/>
 </node>
-<node TEXT="Komplext client/server" POSITION="right" ID="ID_1659498876" CREATED="1350899285508" MODIFIED="1350899317090" COLOR="#0033ff">
+</node>
+</node>
+<node TEXT="RT/IS system" POSITION="right" ID="ID_1659498876" CREATED="1350899285508" MODIFIED="1351685456537" COLOR="#0033ff">
 <font SIZE="18"/>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
+<node TEXT="Schematisk bild" ID="ID_905884632" CREATED="1351685470401" MODIFIED="1351685737249" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<icon BUILTIN="attach"/>
+<node TEXT="" ID="ID_377602677" CREATED="1351685500234" MODIFIED="1351685506171" COLOR="#990000">
+<font SIZE="14"/>
+<hook URI="rt-is.svg" SIZE="1.0" NAME="ExternalObject"/>
+</node>
+</node>
 <node TEXT="Alla servrar redundanta" ID="ID_1697082333" CREATED="1350899321565" MODIFIED="1350899330666" COLOR="#00b439">
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
@@ -131,7 +148,7 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
 </node>
-<node TEXT="Soldatsystem" POSITION="right" ID="ID_155298483" CREATED="1351061998386" MODIFIED="1351062007297" COLOR="#0033ff">
+<node TEXT="mobilt system" POSITION="right" ID="ID_155298483" CREATED="1351061998386" MODIFIED="1351670570375" COLOR="#0033ff">
 <font SIZE="18"/>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <node TEXT="Bara mobila enheter" ID="ID_713876042" CREATED="1351062007302" MODIFIED="1351062022359" COLOR="#00b439">

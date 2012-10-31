@@ -42,15 +42,15 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1"
      inkscape:cx="117.85617"
-     inkscape:cy="-154.1295"
+     inkscape:cy="63.511122"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1025"
-     inkscape:window-x="-3"
-     inkscape:window-y="-3"
-     inkscape:window-maximized="1"
+     inkscape:window-width="723"
+     inkscape:window-height="509"
+     inkscape:window-x="166"
+     inkscape:window-y="386"
+     inkscape:window-maximized="0"
      inkscape:snap-global="true"
      showborder="true"
      fit-margin-top="10"
@@ -75,7 +75,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -84,105 +84,101 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-89.643829,-202.00601)">
-    <g
-       id="g3932"
-       transform="matrix(0.33333339,0,0,0.33333339,66.666661,141.57478)">
-      <rect
-         style="fill:#f9f9f9;fill-rule:evenodd;stroke:#000000;stroke-width:2.13702822px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         id="rect3904"
-         width="230.00002"
-         height="159.99998"
-         x="100"
-         y="502.36218" />
-      <rect
-         inkscape:transform-center-y="-50.000008"
-         inkscape:transform-center-x="34.999992"
-         y="522.36218"
-         x="120"
-         height="159.99998"
-         width="230.00002"
-         id="rect3906"
-         style="fill:#f9f9f9;fill-rule:evenodd;stroke:#000000;stroke-width:2.13702822px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <rect
-         style="fill:#f9f9f9;fill-rule:evenodd;stroke:#000000;stroke-width:2.13702822px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         id="rect3908"
-         width="230.00002"
-         height="159.99998"
-         x="140"
-         y="542.36218"
-         inkscape:transform-center-x="34.999992"
-         inkscape:transform-center-y="-50.000008" />
-      <rect
-         inkscape:transform-center-y="-50.000008"
-         inkscape:transform-center-x="34.999992"
-         y="562.36218"
-         x="160"
-         height="159.99998"
-         width="230.00002"
-         id="rect3910"
-         style="fill:#f9f9f9;fill-rule:evenodd;stroke:#000000;stroke-width:2.13702822px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <rect
-         y="212.36218"
-         x="100"
-         height="159.99998"
-         width="230.00002"
-         id="rect3001"
-         style="fill:#f9f9f9;fill-rule:evenodd;stroke:#000000;stroke-width:2.13702822px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <text
-         sodipodi:linespacing="125%"
-         id="text3042"
-         y="307.36218"
-         x="131"
-         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-         xml:space="preserve"><tspan
-           y="307.36218"
-           x="131"
-           id="tspan3044"
-           sodipodi:role="line">Server</tspan></text>
-      <text
-         sodipodi:linespacing="125%"
-         id="text3836"
-         y="632.36218"
-         x="200"
-         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-         xml:space="preserve"><tspan
-           id="tspan3840"
-           y="632.36218"
-           x="200"
-           sodipodi:role="line">Client</tspan></text>
-      <path
-         inkscape:connector-curvature="0"
-         id="path3916"
-         d="m 370,552.36218 110,0"
-         style="fill:none;stroke:#000000;stroke-width:0.88640523px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path3918"
-         d="m 350,532.36218 130,0"
-         style="fill:none;stroke:#000000;stroke-width:0.90138781px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path3920"
-         d="m 330,512.36218 150,0"
-         style="fill:none;stroke:#000000;stroke-width:0.91287094px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path3922"
-         d="m 330,292.36218 150,0 0,280 -90,0"
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <text
-         inkscape:transform-center-x="14.580078"
-         transform="matrix(0,-1,1,0,0,0)"
-         sodipodi:linespacing="125%"
-         id="text3924"
-         y="470"
-         x="-442.36218"
-         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-         xml:space="preserve"><tspan
-           id="tspan3928"
-           y="470"
-           x="-442.36218"
-           sodipodi:role="line">LAN</tspan></text>
-    </g>
+    <rect
+       y="309.02887"
+       x="100"
+       height="53.333336"
+       width="76.666687"
+       id="rect3904"
+       style="fill:#f9f980;fill-rule:evenodd;stroke:#000000;stroke-width:0.71234286000000002px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
+    <rect
+       style="fill:#f9f980;fill-rule:evenodd;stroke:#000000;stroke-width:0.71234286000000002px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       id="rect3906"
+       width="76.666687"
+       height="53.333336"
+       x="106.66666"
+       y="315.69553"
+       inkscape:transform-center-x="34.999992"
+       inkscape:transform-center-y="-50.000008" />
+    <rect
+       inkscape:transform-center-y="-50.000008"
+       inkscape:transform-center-x="34.999992"
+       y="322.36221"
+       x="113.33334"
+       height="53.333336"
+       width="76.666687"
+       id="rect3908"
+       style="fill:#f9f980;fill-rule:evenodd;stroke:#000000;stroke-width:0.71234286000000002px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
+    <rect
+       style="fill:#f9f980;fill-rule:evenodd;stroke:#000000;stroke-width:0.71234286000000002px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       id="rect3910"
+       width="76.666687"
+       height="53.333336"
+       x="120"
+       y="329.02887"
+       inkscape:transform-center-x="34.999992"
+       inkscape:transform-center-y="-50.000008" />
+    <rect
+       style="fill:#80eb80;fill-rule:evenodd;stroke:#000000;stroke-width:0.71234286000000002px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       id="rect3001"
+       width="76.666687"
+       height="53.333336"
+       x="100"
+       y="212.36218" />
+    <text
+       xml:space="preserve"
+       style="font-size:13.33333588px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="110.33334"
+       y="244.02885"
+       id="text3042"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3044"
+         x="110.33334"
+         y="244.02885">Server</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:13.33333588px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="133.33334"
+       y="352.36221"
+       id="text3836"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="133.33334"
+         y="352.36221"
+         id="tspan3840">Client</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.29546845px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 190.00002,325.69554 36.66667,0"
+       id="path3916"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.30046266px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 183.33335,319.02887 43.33334,0"
+       id="path3918"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.30429035px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 176.66668,312.3622 50.00001,0"
+       id="path3920"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.3333334px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 176.66668,239.02886 50.00001,0 0,93.33335 -30.00001,0"
+       id="path3922"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:13.33333588px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-289.02887"
+       y="223.33336"
+       id="text3924"
+       sodipodi:linespacing="125%"
+       transform="matrix(0,-1,1,0,0,0)"
+       inkscape:transform-center-x="14.580078"><tspan
+         sodipodi:role="line"
+         x="-289.02887"
+         y="223.33336"
+         id="tspan3928">LAN</tspan></text>
   </g>
 </svg>
