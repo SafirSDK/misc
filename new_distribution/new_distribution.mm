@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1350631996606" COLOR="#000000" STYLE="fork">
+<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1351670083940" COLOR="#000000" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="20" BOLD="true"/>
 <hook NAME="MapStyle" zoom="0.75" max_node_width="600"/>
 <edge STYLE="bezier" COLOR="#808080" WIDTH="thin"/>
@@ -214,8 +214,7 @@
       Saker att kanske anv&#228;nda eller i alla fall l&#228;ra sig av
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <edge STYLE="sharp_bezier" COLOR="#808080" WIDTH="8"/>
 <node TEXT="DDS" ID="ID_1709223329" CREATED="1350384982969" MODIFIED="1350385241774" COLOR="#00b439">
 <font SIZE="16"/>
@@ -446,6 +445,20 @@
 <node TEXT="Definiera vad en anv&#xe4;ndbar split/join m&#xe5;ste g&#xf6;ra" ID="ID_1928367277" CREATED="1350473814985" MODIFIED="1350473848480" COLOR="#00b439">
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="Efter join ska &#xe4;garskapet kunna vara f&#xf6;ruts&#xe4;gbart" ID="ID_1082298378" CREATED="1351071043087" MODIFIED="1351071099443" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<node TEXT="Antingen ligga kvar p&#xe5; samma noder som de var p&#xe5; innann" ID="ID_25831535" CREATED="1351071099449" MODIFIED="1351071113996" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Eller samlat p&#xe5; en nod" ID="ID_453184712" CREATED="1351071114976" MODIFIED="1351071130970" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Mer" ID="ID_1647386850" CREATED="1351071131543" MODIFIED="1351670060056" COLOR="#990000">
+<font NAME="Aharoni" SIZE="14"/>
+<icon BUILTIN="help"/>
+</node>
 </node>
 </node>
 <node TEXT="Skalbarhet/prestanda" POSITION="left" ID="ID_193019018" CREATED="1350473965146" MODIFIED="1350473971090" COLOR="#0033ff">
