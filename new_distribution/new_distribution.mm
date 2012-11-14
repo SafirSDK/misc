@@ -25,15 +25,40 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
 </node>
-<node TEXT="Redundans" POSITION="left" ID="ID_328888544" CREATED="1350384393082" MODIFIED="1350385241579" COLOR="#0033ff" STYLE="fork">
+<node TEXT="Redundans och Start av systemet" POSITION="left" ID="ID_328888544" CREATED="1350384393082" MODIFIED="1352887746309" COLOR="#0033ff" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="18" BOLD="true"/>
 <edge STYLE="sharp_bezier" COLOR="#808080" WIDTH="8"/>
-<node TEXT="Ska vi ha nodvis redundans" ID="ID_1126118256" CREATED="1351671390217" MODIFIED="1352881870837" COLOR="#00b439">
-<font NAME="Aharoni" SIZE="16"/>
+<node TEXT="Ny komponent &quot;Starter&quot; ers&#xe4;tter SNAC" ID="ID_404065219" CREATED="1352887760104" MODIFIED="1352887776445" COLOR="#00b439">
+<font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
-<icon BUILTIN="help"/>
-<node TEXT="Har snac st&#xf6;d f&#xf6;r detta?" ID="ID_1619640296" CREATED="1351671413666" MODIFIED="1351671452080" COLOR="#990000">
+<node TEXT="har ett interface f&#xf6;r appar som beh&#xf6;ver hot-standby" ID="ID_679809280" CREATED="1352887805114" MODIFIED="1352887906795" COLOR="#990000">
 <font SIZE="14"/>
+</node>
+<node TEXT="Kallstart &#xe4;r default" ID="ID_1712338811" CREATED="1352887922421" MODIFIED="1352887933532" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Anv&#xe4;nder den nya distributionsmekanismen" ID="ID_636181907" CREATED="1352887938606" MODIFIED="1352887951572" COLOR="#990000">
+<font SIZE="14"/>
+<node TEXT="kommunikation och systemstatus" ID="ID_1614073729" CREATED="1352888059833" MODIFIED="1352888075143" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+</node>
+<node TEXT="Startar &quot;allt&quot;, &#xe4;ven doben" ID="ID_797999656" CREATED="1352887952446" MODIFIED="1352887961132" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Hot-standby-interfacet har ingen dob-koppling" ID="ID_1275762314" CREATED="1352887968294" MODIFIED="1352887996382" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Best&#xe5;r av en l&#xe5;gniv&#xe5;del, utan dob-kopplingar&#xa;samt en h&#xf6;gniv&#xe5;del som publicerar snac-lika entiteter" ID="ID_80600267" CREATED="1352888118194" MODIFIED="1352888149390" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+</node>
+<node TEXT="Ta bort pending" ID="ID_730539378" CREATED="1352887787330" MODIFIED="1352887790864" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<node TEXT="Hur ska dope fungera" ID="ID_789705507" CREATED="1352888013415" MODIFIED="1352888024193" COLOR="#990000">
+<font NAME="Aharoni" SIZE="12"/>
+<icon BUILTIN="help"/>
 </node>
 </node>
 </node>
