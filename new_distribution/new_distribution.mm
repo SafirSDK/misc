@@ -14,8 +14,7 @@
       Det h&#228;r &#228;r en &#246;nskelista &#246;ver saker som vi skulle vilja se hos det perfekta systemet!
     </p>
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 <hook NAME="accessories/plugins/AutomaticLayout.properties"/>
 <icon BUILTIN="calendar"/>
 <node TEXT="Persistens" POSITION="right" ID="ID_1767719401" CREATED="1350384370913" MODIFIED="1350385241576" COLOR="#0033ff" STYLE="fork">
@@ -29,8 +28,8 @@
 <node TEXT="Redundans" POSITION="left" ID="ID_328888544" CREATED="1350384393082" MODIFIED="1350385241579" COLOR="#0033ff" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="18" BOLD="true"/>
 <edge STYLE="sharp_bezier" COLOR="#808080" WIDTH="8"/>
-<node TEXT="Ska vi ha nodvis redundans" ID="ID_1126118256" CREATED="1351671390217" MODIFIED="1351671411214" COLOR="#00b439">
-<font NAME="Aharoni" SIZE="12"/>
+<node TEXT="Ska vi ha nodvis redundans" ID="ID_1126118256" CREATED="1351671390217" MODIFIED="1352881870837" COLOR="#00b439">
+<font NAME="Aharoni" SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
 <icon BUILTIN="help"/>
 <node TEXT="Har snac st&#xf6;d f&#xf6;r detta?" ID="ID_1619640296" CREATED="1351671413666" MODIFIED="1351671452080" COLOR="#990000">
@@ -157,8 +156,8 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 <icon BUILTIN="help"/>
 </node>
-<node TEXT="Ska SNAC kunna anv&#xe4;nda denna mekanism direkt" ID="ID_1319657920" CREATED="1351671512484" MODIFIED="1351671540593" COLOR="#00b439">
-<font NAME="Aharoni" SIZE="12"/>
+<node TEXT="Ska SNAC kunna anv&#xe4;nda denna mekanism direkt" ID="ID_1319657920" CREATED="1351671512484" MODIFIED="1352881870857" COLOR="#00b439">
+<font NAME="Aharoni" SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
 <icon BUILTIN="help"/>
 </node>
@@ -519,9 +518,17 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
 </node>
-<node TEXT="Typsystem" POSITION="left" ID="ID_661653783" CREATED="1351670269027" MODIFIED="1351670293130" COLOR="#0033ff" LINK="typical_systems.mm">
+<node TEXT="Typsystem" POSITION="left" ID="ID_661653783" CREATED="1351670269027" MODIFIED="1352882052145" COLOR="#0033ff">
 <font SIZE="18"/>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
+<node TEXT="html link" ID="ID_11620104" CREATED="1352882000379" MODIFIED="1352882045775" COLOR="#00b439" LINK="typical_systems.html">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="mindmap link" ID="ID_922760631" CREATED="1352882005284" MODIFIED="1352882023557" COLOR="#00b439" LINK="typical_systems.mm">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
 </node>
 </node>
 </map>
