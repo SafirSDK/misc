@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1351670257173" COLOR="#000000" STYLE="fork">
+<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1353661639672" COLOR="#000000" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="20" BOLD="true"/>
 <hook NAME="MapStyle" zoom="0.75" max_node_width="600"/>
 <edge STYLE="bezier" COLOR="#808080" WIDTH="thin"/>
@@ -14,7 +14,8 @@
       Det h&#228;r &#228;r en &#246;nskelista &#246;ver saker som vi skulle vilja se hos det perfekta systemet!
     </p>
   </body>
-</html></richcontent>
+</html>
+</richcontent>
 <hook NAME="accessories/plugins/AutomaticLayout.properties"/>
 <icon BUILTIN="calendar"/>
 <node TEXT="Persistens" POSITION="right" ID="ID_1767719401" CREATED="1350384370913" MODIFIED="1350385241576" COLOR="#0033ff" STYLE="fork">
@@ -23,6 +24,28 @@
 <node TEXT="Hur passar ghostarna in i allt det h&#xe4;r?" ID="ID_1467677305" CREATED="1350473878793" MODIFIED="1350473883520" COLOR="#00b439">
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="Dope idag har tre konfigurationer" ID="ID_213341983" CREATED="1353661659900" MODIFIED="1353661669133" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<node TEXT="Icke-redundant (mot fil eller db)" ID="ID_1130521650" CREATED="1353661682554" MODIFIED="1353661691004" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Redundant mot gemensam resurs (n&#xe4;tverksdisk eller db-kluster)" ID="ID_1915682058" CREATED="1353661691628" MODIFIED="1353661728712" COLOR="#990000">
+<font SIZE="14"/>
+<node TEXT="Saknar skydd mot att flera dope blir aktiva (exvis vid utfrysning)" ID="ID_112137927" CREATED="1353661751397" MODIFIED="1353661773016" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+</node>
+<node TEXT="Redundant mot egen resurs (lokalt fs eller lokal db)" ID="ID_621725614" CREATED="1353661729261" MODIFIED="1353661749965" COLOR="#990000">
+<font SIZE="14"/>
+<node TEXT="Saknar koll p&#xe5; att senaste dope blir aktiv vid systemstart" ID="ID_1404021107" CREATED="1353661774766" MODIFIED="1353661813975" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="Borde f&#xf6;rhandla vid uppstart, om inte alla dope:ar startar s&#xe5; fr&#xe5;ga op" ID="ID_1246458066" CREATED="1353661814623" MODIFIED="1353661870347" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+</node>
 </node>
 </node>
 <node TEXT="Redundans och Start av systemet" POSITION="left" ID="ID_328888544" CREATED="1350384393082" MODIFIED="1352887746309" COLOR="#0033ff" STYLE="fork">
@@ -56,9 +79,17 @@
 <node TEXT="Ta bort pending" ID="ID_730539378" CREATED="1352887787330" MODIFIED="1352887790864" COLOR="#00b439">
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
-<node TEXT="Hur ska dope fungera" ID="ID_789705507" CREATED="1352888013415" MODIFIED="1352888024193" COLOR="#990000">
-<font NAME="Aharoni" SIZE="12"/>
+<node TEXT="Hur ska dope fungera" ID="ID_789705507" CREATED="1352888013415" MODIFIED="1353661634543" COLOR="#990000">
+<font NAME="Aharoni" SIZE="14"/>
 <icon BUILTIN="help"/>
+</node>
+</node>
+<node TEXT="Finns det n&#xe5;gon anv&#xe4;ndning av pending som vi inte t&#xe4;nkt p&#xe5;?&#xa;Kan vi ta bort den med gott samvete?" ID="ID_469807847" CREATED="1353661902777" MODIFIED="1353661956497" COLOR="#ff0000">
+<font NAME="Liberation Sans" SIZE="20"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<icon BUILTIN="yes"/>
+<node TEXT="Record/Replay?" ID="ID_1238982785" CREATED="1353662130999" MODIFIED="1353662138662" COLOR="#990000">
+<font SIZE="14"/>
 </node>
 </node>
 </node>
@@ -78,6 +109,70 @@
 <node TEXT="vad f&#xf6;r h&#xe5;rdvara" ID="ID_1137061638" CREATED="1350384571374" MODIFIED="1350385241597" COLOR="#990000">
 <font NAME="Aharoni" SIZE="14"/>
 <icon BUILTIN="help"/>
+</node>
+</node>
+<node TEXT="f&#xf6;rslag till testsystem" ID="ID_1003171275" CREATED="1353670475496" MODIFIED="1353670483907" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+<node TEXT="2 st RT-noder" ID="ID_934133095" CREATED="1353670483910" MODIFIED="1353670490596" COLOR="#990000">
+<font SIZE="14"/>
+<node TEXT="Producerar mycket data i h&#xf6;g takt ackat/oackat" ID="ID_1754657498" CREATED="1353670493685" MODIFIED="1353670510150" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="bra LAN" ID="ID_707206104" CREATED="1353670511086" MODIFIED="1353670520326" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="Hot-standby" ID="ID_297285562" CREATED="1353670522853" MODIFIED="1353670527534" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="regelbundna redundansomkopplingar" ID="ID_1394630316" CREATED="1353670528230" MODIFIED="1353670543271" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+</node>
+<node TEXT="&gt;3 &quot;klienter&quot;" ID="ID_895265586" CREATED="1353670544622" MODIFIED="1353670558231" COLOR="#990000">
+<font SIZE="14"/>
+<node TEXT="Konsumerar data" ID="ID_1763036522" CREATED="1353670559974" MODIFIED="1353670583449" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="Skickar lite requests" ID="ID_894250580" CREATED="1353670584239" MODIFIED="1353670588599" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="virtuella maskiner och riktiga" ID="ID_1396221586" CREATED="1353670589304" MODIFIED="1353670598673" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="Bra LAN" ID="ID_727514794" CREATED="1353670600608" MODIFIED="1353670605616" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="Troligen l&#xe5;ngsammare &#xe4;n RT-noderna" ID="ID_525298076" CREATED="1353670607368" MODIFIED="1353670615568" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+</node>
+<node TEXT="2 Mycket l&#xe5;ngsamma klienter" ID="ID_494513520" CREATED="1353670619168" MODIFIED="1353670631793" COLOR="#990000">
+<font SIZE="14"/>
+<node TEXT="Kan vara virtuella" ID="ID_1670999629" CREATED="1353670634729" MODIFIED="1353670646818" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="Mycket skakigt LAN" ID="ID_621390082" CREATED="1353670647394" MODIFIED="1353670655574" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+</node>
+<node TEXT="Beh&#xf6;ver Routat n&#xe4;tverk" ID="ID_1419629398" CREATED="1353670662402" MODIFIED="1353670672570" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Ska finnas brandv&#xe4;ggar i n&#xe4;tet" ID="ID_262775314" CREATED="1353670674594" MODIFIED="1353670686293" COLOR="#990000">
+<font SIZE="14"/>
+<node TEXT="Mjukvaru-brandv&#xe4;ggar (windows inbyggda, exvis)" ID="ID_1251633140" CREATED="1353670686300" MODIFIED="1353670719451" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+<node TEXT="Riktiga brandv&#xe4;ggar" ID="ID_15198557" CREATED="1353670748596" MODIFIED="1353670755492" COLOR="#111111">
+<font SIZE="12"/>
+</node>
+</node>
+<node TEXT="Wifi?" ID="ID_775502432" CREATED="1353670763604" MODIFIED="1353670769094" COLOR="#990000">
+<font SIZE="14"/>
+</node>
+<node TEXT="Hur f&#xe5;r vi in riktigt m&#xe5;nga noder? ~100" ID="ID_1773036819" CREATED="1353670773076" MODIFIED="1353670796517" COLOR="#990000">
+<font SIZE="14"/>
 </node>
 </node>
 </node>
@@ -554,6 +649,10 @@
 <font SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
+</node>
+<node TEXT="" POSITION="right" ID="ID_1794230186" CREATED="1353670759444" MODIFIED="1353670759451" COLOR="#0033ff">
+<font SIZE="18"/>
+<edge STYLE="sharp_bezier" WIDTH="8"/>
 </node>
 </node>
 </map>
