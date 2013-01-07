@@ -34,20 +34,35 @@ Simpler to start system::
 == 3rd party dependencies
 Preferrably some 3rd party products should be used in the development of the new distribution mechanism, to simplify and speed up the development process, and to reduce maintenance costs.
 
+=== Distribution mechanisms
+
 DDS::
-  blabla
+  widde
 ZeroMQ::
-  blabla
-Bittorrent::
-  asdfasdf
-Pragmatic Multicast::
-  asdfasdf
+  joel
+Bittorrent/P2P::
+  lars
+Pragmatic General Multicast::
+  joel
 Spread::
-  asdfasdf
-Protobuf::
-  asdfasdf
+  lars
 Database replication mechanisms::
-  asdf
+  widde
+RabbitMQ::
+  joel
+Apache Qpid::
+  joel
+MassTransit::
+  widde
+NServiceBus::
+  widde
+
+=== Serialization
+
+Protobuf::
+  lars
+Apache Thrift::
+  lars
 
 == Requirements
 
