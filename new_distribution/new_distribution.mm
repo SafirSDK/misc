@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!--To view this file, download free mind mapping software Freeplane from http://freeplane.sourceforge.net -->
-<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1353661639672" COLOR="#000000" STYLE="fork">
+<node TEXT="Designa och implementera&#xa;nytt distributionskoncept" ID="ID_1974903012" CREATED="1350384151073" MODIFIED="1353931635867" COLOR="#000000" STYLE="fork">
 <font NAME="Liberation Sans" SIZE="20" BOLD="true"/>
 <hook NAME="MapStyle" zoom="0.75" max_node_width="600"/>
 <edge STYLE="bezier" COLOR="#808080" WIDTH="thin"/>
@@ -84,8 +84,8 @@
 <icon BUILTIN="help"/>
 </node>
 </node>
-<node TEXT="Finns det n&#xe5;gon anv&#xe4;ndning av pending som vi inte t&#xe4;nkt p&#xe5;?&#xa;Kan vi ta bort den med gott samvete?" ID="ID_469807847" CREATED="1353661902777" MODIFIED="1353661956497" COLOR="#ff0000">
-<font NAME="Liberation Sans" SIZE="20"/>
+<node TEXT="Finns det n&#xe5;gon anv&#xe4;ndning av pending som vi inte t&#xe4;nkt p&#xe5;?&#xa;Kan vi ta bort den med gott samvete?" ID="ID_469807847" CREATED="1353661902777" MODIFIED="1353931629391" COLOR="#00b439">
+<font NAME="Liberation Sans" SIZE="16"/>
 <edge STYLE="bezier" WIDTH="thin"/>
 <icon BUILTIN="yes"/>
 <node TEXT="Record/Replay?" ID="ID_1238982785" CREATED="1353662130999" MODIFIED="1353662138662" COLOR="#990000">
@@ -173,6 +173,9 @@
 </node>
 <node TEXT="Hur f&#xe5;r vi in riktigt m&#xe5;nga noder? ~100" ID="ID_1773036819" CREATED="1353670773076" MODIFIED="1353670796517" COLOR="#990000">
 <font SIZE="14"/>
+<node TEXT="OpenVZ? i proxmox" ID="ID_745577300" CREATED="1354090128237" MODIFIED="1354090145983" COLOR="#111111">
+<font SIZE="12"/>
+</node>
 </node>
 </node>
 </node>
@@ -650,9 +653,37 @@
 <edge STYLE="bezier" WIDTH="thin"/>
 </node>
 </node>
-<node TEXT="" POSITION="right" ID="ID_1794230186" CREATED="1353670759444" MODIFIED="1353670759451" COLOR="#0033ff">
+<node TEXT="System Picture" POSITION="right" ID="ID_1794230186" CREATED="1353670759444" MODIFIED="1354090047385" COLOR="#0033ff">
 <font SIZE="18"/>
 <edge STYLE="sharp_bezier" WIDTH="8"/>
+<node TEXT="# hopp" ID="ID_1174003918" CREATED="1354090047388" MODIFIED="1354090051997" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="ping - roundtrip" ID="ID_1604011393" CREATED="1354090052862" MODIFIED="1354090058954" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="&#xe4;r komm dubbelriktad" ID="ID_1098218917" CREATED="1354090059550" MODIFIED="1354090066653" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="drop-rate" ID="ID_129223007" CREATED="1354090067638" MODIFIED="1354090072677" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="nuvarande throughput (in och ut fr&#xe5;n de olika noderna)" ID="ID_214905563" CREATED="1354090073094" MODIFIED="1354090094246" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="Nodernas status (up, down, crashed, suspect, isolated ....)" ID="ID_1416171565" CREATED="1354090094887" MODIFIED="1354090109838" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
+<node TEXT="Sl&#xe5; av och p&#xe5; m&#xe4;tningar per typ" ID="ID_1517573238" CREATED="1354090110671" MODIFIED="1354090119067" COLOR="#00b439">
+<font SIZE="16"/>
+<edge STYLE="bezier" WIDTH="thin"/>
+</node>
 </node>
 </node>
 </map>

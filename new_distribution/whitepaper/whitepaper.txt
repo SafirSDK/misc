@@ -1,0 +1,56 @@
+// -*- coding: utf-8 -*-
+:encoding: UTF-8
+
+New Distribution Whitepaper
+==========================
+:Author: Lars Hagström, Anders Widén and Joel Ottosson
+7 Jan 2013
+
+== Preface
+The purpose of this document is to xxx.
+
+== Benefits
+Robust communication::
+  Utfrysning;;
+    blablabla
+  Slow node will not slow down all nodes;;
+    asdfasdf
+  Support for other topologies;;
+    asdffff
+Removal of general "join" will simplify design::
+  blabla
+Addition of specific "join" cases will allow more uses::
+  Disconnected node will keep all entities as read only;;
+    blabla
+  Disconnected node will become empty;;
+    blabla
+Less static configuration::
+  blabla
+Easier to display system status::
+  aasdfafs
+Simpler to start system::
+  Less needs for start scripts. All parts of Safir SDK Core and the rest of the system gets started by the same mechanism.
+
+== 3rd party dependencies
+Preferrably some 3rd party products should be used in the development of the new distribution mechanism, to simplify and speed up the development process, and to reduce maintenance costs.
+
+DDS::
+  blabla
+ZeroMQ::
+  blabla
+Bittorrent::
+  asdfasdf
+Pragmatic Multicast::
+  asdfasdf
+Spread::
+  asdfasdf
+Protobuf::
+  asdfasdf
+Database replication mechanisms::
+  asdf
+
+== Requirements
+
+=== General requirements
+Platform independence of 3rd party dependencies::
+  Chosen technologies shall run on Win32 and Linux.
