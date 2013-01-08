@@ -1,4 +1,4 @@
-// -*- coding: utf-8 -*-
+﻿// -*- coding: utf-8 -*-
 :encoding: UTF-8
 
 New Distribution Whitepaper
@@ -45,7 +45,11 @@ Preferrably some 3rd party products should be used in the development of the new
 === Distribution mechanisms
 
 DDS::
-  widde
+  There are several DDS implementations, both commercial and Open Source. Lägg till länkar här!
+
+  DDS is a large-scale distribution framework in itself, making it an inappropriate choice as an low level distribution mechanism for Safir.
+
+  What could be of interest is the low-level parts in DDS that are used for basic massage distribution, but such mechanisms are not available as stand-alone products.
 
 [[PGM]]
 Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Multicast::
@@ -90,11 +94,18 @@ RabbitMQ - http://www.rabbitmq.com::
 Apache Qpid - http://qpid.apache.org::
   Along with <<RabbitMQ, RabbitMQ>>, Apache Qpid is one of the major implementations of <<AMQP, AMQP>>.
 
-MassTransit::
-  widde
+[[MassTransit]]
+MassTransit - http://masstransit-project.com/::
+  From the web site: MassTransit (MT) is a framework for creating distributed applications on the .Net platform. MT provides the ability to subscribe to messages by type and then connect different
+  processing nodes though message subscriptions building a cohesive mesh of services.
 
-NServiceBus::
-  widde
+  Introducing a dependency to a .Net framework from the core parts of the dob, that is implemented in C++, is not what we want. Also, although the framework has some support for Mono, this
+  is not a natural choise when we have multiplatform requirements.   
+
+NServiceBus - http://www.nservicebus.com/::
+  From the web site: Developer-friendly SOA for .Net
+
+  This is not useful for Safir. See <<MassTransit, MassTransit>> 
 
 ==== Conclusion
 We think that *ZeroMQ* will be a good choice to build the new communication mechanism on. The LGPL license, the small footprint as well as the message fragmentation handling in conjunction with the publish-subscribe pattern seems appealing, especially when using PGM as transport protocol since a multicast protocol with NAK is very suited to our needs. The API concepts of ZeroMQ are very well suited to our needs, and will not change any of our internal communication concepts or affect our external interfaces.
