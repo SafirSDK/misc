@@ -38,20 +38,34 @@ Preferrably some 3rd party products should be used in the development of the new
 
 DDS::
   widde
+Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Multicast::
+  PGM is a reliable multicast transport protocol that guarantees an ordered sequece of packets without gaps to multiple 
+  recipients simultaneously.  PGM is a NAK protocol wich means that a receiver will send a unicast NAK to the sender whenever it detects loss of 
+  data. Repair data will be sent to recover from data loss if it is possible. The protocol also detects if a receiver has ended up in an 
+  unrecoverable state.
+  
 ZeroMQ::
   joel
 Bittorrent/P2P::
   This is not a technology that we can use directly per se, but we can find useful algorithms and ideas in the enormous amounts of research that has been done in academia in this area.
-Pragmatic General Multicast::
-  joel
 Spread::
   lars
 Database replication mechanisms::
   widde
-RabbitMQ::
-  joel
-Apache Qpid::
-  joel
+
+[[AMQP]]
+Advanced Message Queuing Protocol (AMQP) - http://www.amqp.org/about/what::
+  AMQP is an open standard for business message passing. The protocol relies on a central broker that all messages must pass through.
+  The central boker adds latency and effects the performance negative. Also scalability will suffer from the central broker design.
+
+[[RabbitMQ]]
+RabbitMQ - http://www.rabbitmq.com::  
+  Along with <<Qpid, Apache Qpid>>, RabbitMQ is one of the major implementations of <<AMQP, AMQP>>.
+  
+[[Qpid]]
+Apache Qpid - http://qpid.apache.org::
+  Along with <<RabbitMQ, RabbitMQ>>, Apache Qpid is one of the major implementations of <<AMQP, AMQP>>.
+
 MassTransit::
   widde
 NServiceBus::
