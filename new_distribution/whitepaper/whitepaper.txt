@@ -38,14 +38,25 @@ Preferrably some 3rd party products should be used in the development of the new
 
 DDS::
   widde
+
+[[PGM]]
 Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Multicast::
   PGM is a reliable multicast transport protocol that guarantees an ordered sequece of packets without gaps to multiple 
   recipients simultaneously.  PGM is a NAK protocol wich means that a receiver will send a unicast NAK to the sender whenever it detects loss of 
   data. Repair data will be sent to recover from data loss if it is possible. The protocol also detects if a receiver has ended up in an 
   unrecoverable state.
   
-ZeroMQ::
-  joel
+ZeroMQ - http://www.zeromq.org::
+  An open source (LGPL) library that offers lightweight message based socket-like communication. It offers different kind of services where publish-subscribe 
+  and peer-to-peer seems to be most interesting for us. It handles message fragmentation and always delivers complete   
+  messages no matter what underlying transport protocol being used. ZeroMQ supports Tcp and <<PGM, PGM>>. It also support inter-thread  
+  communication and on Linux it even has inter-process communication.
+  There is no broker or deamon that needs to run seperately and the main focus is performance and high throughput with minimal locking. It 
+  supports many platforms including Windows and Linux and has a quite big community. 
+  ZeroMQ does not solve the problem of keeping track of wich nodes that are connected and wich are not, nor does it offer any other delivery 
+  garantuees than the underlying transport protocol (tcp/pgm).
+  We think that ZeroMQ might be a good choice to build the new communication upon. The LGPL license, the small footprint as well as the message fragmentaion handling in conjunction with the publish-subscribe pattern seems appealing, especially when using PGM as transport protocol. But still theres a lot of work that has to be done manually. As said ZeroMQ will help little to get a common picture of the system topology, and when a node does not keep up with the pace of the rest of the system, ZeroMQ will do nothing but throwing messages.
+
 Bittorrent/P2P::
   This is not a technology that we can use directly per se, but we can find useful algorithms and ideas in the enormous amounts of research that has been done in academia in this area.
 Spread::
