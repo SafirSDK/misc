@@ -11,17 +11,21 @@ The purpose of this document is to xxx.
 
 == Benefits
 Robust communication::
-  Utfrysning;;
-    blablabla
+  Exclusion of misbehaving nodes;;
+    New implementation will have an algorithm that will automatically exclude a node that does not behave properly.
   Slow node will not slow down all nodes;;
-    asdfasdf
+    Current implementation means that one node that is "slow", either temporarily or always, will slow down distribution to all other nodes.
   Support for other topologies;;
-    asdffff
+    A number of issues with the current implementation will be addressed:
+    - Is really designed and optimized for LAN with TTL=1. It has been made to work with higher TTL. 
+    - Has no support for topologies where all nodes cannot see all other nodes.
+    - Does not detect situations where firewalls make communication become "one-way".
 Removal of general "join" will simplify design::
-  blabla
+  The attempt to add general "join" functionality added a lot of complexity that is very unpredictable and hard to explain/document. Removing the general join will simplify the software.
 Addition of specific "join" cases will allow more uses::
-  Disconnected node will keep all entities as read only;;
-    blabla
+  Instead of a general join we want to add two kinds of specific join:
+  Disconnected node will keep all entities owned on other nodes as read only;;
+    An operator console with this setting will still be able to display the "last known" state of all entities. No modification will be allowed and no requests will be served.
   Disconnected node will become empty;;
     blabla
 Less static configuration::
@@ -49,18 +53,23 @@ Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Mul
 ZeroMQ - http://www.zeromq.org::
   An open source (LGPL) library that offers lightweight message based socket-like communication. It offers different kind of services where publish-subscribe 
   and peer-to-peer seems to be most interesting for us. It handles message fragmentation and always delivers complete   
-  messages no matter what underlying transport protocol being used. ZeroMQ supports Tcp and <<PGM, PGM>>. It also support inter-thread  
+  messages no matter what underlying transport protocol being used. ZeroMQ supports Tcp and UDP multicast using <<PGM, PGM>>. It also supports inter-thread  
   communication and on Linux it even has inter-process communication.
   There is no broker or deamon that needs to run seperately and the main focus is performance and high throughput with minimal locking. It 
   supports many platforms including Windows and Linux and has a quite big community. 
-  ZeroMQ does not solve the problem of keeping track of wich nodes that are connected and wich are not, nor does it offer any other delivery 
-  garantuees than the underlying transport protocol (tcp/pgm).
-  We think that ZeroMQ might be a good choice to build the new communication upon. The LGPL license, the small footprint as well as the message fragmentaion handling in conjunction with the publish-subscribe pattern seems appealing, especially when using PGM as transport protocol. But still theres a lot of work that has to be done manually. As said ZeroMQ will help little to get a common picture of the system topology, and when a node does not keep up with the pace of the rest of the system, ZeroMQ will do nothing but throwing messages.
 
 Bittorrent/P2P::
   This is not a technology that we can use directly per se, but we can find useful algorithms and ideas in the enormous amounts of research that has been done in academia in this area.
-Spread::
-  lars
+
+The Spread Toolkit - http://www.spread.org/::
+  General message bus, with both singlecast and multicast with and without delivery and ordering guarantees. Requires one or several server processes to be executing. The open source license includes the following GPL incompatible "advertising clause", which prohibits us from selecting this toolkit while maintaining the license of Safir SDK Core:
+
+  All advertising materials (including web pages) mentioning features or use of 
+  this software, or software that uses this software, must display the following 
+  acknowledgment: "This product uses software developed by Spread Concepts LLC 
+  for use in the Spread toolkit. For more information about Spread see 
+  http://www.spread.org"
+
 Database replication mechanisms::
   widde
 
@@ -81,6 +90,11 @@ MassTransit::
   widde
 NServiceBus::
   widde
+
+==== Conclusion
+We think that *ZeroMQ* will be a good choice to build the new communication mechanism on. The LGPL license, the small footprint as well as the message fragmentation handling in conjunction with the publish-subscribe pattern seems appealing, especially when using PGM as transport protocol since a multicast protocol with NAK is very suited to our needs. The API concepts of ZeroMQ are very well suited to our needs, and will not change any of our internal communication concepts or affect our external interfaces.
+
+There is quite a bit of functionality that we need to implement on top of ZeroMQ, such as providing a common picture of the system topology, and providing robustness when a node does not keep up with the pace of the rest of the system. ZeroMQ on its own will just discard messages when a peer does not respond.
 
 === Data format / Serialization
 Using an open or standard format for the data packets and data headers would remove the need of "rolling our own", and probably also easier to use third party tools such as Wireshark for debugging.
