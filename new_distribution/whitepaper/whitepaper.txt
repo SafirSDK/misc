@@ -22,16 +22,20 @@ Robust communication::
     - Does not detect situations where firewalls make communication become "one-way".
 Removal of general "join" will simplify design::
   The attempt to add general "join" functionality added a lot of complexity that is very unpredictable and hard to explain/document. Removing the general join will simplify the software.
+
 Addition of specific "join" cases will allow more uses::
-  Instead of a general join we want to add two kinds of specific join:
+  Instead of a general join we want to add two kinds of specific join, which will allow nodes to be reconnected if  a network connection is broken. These kinds of nodes will not support having redundant entities:
   Disconnected node will keep all entities owned on other nodes as read only;;
     An operator console with this setting will still be able to display the "last known" state of all entities. No modification will be allowed and no requests will be served.
   Disconnected node will become empty;;
-    blabla
+    An operator console with this setting will still become "empty", i.e. all non-local entities will be deleted (this is the current behavior). When the node is reconnected it will receive all remote entities again. 
+
 Less static configuration::
-  blabla
+  We want to provide a "dhcp"-like functionality for configuring nodes, so that instead of configuring the node identities and other details that should be internal you specify a node type, e.g. "operator console" or "Database server", and from that we internally work out what node id a node should have. This would make adding new nodes a lot easier.
+
 Easier to display system status::
-  aasdfafs
+  The System Picture functionality will be able to provide a unified picture of the system topology, both for use by the system itself to make sure the system remains robust, but this information can also be displayed to allow users and developers to understand what the system status is.
+
 Simpler to start system::
   Less needs for start scripts. All parts of Safir SDK Core and the rest of the system gets started by the same mechanism.
 
@@ -88,6 +92,7 @@ Apache Qpid - http://qpid.apache.org::
 
 MassTransit::
   widde
+
 NServiceBus::
   widde
 
