@@ -41,7 +41,7 @@ DDS::
 ZeroMQ::
   joel
 Bittorrent/P2P::
-  lars
+  This is not a technology that we can use directly per se, but we can find useful algorithms and ideas in the enormous amounts of research that has been done in academia in this area.
 Pragmatic General Multicast::
   joel
 Spread::
@@ -57,12 +57,27 @@ MassTransit::
 NServiceBus::
   widde
 
-=== Serialization
+=== Data format / Serialization
+Using an open or standard format for the data packets and data headers would remove the need of "rolling our own", and probably also easier to use third party tools such as Wireshark for debugging.
 
-Protobuf::
-  lars
-Apache Thrift::
-  lars
+We want a binary format since the blobs are already binary, so XML- or JSON-based formats have not been investigated.
+In some distant future we might also want to change the blob format to use an open format, but in the short term we will just wrap them in whatever format we choose.
+
+We only need support for C\+\+, since all the data transport and blob packing/unpacking code is C++ code.
+
+Protobuf - http://code.google.com/p/protobuf/::
+  * Google developed data serialization format. 
+  * Used by almost all Google internal RPC and file formats. 
+  * Well documented and well supported (by Google).
+  * There are also multiple implementations, e.g. SAX-like deserialization libraries are available.
+  * Stable and widely used.
+Apache Thrift - http://thrift.apache.org/::
+  * Interfaces to more languages than Protobuf.
+  * Slightly larger serialized results compared to Protobuf.
+  * Maintenance seems less "professional" than Protobuf.
+
+==== Conclusion
+*Protobuf* seems to be the sensible choice. Wider usage, better documentation and better maintenance/development.
 
 == Requirements
 
