@@ -7,7 +7,7 @@ New Distribution Whitepaper
 7 Jan 2013
 
 == Preface
-The purpose of this document is to xxx.
+The purpose of this document is to describe the new distribution mechanism of Safir SDK Core and the related changes. It contains information on the benefits, the requirements and the design.
 
 == Benefits
 Robust communication::
@@ -41,6 +41,15 @@ Simpler to start system::
 
 == 3rd party dependencies
 Preferrably some 3rd party products should be used in the development of the new distribution mechanism, to simplify and speed up the development process, and to reduce maintenance costs.
+
+Some requirements:
+
+Platform independence of 3rd party dependencies::
+  Chosen technologies shall run on Win32 and Linux.
+License::
+  Chosen technologies shall have a GPL compatible license, since Safir SDK Core license is GPLv3. See http://www.gnu.org/licenses/license-list.html for the GNU project list of compatible licenses.
+Real-Time Behaviour::
+  Chosen technologies shall not prevent the Safir SDK Core from having bounded latency.
 
 === Distribution mechanisms
 
@@ -108,6 +117,7 @@ There is quite a bit of functionality that we need to implement on top of ZeroMQ
 Using an open or standard format for the data packets and data headers would remove the need of "rolling our own", and probably also easier to use third party tools such as Wireshark for debugging.
 
 We want a binary format since the blobs are already binary, so XML- or JSON-based formats have not been investigated.
+
 In some distant future we might also want to change the blob format to use an open format, but in the short term we will just wrap them in whatever format we choose.
 
 We only need support for C\+\+, since all the data transport and blob packing/unpacking code is C++ code.
@@ -118,16 +128,44 @@ Protobuf - http://code.google.com/p/protobuf/::
   * Well documented and well supported (by Google).
   * There are also multiple implementations, e.g. SAX-like deserialization libraries are available.
   * Stable and widely used.
+  * BSD 3-Clause License (GPL compatible)
 Apache Thrift - http://thrift.apache.org/::
   * Interfaces to more languages than Protobuf.
   * Slightly larger serialized results compared to Protobuf.
   * Maintenance seems less "professional" than Protobuf.
+  * Apache License 2.0 (GPLv3 compatible)
 
 ==== Conclusion
 *Protobuf* seems to be the sensible choice. Wider usage, better documentation and better maintenance/development.
 
 == Requirements
 
-=== General requirements
-Platform independence of 3rd party dependencies::
-  Chosen technologies shall run on Win32 and Linux.
+TODO: Write about new and existing requirements.
+
+== Design
+This section describes the design of the new distribution mechanism and the related changes to Safir SDK Core.
+
+=== Overview
+TODO: Give an overview of the new design.
+
+=== Application Start/Stop
+
+This component will be based on the existing SNAC component, with a few notable changes:
+
+ * New name will be "Safir Control" ("Control" will be used in this document, for short), to reflect the fact that this "new" component is somehow in control of the whole system. The user will start safir_control(.exe) which in turn starts dose_main and dope_main and then starts all the other applications. Starting safir_control is a bit less cryptic than starting a lot of xxxx_main applications.
+ * Dependencies to ACE will be removed
+ * Dependencies to non-Core parts of Safir SDK will be removed
+ * Since we want Control to start the Dob it will use the new communication mechanism directly, instead of using the Dob.
+ * TODO: Do we need to add any new features because of new requirements?
+
+=== System Picture
+
+TODO: What are the responsibilites of System Picture
+
+=== Communication
+
+TODO: What are the responsibilites of Communication
+
+==== Protocol
+
+TODO: Describe the protocol
