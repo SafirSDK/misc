@@ -190,6 +190,8 @@ This component will be based on the existing Snac component, with a few notable 
 
 A first iteration of Control will probably just launch Safir SDK Core and then launch the existing Snac.
 
+TODO: should we use Boost.Process, not yet part of Boost. http://www.highscore.de/boost/process0.5/
+
 === System Picture
 
 TODO: What are the responsibilites of System Picture
