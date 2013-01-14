@@ -175,15 +175,20 @@ Control HighLevel::
   - Provides Dob objects of the application and group statuses of Control LowLevel.
   - Allows control of applications and groups through the Dob objects.
 
-=== Application Start/Stop
+=== Control - Application Start/Stop
 
-This component will be based on the existing SNAC component, with a few notable changes:
+This component will be based on the existing Snac component, with a few notable changes:
 
  * New name will be "Safir Control" ("Control" will be used in this document, for short), to reflect the fact that this "new" component is somehow in control of the whole system. The user will start safir_control(.exe) which in turn starts dose_main and dope_main and then starts all the other applications. Starting safir_control is a bit less cryptic than starting a lot of xxxx_main applications.
  * Dependencies to ACE will be removed
  * Dependencies to non-Core parts of Safir SDK will be removed
  * Since we want Control to start the Dob it will use the new communication mechanism directly, instead of using the Dob.
- * TODO: Do we need to add any new features because of new requirements?
+ * Will have a low level part and a high level part.
+   - The low level part does most of the work, but does 'not' depend on Dose or Dots. This means that low level part will not have the Dob shared memories loaded, and can not be affected by a corrupt shared memory. 
+   - The high level part provides dob objects that behave the same way that the current Snac objects do.
+ * Current Master and Slave concepts will most likely be kept.
+
+A first iteration of Control will probably just launch Safir SDK Core and then launch the existing Snac.
 
 === System Picture
 
