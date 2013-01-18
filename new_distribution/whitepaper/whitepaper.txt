@@ -205,6 +205,12 @@ Since Control, dose_main and dobexplorer are separate executables the SP and RAW
 
 So the System Picture in dose_main will publish its RAW data, and the System Picture in Control will publish its RAW and SP data.
 
+[[sp-raw-pub-sub]]
+.System Picture data
+image::sp_raw_pub_sub.png["System Picture Pub/Sub", width=401, link="sp_raw_pub_sub.png"]
+
+All of these ZeroMQ sockets will use TCP/IP communication over the loopback interface (127.0.0.1), to make sure that it is computer-local.
+
 === Communication
 
 TODO: What are the responsibilites of Communication
