@@ -194,7 +194,16 @@ TODO: should we use Boost.Process, not yet part of Boost. http://www.highscore.d
 
 === System Picture
 
-TODO: What are the responsibilites of System Picture
+To be able to provide a system picture ('SP' for short) the System Picture component has to collect communication statistics from Communication. This data consists of timing information and packet loss information, etc. This low level information ('RAW' for short) is collected on all nodes, and distributed to all other nodes. 
+
+From this RAW data System Picture has to produce an SP, that is identical on all nodes. Either this can be done on one node (a 'master' node), or on each node using an algorithm that is guaranteed to produce identical output on all nodes.
+
+An advantage of having the RAW and SP data available on all nodes is that it will be possible to view all of this data on each node (e.g. in dobexplorer), instead of having to check on each node.
+
+==== Transportation of SP and RAW within a node
+Since Control, dose_main and dobexplorer are separate executables the SP and RAW data has to be transported between them. This will be achieved using local ZeroMQ PUB/SUB sockets, to avoid use of shared memory or platform specific IPC.
+
+So the System Picture in dose_main will publish its RAW data, and the System Picture in Control will publish its RAW and SP data.
 
 === Communication
 
