@@ -212,9 +212,12 @@ image::sp_raw_pub_sub.png["System Picture Pub/Sub", width=401, link="sp_raw_pub_
 All of these ZeroMQ sockets will use TCP/IP communication over the loopback interface (127.0.0.1), to make sure that it is computer-local.
 
 === Communication
+Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to System Picture who decides wich nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
 
-TODO: What are the responsibilites of Communication
+Only complete messages shall be delivered, and messages shall be delivered in correct order, i.e the order they were sent. Actually these requirements are already handled by ZeroMQ. Communication must also be able to detect when a message is lost and report it as a failure. 
 
 ==== Protocol
+ZeroMQ and the http://zguide.zeromq.org/page:all#Chapter-Advanced-Publish-Subscribe-Patterns[publish-subscribe] pattern will be used for all the low-level communication. Each node will have at least one publisher socket and one subscriber socket, and supported transport protocols are tcp and epgm which is pgm multicast on top of udp.
 
-TODO: Describe the protocol
+To avoid unnecessary copying message headers and message data will be separated using ZeroMQ's multipart messages. That makes it possible to write the data part in shared memory immediately without any  intermediate storage.
+
