@@ -62,11 +62,15 @@ Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Mul
   recipients simultaneously.  PGM is a NAK protocol wich means that a receiver will send a unicast NAK to the sender whenever it detects loss of 
   data. Repair data will be sent to recover from data loss if it is possible. The protocol also detects if a receiver has ended up in an 
   unrecoverable state.
+
+[[OpenPGM]]
+OpenPGM - http://code.google.com/p/openpgm::
+  A well-known open source implementation of <<PGM, PGM>> specification. It supports most big platforms such as Windows and Linux and also has a beta version for Android.
   
 ZeroMQ - http://www.zeromq.org::
   An open source (LGPL) library that offers lightweight message based socket-like communication. It offers different kind of services where publish-subscribe 
   and peer-to-peer seems to be most interesting for us. It handles message fragmentation and always delivers complete   
-  messages no matter what underlying transport protocol being used. ZeroMQ supports Tcp and UDP multicast using <<PGM, PGM>>. It also supports inter-thread  
+  messages no matter what underlying transport protocol being used. ZeroMQ supports Tcp and UDP multicast using <<OpenPGM, OpenPGM>>. It also supports inter-thread  
   communication and on Linux it even has inter-process communication.
   There is no broker or deamon that needs to run seperately and the main focus is performance and high throughput with minimal locking. It 
   supports many platforms including Windows and Linux and has a quite big community. 
@@ -111,7 +115,7 @@ NServiceBus - http://www.nservicebus.com/::
 ==== Conclusion
 We think that *ZeroMQ* will be a good choice to build the new communication mechanism on. The LGPL license, the small footprint as well as the message fragmentation handling in conjunction with the publish-subscribe pattern seems appealing, especially when using PGM as transport protocol since a multicast protocol with NAK is very suited to our needs. The API concepts of ZeroMQ are very well suited to our needs, and will not change any of our internal communication concepts or affect our external interfaces.
 
-There is quite a bit of functionality that we need to implement on top of ZeroMQ, such as providing a common picture of the system topology, and providing robustness when a node does not keep up with the pace of the rest of the system. ZeroMQ on its own will just discard messages when a peer does not respond.
+There is quite a bit of functionality that we need to implement on top of ZeroMQ, such as providing a common picture of the system topology, and providing robustness when a node does not keep up with the pace of the rest of the system. ZeroMQ on its own will just discard messages when a peer does not respond. ZeroMQ does not support singlecast over UDP wich means that if a singlecast mechanism is needed we have to implement it ourselves or we can decide that it's fine to send addressed data as multicast.
 
 === Data format / Serialization
 Using an open or standard format for the data packets and data headers would remove the need of "rolling our own", and probably also easier to use third party tools such as Wireshark for debugging.
@@ -214,10 +218,37 @@ All of these ZeroMQ sockets will use TCP/IP communication over the loopback inte
 === Communication
 Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to System Picture who decides wich nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
 
-Only complete messages shall be delivered, and messages shall be delivered in correct order, i.e the order they were sent. Actually these requirements are already handled by ZeroMQ. Communication must also be able to detect when a message is lost and report it as a failure. 
+Only complete messages shall be delivered, and messages shall be delivered in correct order, i.e the order they were sent. Actually these requirements are already handled by ZeroMQ. Communication must also be able to detect when a message is lost and report it as a failure.
 
 ==== Protocol
 ZeroMQ and the http://zguide.zeromq.org/page:all#Chapter-Advanced-Publish-Subscribe-Patterns[publish-subscribe] pattern will be used for all the low-level communication. Each node will have at least one publisher socket and one subscriber socket, and supported transport protocols are tcp and epgm which is pgm multicast on top of udp.
 
-To avoid unnecessary copying message headers and message data will be separated using ZeroMQ's multipart messages. That makes it possible to write the data part in shared memory immediately without any  intermediate storage.
+To avoid unnecessary copying, message headers and message data will be separated using ZeroMQ's multipart messages. That makes it possible to write the data part in shared memory immediately without any intermediate storage.
+
+==== Node types
+We introduce a new concept called node type. It shall be possible to define node types with a number of common parameters and then tag every node with a node type. For example one node type could be RT_NODE and another IS_NODE. A node tagged as RT_NODE might have a higher minimum receive data rate than a node tagged as IS_NODE. The node type affects how data are sent to the node and the requirements that must be met to be part of the system.
+
+==== Distribution channels
+Each distribution channel will have a pair of multicast sockets per node type. In such pair, one socket is flow controlled and one is not flow controlled.
+On a non flow controlled socket the sender is allowed to send as fast as it wants and a receiver is allowed to lose messages if it can't keep up with the pace. Still, if using PGM as transport protocol, NAK and RData are sent as usual, so a lost message will only occure in case of PGM unrecoverable data loss.
+A flow controlled socket on the other hand has a minimum transfer rate, defined by the node type, that a receiver must obey. If a receiver starts to send NAK's the sender shall slow down the pace, but if the receiver continues to NAK messages when the send rate has dropped to the minimum level, the receiver will be kicket out from the distribution channel.
+FRÅGA: Måste vi ha en NFC per nodtyp, skulle det inte räcka med en gemensam för alla och enbart en FC per nodtyp?
+
+==== Questions
+One question that needs more investigation is how big the benefits are of using ZeroMQ's multicast over using OpenPGM directly. ZeroMQ is an additional layer on top of OpenPGM with an interface that looks a bit easier to use. On the downside the simplification means that some features and parameters available in OpenPGM are hidden by ZeroMQ and not easily available to users. ZeroMQ handles message fragmentation wich is really nice to have out of the box, however OpenPGM also claims to handle some kind of message fragmentation.
+
+== Use cases
+The DOB supports three kinds of mechanism: entities, messages and requests (service requests and entity requests). Here we try to show how each of these are realized on the proposed design.
+
+=== Messages
+Today there is no guarantees that messages are delivered, but if a message is sent on an ACK:ed distribution channel it is guaranteed that the message will arrive to the node. After the message has arrived to the node it might be delivered or not to each single subscriber.
+If we choose to use a NAK-protocol such as PGM, there are two possible ways to send messages.
+ * Send as non flow controlled - messages will still have no guarantees to be delivered and a slow node will never be kicked out because of messages. There is a small difference from the implementation of today; there is no longer any guarantees that a message will reach the node at all.
+ * Send as flow controlled - messages will still have no guarantees to be delivered. On contray to sending on non flow controlled it is now guaranteed that all messages will reach the receiver nodes, or if the receiver is too slow it will be kicked out.
+
+=== Entities
+Entities should normally be sent as flow controlled data to ensure consistency on all nodes.
+
+=== Requests
+TODO med multicast eller med egen udp?
 
