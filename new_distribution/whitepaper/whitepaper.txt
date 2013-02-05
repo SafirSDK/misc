@@ -215,6 +215,10 @@ image::sp_raw_pub_sub.png["System Picture Pub/Sub", width=401, link="sp_raw_pub_
 
 All of these ZeroMQ sockets will use TCP/IP communication over the loopback interface (127.0.0.1), to make sure that it is computer-local.
 
+==== Exclusion algorithm
+
+We have not decided on an algorithm yet, but it will most likely be based on whether a node is "slowing down" the other nodes to an unacceptable degree. A node will most likely have a few chances to recover from temporary glitches (by getting a pool distribution).
+
 === Communication
 Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to System Picture who decides which nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
 
@@ -231,11 +235,16 @@ We introduce a new concept called node type. It shall be possible to define node
 ==== Distribution channels
 Each distribution channel will have a pair of multicast sockets per node type. In such pair, one socket is flow controlled (FC for short) and one is not flow controlled (NFC for short).
 
-On an NFC socket the sender is allowed to send as fast as it wants and a receiver is allowed to drop messages if it can't keep up with the pace. Still, if using PGM as transport protocol, NAKs and Data is sent as usual, so a lost message will only occur in case of PGM unrecoverable data loss. NFC sockets will probably have shorter PGM recovery interval, to reduce memory use, so PGM unrecoverable data losses may not be uncommon when data flow is high.
+On an NFC socket the sender is allowed to send as fast as it wants and a receiver is allowed to drop messages if it can't keep up with the pace. Still, if using PGM as transport protocol, NAKs and RData (Repair Data) is sent as usual, so a lost message will only occur in case of PGM unrecoverable data loss. NFC sockets will probably have shorter PGM recovery interval, to reduce memory use, so PGM unrecoverable data losses may not be uncommon when data flow is high.
 
 An FC socket on the other hand has a minimum transfer rate, defined by the node type, that a receiver must obey. If a receiver starts to send NAK's the sender shall slow down the pace, but if the receiver continues to NAK messages when the send rate has dropped to the minimum level, the receiver may be excluded from the system. The exact criteria for node exclusion have not been decided yet.
 
 It may be possible to just have one PGM NFC socket for all node types per distribution channel. PGM recovery interval settings may influence this choice.
+
+==== Priorities
+In the current implementation it is possible to set six different priority levels/channels, where each channel can either be acked or unacked. For every type it is then possible to specify which channel it is to be sent on.
+
+The new design removes this level of control. There will not be any priority levels, since we doubt their usefulness (no customer that we know of have actually used the priority levels). Priorities would also compicate things even further...
 
 ==== Questions
 One question that needs more investigation is how big the benefits are of using ZeroMQ's multicast over using OpenPGM directly. ZeroMQ is an additional layer on top of OpenPGM with an interface that looks a bit easier to use. On the downside the simplification means that some features and parameters available in OpenPGM are hidden by ZeroMQ and not easily available to users. ZeroMQ handles message fragmentation which is really nice to have out of the box, however OpenPGM also claims to handle some kind of message fragmentation.
@@ -254,6 +263,18 @@ If we choose to use a NAK-protocol such as PGM, there are two possible ways to s
  * Send as flow controlled - messages will still have no guarantees to be delivered. Contrary to sending on NFC sockets it is now guaranteed that all messages will reach the receiver nodes, and a receiving node that is too slow will be excluded from the system.
 
 TODO: We should have a proposal for messages with some kind of guarantees in this iteration.
+
+
+==== Proposal 1
+Use NFC socket for data transport, with a smallish (1s?) recovery interval. Change message Send() to return a MessageId (like a RequestId), or add another Send that takes a user-defined MessageId. Receiver will be able to check MessageId of each received message (in the MessageProxy). 
+
+Also add functions to the MessageProxy to allow the receiver to check whether he has missed any messages, and if so, which MessageIds he has missed since he last asked.
+
+This is actually no more guarantees than what we already provide when sending messages on unacked priority channels (well, there is the short PGM recovery interval), but the receiver will be able to warn or log if he starts missing messages. During the development of a system the send rates of the message sender and the queue lengths of the receiver can be adjusted to reduce data losses to a minimum.
+
+The main advantages for this proposal is that it is fairly easy to implement and that it will have the same performance characteristics as the current implementation.
+
+Disadvantages are that there are no actual delivery guarantees, and that detecting losses depend on receiving a message after one has been lost, i.e. a lost message will not be detected until a new message of the same type is received.
 
 === Entities
 Entities can be sent on FC or NFC sockets depending on type, just like they are sent acked or unacked in the current implementation.
