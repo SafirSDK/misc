@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 #add dependencies here (.dia files are automatically converted to .png if dia is installed)
-DEPS := whitepaper.txt block-diagram.png sp_raw_pub_sub.png Makefile
+DEPS := whitepaper.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png Makefile
 
 default: whitepaper.pdf
 
