@@ -87,9 +87,6 @@ The Spread Toolkit - http://www.spread.org/::
   for use in the Spread toolkit. For more information about Spread see 
   http://www.spread.org"
 
-Database replication mechanisms::
-  widde
-
 [[AMQP]]
 Advanced Message Queuing Protocol (AMQP) - http://www.amqp.org/about/what::
   AMQP is an open standard for business message passing. The protocol relies on a central broker that all messages must pass through.
