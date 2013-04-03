@@ -1,0 +1,92 @@
+// -*- coding: utf-8 -*-
+:encoding: UTF-8
+
+Messages with guaranteed delivery
+=================================
+Lars Hagström
+3 April 2013
+
+== Preface
+The Message facility of the Dob gives no guarantees about whether or not a particular message will be delivered to all subscribers or not. Neither does it report status of deliver to the sender. There has been a long standing discussion about implementing a message delivery facility with guarantees (aka "Deliver"). This article discusses some possible ways to implement this facility. 
+
+This facility could be implemented inside the Dob, as a completely new facility or on top of the current facilities. We'll discuss the possible implementations and present a recommendation.
+
+== On top of Existing Facilities
+Today there exists a facility called _Foreach_, which is a separate executable that provides a service where it is possible to send an entity (update or delete) request to multiple entities. It currently works like this (see User's Guide for more information):
+
+ . User sends a service request containing a _template_ request and a number of entity ids to Foreach.
+ . Foreach sends the template request to each of the entity ids specified.
+ . Foreach collects the responses and sends them back to the user.
+
+So for sending a "bunch" of entity requests the user can just send one request and let Foreach handle spreading it to several handlers/entities.
+
+=== Using the current foreach
+
+This facility can actually be used to provide messages with guaranteed delivery as it stands today:
+
+ . Create an entity type XXXMessageReceiver, that has the message data members in it.
+ . Each "subscriber" registers a handler and creates _one_ instance of the entity (with no members set).
+ . The sender sends one _Safir.Foreach.UpdateRequest_ to all the instances via Foreach.
+ . The "subscriber" will get an UpdateRequest on the entity, which it should treat as a message, i.e. the contents are a message, not an update request (_do not call _SetAll_ or _SetChanges_).
+ . The sender will get a response which contains the responses of all the subscribers (or it can get a summary).
+
+Apart from the fact that this seems slightly forced there is one other drawback, which is that the sender has to keep track of what subscribers exist (i.e. which entity instances exist). This has to be done either by subscribing to that entity, or by iterating through all the entities periodically.
+
+We have performed a test with this strategy, and on a single node we're getting around 8000 Hz with one sender and one "subscriber" and 3200 Hz with one sender and five "subscribers". The computer that this test was run on is a Linux machine with a Core i7 processor (2 cores with HyperThreading enabled).
+
+=== Adding features to foreach
+
+To make using foreach for "message delivery" a bit nicer a few new features could be added:
+
+ * Add ability to send Service requests with Foreach.
+ * Let Foreach keep track of handlers and entity instances (dynamically, by adding and removing subscriptions, for example), so that the sender can just say "send to all".
+ * (While we're at it we should also add ability to send Create requests with Foreach, for symmetry).
+ * Add HandlerId::GenerateRandom(), so that subscribers can register in parallel without having a numbering scheme worked out.
+
+Pros::
+  - Easy to use
+  - Familiar flow control
+  - No new features in the Dob.
+
+Cons::
+  - Lower throughput compared to raw messages
+  - Bad scalability (throughput is inversely proportional to number of subscribers)
+
+== New Dob Facility
+
+There are (at least) two fundamentally different ways to provide this facility inside the Dob. One is to provide app-to-app acknowledgement, so that a sender will get an overflow if it is sending messages at too high a rate, and will be notified of all failed deliveries. The other approach is to push the responsibility to the subscriber, by guaranteeing delivery as long as the subscriber fulfills some very specific requirements (e.g. a defined minimum latency).
+
+=== App-to-app acknowledgement
+The idea is to use request-like behaviour, where the sender conceptually has an out queue, where a message will only be removed when acknowledgements from each subscriber has been received.
+
+The sender will get an overflow trying to send when the out-queue is full, and if delivery to one or more subscribers has failed the sender will be notified. The sender will be given the option of retrying or ignoring the error.
+
+Pros::
+  - Easy to use
+  - Familiar flow control
+
+Cons::
+  - Potentially low throughput (would probably be slightly higher than the Foreach solution above, but not significantly)
+  - Bad scalability (throughput is inversely proportional to number of subscribers)
+  - A completely new facility in the Dob, adding complexity
+
+=== Subscriber latency requirements
+This solution is fundamentally different from the previous solution, in that it does not offer flow control back to the sender, only a notification that "something" was lost within a certain time span.
+The underlying idea is to move the responsibility from "sender has to make certain that all subscribers get it" to "subscriber has to behave in a way that ensures that he will get it". 
+
+One design for this would be to make the message in queues time based instead of slot based, so that they will keep messages for a certain amount of time (e.g. 2 seconds). A subscriber that is able to keep up with the flow, and never blocks for longer than the queue time is guaranteed to receive all messages. If a message is discarded (when it gets too old) the sender will be notified that "some" message was lost.
+
+For this approach to work there also needs to be a maximum send rate, so that the queues will have finite sizes.
+
+Pros::
+  - High througput
+  - Less intrusive than the previous solution
+Cons::
+  - No (dynamic) flow control
+  - Not consistent with other Dob facilities
+  - No resend
+  - New faciltity in the Dob adding to complexity
+
+== Recommendation
+
+We recommend going down the Foreach path. The _App-to-app acknowledgement_ path offers (as far as we can "guess") a slightly higher throughput, but at the disadvantage of adding a lot of new code to an already complex product. The _Subscriber latency requirements_ path offers higher throughput, but introduces a completely new un-dob-like user interface.
