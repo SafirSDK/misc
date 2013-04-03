@@ -20,7 +20,7 @@ Today there exists a facility called _Foreach_, which is a separate executable t
 
 So for sending a "bunch" of entity requests the user can just send one request and let Foreach handle spreading it to several handlers/entities.
 
-=== Using the current foreach
+=== Using the current Foreach
 This facility can actually be used to provide messages with guaranteed delivery as it stands today:
 
  . Create an entity type XXXMessageReceiver, that has the message data members in it.
@@ -33,8 +33,8 @@ Apart from the fact that this seems slightly forced there is one other drawback,
 
 We have performed a test with this strategy, and on a single node we're getting around 8000 Hz with one sender and one "subscriber" and 3200 Hz with one sender and five "subscribers". The computer that this test was run on is a Linux machine with a Core i7 processor (2 cores with HyperThreading enabled).
 
-=== Adding features to foreach
-To make using foreach for "message delivery" a bit nicer a few new features could be added:
+=== Adding features to Foreach
+To make using Foreach for "message delivery" a bit nicer a few new features could be added:
 
  * Add ability to send Service requests with Foreach.
  * Let Foreach keep track of handlers and entity instances (dynamically, by adding and removing subscriptions, for example), so that the sender can just say "send to all".
@@ -79,13 +79,13 @@ One design for this would be to make the message in queues time based instead of
 For this approach to work there also needs to be a maximum send rate, so that the queues will have finite sizes.
 
 Pros::
-  - High througput
+  - High throughput
   - Less intrusive than the previous solution
 Cons::
   - No (dynamic) flow control
   - Not consistent with other Dob facilities
   - No resend
-  - New faciltity in the Dob adding to complexity
+  - New facility in the Dob adding to complexity
   - Memory usage can be difficult to predict
 
 == Recommendation
