@@ -21,7 +21,6 @@ Today there exists a facility called _Foreach_, which is a separate executable t
 So for sending a "bunch" of entity requests the user can just send one request and let Foreach handle spreading it to several handlers/entities.
 
 === Using the current foreach
-
 This facility can actually be used to provide messages with guaranteed delivery as it stands today:
 
  . Create an entity type XXXMessageReceiver, that has the message data members in it.
@@ -35,7 +34,6 @@ Apart from the fact that this seems slightly forced there is one other drawback,
 We have performed a test with this strategy, and on a single node we're getting around 8000 Hz with one sender and one "subscriber" and 3200 Hz with one sender and five "subscribers". The computer that this test was run on is a Linux machine with a Core i7 processor (2 cores with HyperThreading enabled).
 
 === Adding features to foreach
-
 To make using foreach for "message delivery" a bit nicer a few new features could be added:
 
  * Add ability to send Service requests with Foreach.
@@ -91,7 +89,6 @@ Cons::
   - Memory usage can be difficult to predict
 
 == Recommendation
-
 We recommend going down the Foreach path. This an implementation that requires no changes to the existing Dob core, it is easier to implement and requires no writing interfaces in different languages. The underlying request/response functionality is very well tested.
 
 The _App-to-app acknowledgement inside Dob_ path offers (as far as we can "guess") a slightly higher throughput, but at the disadvantage of adding a lot of new code to an already complex product. The _Subscriber latency requirements_ path offers higher throughput, but introduces a completely new un-dob-like user interface.
