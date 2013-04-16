@@ -92,3 +92,6 @@ Cons::
 We recommend going down the Foreach path. This an implementation that requires no changes to the existing Dob core, it is easier to implement and requires no writing interfaces in different languages. The underlying request/response functionality is very well tested.
 
 The _App-to-app acknowledgement inside Dob_ path offers (as far as we can "guess") a slightly higher throughput, but at the disadvantage of adding a lot of new code to an already complex product. The _Subscriber latency requirements_ path offers higher throughput, but introduces a completely new un-dob-like user interface.
+
+== Decision
+The decision has been made, we're implementing the Foreach solution. When this will be done is still to be decided, though. 
