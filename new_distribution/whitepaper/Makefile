@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 #add dependencies here (.dia files are automatically converted to .png if dia is installed)
-DEPS := whitepaper.txt messages.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png Makefile
+DEPS := syslog.txt whitepaper.txt messages.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png Makefile
 
 default: all
 
@@ -12,7 +12,7 @@ help:
 	echo "   whitepaper.html - build single page html" 
 	echo " Check the Makefile for other targets"
 
-all: whitepaper.pdf whitepaper.html messages.pdf messages.html
+all: whitepaper.pdf whitepaper.html messages.pdf messages.html syslog.pdf syslog.html
 
 
 vpath %.dia images
@@ -37,5 +37,14 @@ messages.html: $(DEPS)
 	echo "Building message html"
 	asciidoc -d book -a toc -a toclevels=4 -a numbered messages.txt
 
+syslog.pdf: $(DEPS)
+	echo "Building message pdf"
+	a2x -L -f pdf -d article --dblatex-opts "-P latex.output.revhistory=0 -Pdoc.layout=\"coverpage frontmatter mainmatter \"" syslog.txt
+
+syslog.html: $(DEPS)
+	echo "Building message html"
+	asciidoc -d book -a toc -a toclevels=4 -a numbered syslog.txt
+
+
 clean:
-	rm -rf *~ *.pdf *.html *.xml *.fo
+	rm -rf *~ *.pdf *.html *.xml *.fo *.png
