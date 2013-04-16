@@ -4,7 +4,7 @@
 Messages with guaranteed delivery
 =================================
 Lars Hagström
-3 April 2013
+16 April 2013
 
 == Preface
 The Message facility of the Dob gives no guarantees about whether a particular message will be delivered to all subscribers or not. Neither does it report status of deliver to the sender. There has been a long standing discussion about implementing a message delivery facility with guarantees (aka "Deliver"). This article discusses some possible ways to implement this facility. 
