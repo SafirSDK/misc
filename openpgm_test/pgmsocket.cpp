@@ -73,7 +73,7 @@ PgmSocket::PgmSocket(bool receiver)
     {
         const int sendOnly=1;
         const int maxTpdu=1500;
-        const int maxRte=3e7; // unit: byte/sec  1000000=8 Mbit/sec
+        const int maxRte=2e7; // unit: byte/sec  1000000=8 Mbit/sec
         const int ambientSpm=pgm_secs (30);
         const int heartbeatSpm[]={ pgm_msecs (100),
                                    pgm_msecs (100),
