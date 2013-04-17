@@ -41,13 +41,14 @@ PgmSocket::PgmSocket(bool receiver)
         std::cout<<"Failed to set multicast port"<<std::endl;
     }
 
+    const int sqns=200000;
+
     if (receiver)
     {
         //set PGM parameters
         const int recvOnly = 1;
         const int passive = 0;
         const int maxTpdu=1500;
-        const int secs=3;
         const int peerExpiry = pgm_secs (300);
         const int spmrExpiry = pgm_msecs (250);
         const int nakBoIvl = pgm_msecs (50);
@@ -59,7 +60,7 @@ PgmSocket::PgmSocket(bool receiver)
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_RECV_ONLY, &recvOnly, sizeof(recvOnly));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_PASSIVE, &passive, sizeof(passive));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_MTU, &maxTpdu, sizeof(maxTpdu));
-        pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_RXW_SECS, &secs, sizeof(secs));
+        pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_RXW_SQNS, &sqns, sizeof(sqns));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_PEER_EXPIRY, &peerExpiry, sizeof(peerExpiry));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_SPMR_EXPIRY, &spmrExpiry, sizeof(spmrExpiry));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_NAK_BO_IVL, &nakBoIvl, sizeof(nakBoIvl));
@@ -72,7 +73,6 @@ PgmSocket::PgmSocket(bool receiver)
     {
         const int sendOnly=1;
         const int maxTpdu=1500;
-        const int secs=3;
         const int maxRte=3e7; // unit: byte/sec  1000000=8 Mbit/sec
         const int ambientSpm=pgm_secs (30);
         const int heartbeatSpm[]={ pgm_msecs (100),
@@ -88,7 +88,7 @@ PgmSocket::PgmSocket(bool receiver)
 
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_SEND_ONLY, &sendOnly, sizeof(sendOnly));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_MTU, &maxTpdu, sizeof(maxTpdu));
-        pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_TXW_SECS, &secs, sizeof(secs));
+        pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_TXW_SQNS, &sqns, sizeof(sqns));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_TXW_MAX_RTE, &maxRte, sizeof(maxRte));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_AMBIENT_SPM, &ambientSpm, sizeof(ambientSpm));
         pgm_setsockopt (m_socket, IPPROTO_PGM, PGM_HEARTBEAT_SPM, &heartbeatSpm, sizeof(heartbeatSpm));
