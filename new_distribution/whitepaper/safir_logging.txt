@@ -1,0 +1,94 @@
+// -*- coding: utf-8 -*-
+:encoding: UTF-8
+
+Logging in Safir SDK Core
+========================
+Anders Widén
+18 April 2013
+
+== Preface
+Today Safir SDK Core provides a legacy logging mechanism (SWRE). This mechanism is used in Safir systems to generate and consume logs.
+
+There is a desire to integrate the logs generated in a Safir system with standardized logging infrastructure, such as Syslog. Some benefits that will come "for free" with this approach:
+
+ * Log filtering
+ * Log searching
+ * Save logs in a database
+ * Send logs to a centralized log server.
+ * Log file rotation 
+
+== Definitions
+For the discussion in this document we need to distinguish between two closely related types of logs.
+
+ * Event logs - Logs used to signal some significant event to the administrator or user. Event logs can potentially be verbose, are always enabled, and are not generated with a high frequency.
+ * Trace logs - Logs in the form of debug trace printouts, usually meaningful only for a developer. Trace logs are typically one-line printouts, are enabled on request, and can potentially have a high output frequence. 
+
+== Current solution
+SWRE provides functionality for sending Event Logs and Trace Logs from applications. These logs are consumed by a simple command line tool (swre_logger) that provides basic functionality for writing logs to standard output or a file.
+
+Under the hood the Dob will be used as communication mechanism between the log sender (application) and swre_logger.
+
+=== Event logs
+Applications use the SWRE API and the associated library to send Event logs. The library will use the application's own Dob connection to send the corresponding Dob message. In some cases, for instance when it is not possible to attach to the application's own connection, a hidden thread will be started and then this thread will be used for the sending.
+
+=== Trace Logs
+For sending Trace logs the application uses an Tracer class which provides a syntactically simple way of generating "one liner" debug output. Internally the Tracer will create a Program Info Event log and send it via the Dob. The Tracer will always start a hidden thread to handle buffering of trace logs.
+
+[[Drawbacks]]
+=== Drawbacks with the SWRE solution
+- The current solution doesn't provide a way to consume Safir logs using standardized tools.
+- Although the swre_logger is capable of saving logs to a file, our experience is that this feature is seldom used, which means that critical logs are lost. 
+- SWRE uses the Dob for distribution of the logs from application to swre_logger. This means that the Dob kernel code can't use the SWRE logging mechanism since this would introduce a circular dependency. Today the Dob kernel instead uses what we call a Panic Log which means that a log is just sent out on an UDP port with a hope that it will be picked up by someone. (Luckily, the swre_logger happens to listen to this port.)
+- Trace printouts in the form of Program Info reports are "ugly". Trace logs should be just "one liners".
+- The hidden thread and the buffering mechanism introduces some complexity, for instance when stopping the application.
+
+== Syslog
+Syslog has become the standard logging solution on Unix and Unix-like systems. There are also a variety of Syslog implementations on other operating systems.
+
+For a long time Syslog has functioned as a de-facto standard. Its "observed behavior" was later documented in RFC 3164. This RFC is now made obsolete by the newer RFC 5424 and the associated RFC 5425 (TLS as transport protocol) and RFC 5426 (UDP as transport protocol). Despite the fact that RFC 3164 now is obsolete, the format that it specifies is still widely used. 
+
+=== Structured Data vs Project Lumberjack
+RFC 5424 specifies what is called Structured Data which is an attempt to bring some structure to the log messages and thereby making life easier for parsers. It seems that Structured Data hasn't gained much attraction in the logging community and recently a new initiative, Project Lumberjack (https://fedorahosted.org/lumberjack/), has popped up. This seems to be a quite ambitious attempt to bring structure to the logging arena but it is still in an early stage.
+
+== Windows logging
+
+- Event Tracing for Windows (ETW) is a high-speed tracing facility provided by the Windows Operating System. ETW is the core tracing facility in Windows on top of which the Windows Event Log is built.
+- Windows Event Log is a management-focused event system, designed for system administrators to easily consume events. Tools such as the Event Viewer and Windows PowerShell interact with the Event Log to receive and display events to users.
+
+Beginning with Windows Vista, ETW and Windows Event Log providers use the same APIs to log events. Providers log events to channels, each with a different target audience.
+
+== Long term goals
+The long term goal is to generate the Safir logs using a standardized framwork that is the de facto standard on the respective platform (Linux and Windows). This will enable us to benefit from an existing infrastructure and related tools.
+
+On the Linux platform this means that we will add support for generating logs in the Syslog format.
+
+There are Syslog deamons available for the Windows platform (for example http://www.kiwisyslog.com), so Syslog is truly an alternative also in this case. With that said, we think it is important to also support native Windows Event Logs, thereby keeping a low threshhold for those working solely in a Windows environment.
+
+The homebrewn SWRE solution will be completly phased out, including the SWRE interface. Instead applications will be provided with an interface that is more adapted to the Syslog format.
+
+== Recommended way forward
+All sending of SWRE reports via the Dob will be removed. In a first step the existing SWRE interface will remain but the library will be modified to translate the SWRE reports to Syslog messages and/or Windows Event Logs.
+
+The Syslog server address and port, as well as whether or not native logging should be used, is configurable. This makes it possible to use both local and remote Syslog servers.
+
+Since there will be no SWRE reports there is no need for the swre_logger wich will be removed.
+
+When Syslog is used, both Event Logs and Trace Logs are generated using Syslog messages. The only difference is that Trace logs have the Facility code set to Debug.
+
+For native logging on Windows, Event Logs are sent using the Windows Event Log mechanism. Ideally, Trace Logs can be sent using the ETW mechanism but this must be further investigated.
+
+In a second step the legacy SWRE interface will be removed and the applications then have to use the new logging interface.
+
+Also, when project Lumberjack has progressed further, we might want to adapt our logs to be compliant with this initiative.
+
+
+ 
+
+
+
+
+
+
+
+
+
