@@ -38,11 +38,11 @@ messages.html: $(DEPS)
 	asciidoc -d book -a toc -a toclevels=4 -a numbered messages.txt
 
 syslog.pdf: $(DEPS)
-	echo "Building message pdf"
+	echo "Building syslog pdf"
 	a2x -L -f pdf -d article --dblatex-opts "-P latex.output.revhistory=0 -Pdoc.layout=\"coverpage frontmatter mainmatter \"" syslog.txt
 
 syslog.html: $(DEPS)
-	echo "Building message html"
+	echo "Building syslog html"
 	asciidoc -d book -a toc -a toclevels=4 -a numbered syslog.txt
 
 
