@@ -9,7 +9,7 @@ Anders Widén
 == Preface
 Today Safir SDK Core provides a legacy logging mechanism (SWRE). This mechanism is used in Safir systems to generate and consume logs.
 
-There is a desire to integrate the logs generated in a Safir system with standardized logging infrastructure, such as Syslog. Some benefits that will come "for free" with this approach:
+There is a desire to integrate the logs generated in a Safir system with standardized logging infrastructure, such as Syslog. The 3rd-party tools give us a lot of functionality "for free", for example:
 
  * Log filtering
  * Log searching
@@ -18,10 +18,11 @@ There is a desire to integrate the logs generated in a Safir system with standar
  * Log file rotation 
 
 == Definitions
-For the discussion in this document we need to distinguish between two closely related types of logs.
+For the discussion in this document we need to distinguish between some related types of logs.
 
  * Event logs - Logs used to signal some significant event to the administrator or user. Event logs can potentially be verbose, are always enabled, and are not generated with a high frequency.
- * Trace logs - Logs in the form of debug trace printouts, usually meaningful only for a developer. Trace logs are typically one-line printouts, are enabled on request, and can potentially have a high output frequence. 
+ * Trace logs - Logs in the form of debug trace printouts, usually meaningful only for a developer. Trace logs are typically one-line printouts, are enabled on request, and can potentially have a high output frequence.
+ * Low Level logs - Trace logs that are used by the Dob kernel. The main reason for having this flavor of trace logs is that the Dob kernel can't have a dependency to SWRE.
 
 == Current solution
 SWRE provides functionality for sending Event Logs and Trace Logs from applications. These logs are consumed by a simple command line tool (swre_logger) that provides basic functionality for writing logs to standard output or a file.
@@ -29,10 +30,10 @@ SWRE provides functionality for sending Event Logs and Trace Logs from applicati
 Under the hood the Dob is used as communication mechanism between the log sender (application) and swre_logger.
 
 === Event logs
-Applications use the SWRE API and the associated library to send Event logs. The library uses the application's own Dob connection to send the corresponding Dob message. In some cases, for instance when it is not possible to attach to the application's own connection, a background thread is which will be used for sending the messages.
+Applications use the SWRE API and the associated library to send Event logs. The library uses the application's own Dob connection to send the corresponding Dob message. In some cases, for instance when it is not possible to attach to the application's own connection, a background thread is used for sending the messages.
 
 === Trace Logs
-For sending Trace logs the application uses an Tracer class which provides a syntactically simple way of generating "one liner" debug output. Internally the Tracer creates a Program Info Event log and send it via the Dob. The Tracer always starts a hidden thread to handle buffering of trace logs.
+For sending Trace logs the application uses a Tracer class which provides a syntactically simple way of generating "one liner" debug output. Internally the Tracer creates a Program Info Event log and send it via the Dob. The Tracer always starts a hidden thread to handle buffering of trace logs.
 
 [[Drawbacks]]
 === Drawbacks with the SWRE solution
@@ -40,6 +41,7 @@ For sending Trace logs the application uses an Tracer class which provides a syn
 - Although the swre_logger is capable of saving logs to a file, our experience is that this feature is seldom used, which means that critical logs are lost. 
 - SWRE uses the Dob for distribution of the logs from application to swre_logger. This means that the Dob kernel code can't use the SWRE logging mechanism since this would introduce a circular dependency. Today the Dob kernel instead uses what we call a Panic Log which means that a log is just sent out on an UDP port with a hope that it will be picked up by someone. (Luckily, the swre_logger happens to listen to this port.)
 - Trace printouts in the form of Program Info reports are "ugly". Trace logs should be just "one liners".
+- Since the Dob is used as transport mechanism for the logs, the "normal" Dob traffic might get affected when there is a lot of logs generated.
 - The hidden thread and the buffering mechanism introduces some complexity, for instance when stopping the application.
 
 == Syslog
@@ -78,6 +80,8 @@ When Syslog is used, both Event Logs and Trace Logs are generated using Syslog m
 For native logging on Windows, Event Logs are sent using the Windows Event Log mechanism. Ideally, Trace Logs can be sent using the ETW mechanism but this must be investigated further.
 
 In a second step the legacy SWRE interface will be removed and the applications then have to use the new logging interface.
+
+The Low Level Logs, used by the Dob kernel, will in a first step remain, but in the future they will be aligned to the "normal" Trace logging.  
 
 Also, when project Lumberjack has progressed further, we might want to adapt our logs to be compliant with this initiative.
 
