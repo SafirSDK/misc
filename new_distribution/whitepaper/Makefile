@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 #add dependencies here (.dia files are automatically converted to .png if dia is installed)
-DEPS := syslog.txt whitepaper.txt messages.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png Makefile
+DEPS := safir_logging.txt whitepaper.txt messages.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png Makefile
 
 default: all
 
