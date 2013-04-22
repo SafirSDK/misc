@@ -12,7 +12,7 @@ help:
 	echo "   whitepaper.html - build single page html" 
 	echo " Check the Makefile for other targets"
 
-all: whitepaper.pdf whitepaper.html messages.pdf messages.html syslog.pdf syslog.html
+all: whitepaper.pdf whitepaper.html messages.pdf messages.html safir_logging.pdf safir_logging.html
 
 
 vpath %.dia images
@@ -37,13 +37,13 @@ messages.html: $(DEPS)
 	echo "Building message html"
 	asciidoc -d book -a toc -a toclevels=4 -a numbered messages.txt
 
-syslog.pdf: $(DEPS)
-	echo "Building syslog pdf"
-	a2x -L -f pdf -d article --dblatex-opts "-P latex.output.revhistory=0 -Pdoc.layout=\"coverpage frontmatter mainmatter \"" syslog.txt
+safir_logging.pdf: $(DEPS)
+	echo "Building safir_logging pdf"
+	a2x -L -f pdf -d article --dblatex-opts "-P latex.output.revhistory=0 -Pdoc.layout=\"coverpage frontmatter mainmatter \"" safir_logging.txt
 
-syslog.html: $(DEPS)
-	echo "Building syslog html"
-	asciidoc -d book -a toc -a toclevels=4 -a numbered syslog.txt
+safir_logging.html: $(DEPS)
+	echo "Building safir_logging html"
+	asciidoc -d book -a toc -a toclevels=4 -a numbered safir_logging.txt
 
 
 clean:
