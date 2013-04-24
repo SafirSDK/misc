@@ -2,17 +2,17 @@
 .PHONY: all clean
 
 #add dependencies here (.dia files are automatically converted to .png if dia is installed)
-DEPS := safir_logging.txt whitepaper.txt messages.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png Makefile
+DEPS := safir_logging.txt new_distribution.txt messages.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png Makefile
 
 default: all
 
 help:
 	echo "Some available targets:"
-	echo "   default         - build pdf"
-	echo "   whitepaper.html - build single page html" 
+	echo "   all         - build pdfs and html of all white papers"
+	echo "   new_distribution.html - build single page html" 
 	echo " Check the Makefile for other targets"
 
-all: whitepaper.pdf whitepaper.html messages.pdf messages.html safir_logging.pdf safir_logging.html
+all: new_distribution.pdf new_distribution.html messages.pdf messages.html safir_logging.pdf safir_logging.html
 
 
 vpath %.dia images
@@ -20,13 +20,13 @@ vpath %.dia images
 	dia --export=$@ -t png $<
 
 
-whitepaper.pdf: $(DEPS)
-	echo "Building whitepaper pdf"
-	a2x -L -f pdf -d book --xsltproc-opts="--stringparam section.autolabel 1 --stringparam section.label.includes.component.label 1 --stringparam toc.section.depth 3" --dblatex-opts "-P latex.output.revhistory=0" whitepaper.txt
+new_distribution.pdf: $(DEPS)
+	echo "Building new_distribution pdf"
+	a2x -L -f pdf -d book --xsltproc-opts="--stringparam section.autolabel 1 --stringparam section.label.includes.component.label 1 --stringparam toc.section.depth 3" --dblatex-opts "-P latex.output.revhistory=0" new_distribution.txt
 
-whitepaper.html: $(DEPS)
-	echo "Building whitepaper html"
-	asciidoc -d book -a toc -a toclevels=4 -a numbered whitepaper.txt
+new_distribution.html: $(DEPS)
+	echo "Building new_distribution html"
+	asciidoc -d book -a toc -a toclevels=4 -a numbered new_distribution.txt
 
 
 messages.pdf: $(DEPS)
