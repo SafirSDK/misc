@@ -39,8 +39,8 @@ Easier to display system status::
 Simpler to start system::
   Less needs for start scripts. All parts of Safir SDK Core and the rest of the system gets started by the same mechanism.
 
-== 3rd party dependencies
-Preferrably some 3rd party products should be used in the development of the new distribution mechanism, to simplify and speed up the development process, and to reduce maintenance costs.
+== Product Evaluation
+Preferrably some 3rd party products or protocols should be used in the development of the new distribution mechanism, to simplify and speed up the development process, and to reduce maintenance costs.
 
 Some requirements:
 
@@ -51,19 +51,55 @@ License::
 Real-Time Behaviour::
   Chosen technologies shall not prevent the Safir SDK Core from having bounded latency.
 Reliability::
-  Chosen technologies shall not prevent the Safir SDK Core from having reliability guarantees.
+  Chosen technologies shall not prevent the Safir SDK Core from providing reliability guarantees.
+Complexity::
+  Chosen technologies shall not add unwarranted complexity to configuration or use.
+
+=== Data format / Serialization
+Using an open or standard format for the data packets would remove the need of "rolling our own", and probably also easier to use third party tools such as Wireshark for debugging.
+
+We want a binary format since the blobs are already binary, so XML- or JSON-based formats have not been investigated.
+
+In some distant future we might also want to change the blob format to use an open format, but in the short term we will just wrap them in whatever format we choose.
+
+We only need support for C\+\+, since all the data transport and blob packing/unpacking code is C++ code.
+
+Protobuf - http://code.google.com/p/protobuf/::
+  * Google developed data serialization format. 
+  * Used by almost all Google internal RPC and file formats. 
+  * Well documented and well supported (by Google).
+  * There are also multiple implementations, e.g. SAX-like deserialization libraries are available.
+  * Stable and widely used.
+  * BSD 3-Clause License (GPL compatible)
+Apache Thrift - http://thrift.apache.org/::
+  * Interfaces to more languages than Protobuf.
+  * Slightly larger serialized results compared to Protobuf.
+  * Maintenance seems less "professional" than Protobuf.
+  * Apache License 2.0 (GPLv3 compatible)
+
+==== Conclusion
+*Protobuf* seems to be the sensible choice. Wider usage, better documentation and better maintenance/development.
 
 === Distribution mechanisms
-
-At first we looked at some existing products, to see if we could find something we could use. When that failed (more below) we looked at some protocols on which we could base our communication implementation.
-
-==== Products
+There are a lot of possible products and protocols available. They all have different characteristics and different levels of guarantees. Here is a list of some of the main ones that we have evaluated along with some of our thoughts on them. See <<discarded_solutions>> for TODO
 
 DDS - http://en.wikipedia.org/wiki/Data_Distribution_Service::
   There are several DDS implementations, both commercial and Open
   Source. DDS is a large-scale distribution framework in itself,
   making it an inappropriate choice as an low level distribution
   mechanism for Safir.
+
+RTPS - todo::
+  laha
+
+ORTE - todo::
+  laha
+
+OpenSplice - asdf::
+  laha
+
+Reliable Multicast - asdf::
+  laha
 
 Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Multicast::
   PGM is a reliable multicast transport protocol that guarantees an
@@ -139,41 +175,38 @@ NServiceBus - http://www.nservicebus.com/::
   From the web site: ++Developer-friendly SOA for .Net++.
   This is not useful for Safir, see MassTransit.
 
-===== Evaluation of ZeroMQ and OpenPGM
-We decided to evaluate *ZeroMQ* and *OpenPGM* since they appeared to be good choices to build the new communication mechanism on. The licenses, the small footprint as well as the message fragmentation handling in conjunction with the publish-subscribe pattern seemed appealing.
+==== Discarded solutions
 
-After a rather long evaluation period we had to discard ZeroMQ, since it has no reliability guarantees, and no easy way of detecting when data has been lost. This is especially true when using OpenPGM as the underlying transport. Data can be discarded on the sender side or on the receiver side and it can be lost on the wire. Also, if the sender attempts to send more than ZeroMQ can handle data is discarded silently (see http://lists.zeromq.org/pipermail/zeromq-dev/2011-December/014721.html[] for more information).
+During the evaluation of these technologies we have come up with several possible designs and ways of using these technologies in our implementation. Here we describe some solutions that were discarded.
 
-At this point we decided to look into using OpenPGM directly. Doing that would allow us to detect lost packages more easily and have a higher degree of control over the transport. After some trials we found a bug in it which caused a lost package, but more seriously than that we realized that controlling the transmission rates would be very difficult or even impossible. 
+===== ZeroMQ
+
+We decided to evaluate *ZeroMQ* since it appeared to be a good choice to build the new communication mechanism on. The licenses, the small footprint as well as the message fragmentation handling in conjunction with the publish-subscribe pattern seemed appealing.
+
+There is quite a bit of functionality that would need to implement on top of ZeroMQ, such as providing a common picture of the system topology, and providing robustness when a node does not keep up with the pace of the rest of the system. ZeroMQ on its own will just discard messages when a peer does not respond. ZeroMQ does not support singlecast over UDP which means that if a singlecast mechanism is needed we have to implement it ourselves or we can decide that it's fine to send addressed data as multicast.
+
+ZeroMQ and the http://zguide.zeromq.org/page:all#Chapter-Advanced-Publish-Subscribe-Patterns[publish-subscribe] pattern would be used for all the low-level communication. Each node will have at least one publisher socket and one subscriber socket, and supported transport protocols are TCP and EPGM which is pgm multicast on top of UDP. The new distribution concept would allow for different node types that specify if TCP or EPGM should be used. It would be allowed to mix nodes using multicast and TCP in the same system.
+
+[[Communication configurations]]
+.Communication configurations: To the left a pure multicast system. To the right we have added one TCP node.
+image::com_pgm.png["Communication configurations", width=401, link="com_pgm.png"]
+
+ZeroMQ over EPGM is a NAK based protocol, which essentially makes it impossible to know if a sender is transmitting data at a rate which all receivers can't keep up with. To allow us to use this we decided to try to implement some kind if flow control on top of the ZeroMQ EPGM sockets.
+
+A flow controlled socket has a maximum send rate, defined by the node type, that a receiver must obey. If a receiver starts to send NAK's the sender will send RDATA if PGM is used, but if the receiver continues to lose messages, the receiver will eventually get an unrecoverable data loss which will be detected and reported by Communication. This may lead to a pool resynchronization or the node being excluded from the system. An unrecoverable data loss can only be repaired by a complete pool resynchronization a node would get a number of chances before exclusion.
+
+After writing a few test programs and more evaluation we had to discard ZeroMQ, since it has no reliability guarantees, and no easy way of detecting when data has been lost. This is especially true when using EPGM as the underlying transport. Data can be discarded on the sender side or on the receiver side and it can be lost on the wire. Also, if the sender attempts to send more than ZeroMQ can handle data is discarded silently (see http://lists.zeromq.org/pipermail/zeromq-dev/2011-December/014721.html[] for more information).
+
+We briefly toyed with the idea of improving ZeroMQ to fill in these gaps, but we decided to evaluate "Pure OpenPGM" first. Since ZeroMQ uses OpenPGM for its EPGM transport it was useful to check if we could get OpenPGM to work the way we wanted it to before making any changes to ZeroMQ.  
+
+===== Pure OpenPGM
+
+As mentioned in the previous section we decided to look into using OpenPGM directly. Doing that would allow us to detect lost packages more easily and have a higher degree of control over the transport. After some trials we found a bug in it which caused a lost package, but more seriously than that we realized that controlling the transmission rates would be very difficult or even impossible.
 
 Automatic detection of what transmission rate can be used in a particular configuration is something we judged to be close to impossible to design and implement in a timely fashion. The other alternative would be to use manual rate configuration, and to push this decision back to the user. The problem with this approach is that the configuration is very difficult to get right, and if it is not "exactly right" would make the system either very slow due to the rate being set too low, or very slow due to constant node resynchronizations after overload failures.
 
-There is quite a bit of functionality that we need to implement on top of ZeroMQ, such as providing a common picture of the system topology, and providing robustness when a node does not keep up with the pace of the rest of the system. ZeroMQ on its own will just discard messages when a peer does not respond. ZeroMQ does not support singlecast over UDP which means that if a singlecast mechanism is needed we have to implement it ourselves or we can decide that it's fine to send addressed data as multicast.
+Having an underlying communication mechanism that is difficult or even impossible to configure "right" while maintaining performance is a showstopper for the Dob, so any solution using OpenPGM either directly or through ZeroMQ was discarded.
 
-=== Data format / Serialization
-Using an open or standard format for the data packets and data headers would remove the need of "rolling our own", and probably also easier to use third party tools such as Wireshark for debugging.
-
-We want a binary format since the blobs are already binary, so XML- or JSON-based formats have not been investigated.
-
-In some distant future we might also want to change the blob format to use an open format, but in the short term we will just wrap them in whatever format we choose.
-
-We only need support for C\+\+, since all the data transport and blob packing/unpacking code is C++ code.
-
-Protobuf - http://code.google.com/p/protobuf/::
-  * Google developed data serialization format. 
-  * Used by almost all Google internal RPC and file formats. 
-  * Well documented and well supported (by Google).
-  * There are also multiple implementations, e.g. SAX-like deserialization libraries are available.
-  * Stable and widely used.
-  * BSD 3-Clause License (GPL compatible)
-Apache Thrift - http://thrift.apache.org/::
-  * Interfaces to more languages than Protobuf.
-  * Slightly larger serialized results compared to Protobuf.
-  * Maintenance seems less "professional" than Protobuf.
-  * Apache License 2.0 (GPLv3 compatible)
-
-==== Conclusion
-*Protobuf* seems to be the sensible choice. Wider usage, better documentation and better maintenance/development.
 
 == Requirements
 
