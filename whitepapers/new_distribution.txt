@@ -18,14 +18,14 @@ Robust communication::
   Support for other topologies;;
     A number of issues with the current implementation will be addressed:
     - Is really designed and optimized for LAN with TTL=1. It has been made to work with higher TTL. 
-    - Has no support for topologies where all nodes cannot see all other nodes.
+    - Has no support for networks where all nodes cannot see all other nodes via UDP multicast.
     - Does not detect situations where firewalls make communication become "one-way".
 Removal of general "join" will simplify design::
   The attempt to add general "join" functionality added a lot of complexity that is very unpredictable and hard to explain/document. Removing the general join will simplify the software.
 
 Addition of specific "join" cases will allow more uses::
   Instead of a general join we want to add two kinds of specific join, which will allow nodes to be reconnected if  a network connection is broken. These kinds of nodes will not support having redundant entities:
-  Disconnected node will keep all entities owned on other nodes as read only;;
+  Disconnected node will keep all entities owned on other nodes as "read only";;
     An operator console with this setting will still be able to display the "last known" state of all entities. No modification will be allowed and no requests will be served.
   Disconnected node will become empty;;
     An operator console with this setting will still become "empty", i.e. all non-local entities will be deleted (this is the current behavior). When the node is reconnected it will receive all remote entities again. 
@@ -34,7 +34,7 @@ Less static configuration::
   We want to provide a "dhcp"-like functionality for configuring nodes, so that instead of configuring the node identities and other details that should be internal you specify a node type, e.g. "operator console" or "Database server", and from that we internally work out what node id a node should have. This would make adding new nodes a lot easier.
 
 Easier to display system status::
-  The System Picture functionality will be able to provide a unified picture of the system topology, both for use by the system itself to make sure the system remains robust, but this information can also be displayed to allow users and developers to understand what the system status is.
+  We want to provide a unified picture of the system topology, both for use by the system itself to make sure the system remains robust, but this information can also be displayed to allow users and developers to understand what the system status is.
 
 Simpler to start system::
   Less needs for start scripts. All parts of Safir SDK Core and the rest of the system gets started by the same mechanism.
@@ -50,36 +50,60 @@ License::
   Chosen technologies shall have a GPL compatible license, since Safir SDK Core license is GPLv3. See http://www.gnu.org/licenses/license-list.html for the GNU project list of compatible licenses.
 Real-Time Behaviour::
   Chosen technologies shall not prevent the Safir SDK Core from having bounded latency.
+Reliability::
+  Chosen technologies shall not prevent the Safir SDK Core from having reliability guarantees.
 
 === Distribution mechanisms
 
-DDS - http://en.wikipedia.org/wiki/Data_Distribution_Service::
-  There are several DDS implementations, both commercial and Open Source. DDS is a large-scale distribution framework in itself, making it an inappropriate choice as an low level distribution mechanism for Safir. What could be of interest is the low-level parts in DDS that are used for basic massage distribution, but such mechanisms are not available as stand-alone products.
+At first we looked at some existing products, to see if we could find something we could use. When that failed (more below) we looked at some protocols on which we could base our communication implementation.
 
-[[PGM]]
+==== Products
+
+DDS - http://en.wikipedia.org/wiki/Data_Distribution_Service::
+  There are several DDS implementations, both commercial and Open
+  Source. DDS is a large-scale distribution framework in itself,
+  making it an inappropriate choice as an low level distribution
+  mechanism for Safir.
+
 Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Multicast::
-  PGM is a reliable multicast transport protocol that guarantees an ordered sequece of packets without gaps to multiple 
-  recipients simultaneously.  PGM is a NAK protocol which means that a receiver will send a unicast NAK to the sender whenever it detects loss of 
-  data. Repair data will be sent to recover from data loss if it is possible. The protocol also detects if a receiver has ended up in an 
+  PGM is a reliable multicast transport protocol that guarantees an
+  ordered sequece of packets without gaps to multiple recipients
+  simultaneously.  PGM is a NAK protocol which means that a receiver
+  will send a unicast NAK to the sender whenever it detects loss of
+  data. Repair data will be sent to recover from data loss if it is
+  possible. The protocol also detects if a receiver has ended up in an
   unrecoverable state.
 
-[[OpenPGM]]
 OpenPGM - http://code.google.com/p/openpgm::
-  A well-known open source implementation of <<PGM, PGM>> specification. It supports most big platforms such as Windows and Linux and also has a beta version for Android.
+  A well-known open source implementation of PGM specification. It
+  supports most big platforms such as Windows and Linux and also has a
+  beta version for Android.
   
 ZeroMQ - http://www.zeromq.org::
-  An open source (LGPL) library that offers lightweight message based socket-like communication. It offers different kind of services where publish-subscribe 
-  and peer-to-peer seems to be most interesting for us. It handles message fragmentation and always delivers complete   
-  messages no matter what underlying transport protocol being used. ZeroMQ supports TCP and UDP multicast using <<OpenPGM, OpenPGM>>. It also supports inter-thread  
-  communication and on Linux it even has inter-process communication.
-  There is no broker or deamon that needs to run seperately and the main focus is performance and high throughput with minimal locking. It 
-  supports many platforms including Windows and Linux and has a quite big community. 
+  An open source (LGPL) library that offers lightweight message based
+  socket-like communication. It offers different kind of services
+  where publish-subscribe and peer-to-peer seems to be most
+  interesting for us. It handles message fragmentation and always
+  delivers complete messages no matter what underlying transport
+  protocol being used. ZeroMQ supports TCP and UDP multicast using
+  OpenPGM. It also supports inter-thread communication and on Linux it
+  even has inter-process communication.  There is no broker or deamon
+  that needs to run seperately and the main focus is performance and
+  high throughput with minimal locking. It supports many platforms
+  including Windows and Linux and has a quite big community.
 
 Bittorrent/P2P::
-  This is not a technology that we can use directly per se, but we can find useful algorithms and ideas in the enormous amounts of research that has been done in academia in this area.
+  This is not a technology that we can use directly per se, but we can
+  find useful algorithms and ideas in the enormous amounts of research
+  that has been done in academia in this area.
 
 The Spread Toolkit - http://www.spread.org/::
-  General message bus, with both singlecast and multicast with and without delivery and ordering guarantees. Requires one or several server processes to be executing. The open source license includes the following GPL incompatible "advertising clause", which prohibits us from selecting this toolkit while maintaining the license of Safir SDK Core:
+  General message bus, with both singlecast and multicast with and
+  without delivery and ordering guarantees. Requires one or several
+  server processes to be executing. The open source license includes
+  the following GPL incompatible "advertising clause", which prohibits
+  us from selecting this toolkit while maintaining the license of
+  Safir SDK Core:
 
   All advertising materials (including web pages) mentioning features or use of 
   this software, or software that uses this software, must display the following 
@@ -87,30 +111,42 @@ The Spread Toolkit - http://www.spread.org/::
   for use in the Spread toolkit. For more information about Spread see 
   http://www.spread.org"
 
-[[AMQP]]
 Advanced Message Queuing Protocol (AMQP) - http://www.amqp.org/about/what::
-  AMQP is an open standard for business message passing. The protocol relies on a central broker that all messages must pass through.
-  The central boker adds latency and effects the performance negative. Also scalability will suffer from the central broker design.
+  AMQP is an open standard for business message passing. The protocol
+  relies on a central broker that all messages must pass through.  The
+  central boker adds latency and affects the performance
+  negatively. Also scalability will suffer from the central broker
+  design.
 
-[[RabbitMQ]]
 RabbitMQ - http://www.rabbitmq.com::  
-  Along with <<Qpid, Apache Qpid>>, RabbitMQ is one of the major implementations of <<AMQP, AMQP>>.
+  Along with Apache Qpid, RabbitMQ is one of the major implementations of AMQP
   
-[[Qpid]]
 Apache Qpid - http://qpid.apache.org::
-  Along with <<RabbitMQ, RabbitMQ>>, Apache Qpid is one of the major implementations of <<AMQP, AMQP>>.
+  Along with RabbitMQ, Apache Qpid is one of the major implementations of AMQP.
 
-[[MassTransit]]
 MassTransit - http://masstransit-project.com/::
-  From the web site: ++MassTransit (MT) is a framework for creating distributed applications on the .Net platform. MT provides the ability to subscribe to messages by type and then connect different processing nodes though message subscriptions building a cohesive mesh of services.++ Introducing a dependency to a .Net framework from the core parts of the Dob, that is implemented in C++, is not what we want. Also, although the framework has some support for Mono, this
-  is not a natural choice when we have multiplatform requirements.   
+  From the web site: ++MassTransit (MT) is a framework for creating
+  distributed applications on the .Net platform. MT provides the
+  ability to subscribe to messages by type and then connect different
+  processing nodes though message subscriptions building a cohesive
+  mesh of services.++ Introducing a dependency to a .Net framework
+  from the core parts of the Dob, that is implemented in C++, is not
+  what we want. Also, although the framework has some support for
+  Mono, this is not a natural choice when we have multiplatform
+  requirements.
 
 NServiceBus - http://www.nservicebus.com/::
-  From the web site: ++Developer-friendly SOA for .Net++
-  This is not useful for Safir. See <<MassTransit, MassTransit>> 
+  From the web site: ++Developer-friendly SOA for .Net++.
+  This is not useful for Safir, see MassTransit.
 
-==== Conclusion
-We think that *ZeroMQ* will be a good choice to build the new communication mechanism on. The LGPL license, the small footprint as well as the message fragmentation handling in conjunction with the publish-subscribe pattern seems appealing. Especially EPGM, which is a NAK based multicast protocol encapsulated in UDP, is very well suited to our needs. Also the API concepts of ZeroMQ suit us fine and will not change any of our internal communication concepts or affect our external interfaces.
+===== Evaluation of ZeroMQ and OpenPGM
+We decided to evaluate *ZeroMQ* and *OpenPGM* since they appeared to be good choices to build the new communication mechanism on. The licenses, the small footprint as well as the message fragmentation handling in conjunction with the publish-subscribe pattern seemed appealing.
+
+After a rather long evaluation period we had to discard ZeroMQ, since it has no reliability guarantees, and no easy way of detecting when data has been lost. This is especially true when using OpenPGM as the underlying transport. Data can be discarded on the sender side or on the receiver side and it can be lost on the wire. Also, if the sender attempts to send more than ZeroMQ can handle data is discarded silently (see http://lists.zeromq.org/pipermail/zeromq-dev/2011-December/014721.html[] for more information).
+
+At this point we decided to look into using OpenPGM directly. Doing that would allow us to detect lost packages more easily and have a higher degree of control over the transport. After some trials we found a bug in it which caused a lost package, but more seriously than that we realized that controlling the transmission rates would be very difficult or even impossible. 
+
+Automatic detection of what transmission rate can be used in a particular configuration is something we judged to be close to impossible to design and implement in a timely fashion. The other alternative would be to use manual rate configuration, and to push this decision back to the user. The problem with this approach is that the configuration is very difficult to get right, and if it is not "exactly right" would make the system either very slow due to the rate being set too low, or very slow due to constant node resynchronizations after overload failures.
 
 There is quite a bit of functionality that we need to implement on top of ZeroMQ, such as providing a common picture of the system topology, and providing robustness when a node does not keep up with the pace of the rest of the system. ZeroMQ on its own will just discard messages when a peer does not respond. ZeroMQ does not support singlecast over UDP which means that if a singlecast mechanism is needed we have to implement it ourselves or we can decide that it's fine to send addressed data as multicast.
 
