@@ -81,7 +81,7 @@ Apache Thrift - http://thrift.apache.org/::
 *Protobuf* seems to be the sensible choice. Wider usage, better documentation and better maintenance/development.
 
 === Distribution mechanisms
-There are a lot of possible products and protocols available. They all have different characteristics and different levels of guarantees. Here is a list of some of the main ones that we have evaluated along with some of our thoughts on them. See <<discarded_solutions>> for TODO
+There are a lot of possible products and protocols available. They all have different characteristics and different levels of guarantees. Here is a list of some of the main ones that we have evaluated along with some of our thoughts on them. See <<discarded_solutions, Discarded Solutions>> for further details into the protocols and products that we have investigated more thoroughly.
 
 DDS - http://en.wikipedia.org/wiki/Data_Distribution_Service::
   There are several DDS implementations, both commercial and Open
@@ -89,17 +89,29 @@ DDS - http://en.wikipedia.org/wiki/Data_Distribution_Service::
   making it an inappropriate choice as an low level distribution
   mechanism for Safir.
 
-RTPS - todo::
-  laha
+RTPS - http://www.omg.org/spec/DDSI/Current::
+  The _Real-Time Publish-Subscribe_ (RTPS) protocol can be used for
+  one-to-many connectionless communication over transports such as UDP
+  Multicast. It is the wire protocol used for DDS interoperability,
+  and has its origins in industrial automation. The protocol is
+  extensible and quite flexible, and has support for both reliable and
+  best-effort communication. It is a candidate for use in the new
+  distribution implementation.
 
-ORTE - todo::
-  laha
+ORTE - http://orte.sourceforge.net/::
+  An open source implementation of the RTPS protocol. It does not
+  appear to be very active, and has slightly unclear licensing
+  situation (there is no clear summary of its license on the
+  website). This makes it unsuitable for our purposes.
 
-OpenSplice - asdf::
-  laha
-
-Reliable Multicast - asdf::
-  laha
+OpenSplice - http://www.prismtech.com/opensplice::
+  OpenSplice is an implementation of DDS, and is available under both
+  commercial and open source licenses. As stated above we do not want
+  or need a complete DDS, but it could have been possible to just use
+  OpenSplice's underlying RTPS implementation. Unfortunately it does
+  not appear to be easy to separate from the rest of the product, and
+  the interface documentation is severly lacking detail. It seems too
+  risky to attempt this reuse.
 
 Pragmatic General Multicast - http://en.wikipedia.org/wiki/Pragmatic_General_Multicast::
   PGM is a reliable multicast transport protocol that guarantees an
@@ -175,7 +187,8 @@ NServiceBus - http://www.nservicebus.com/::
   From the web site: ++Developer-friendly SOA for .Net++.
   This is not useful for Safir, see MassTransit.
 
-==== Discarded solutions
+[[discarded_solutions]]
+==== Discarded Solutions
 
 During the evaluation of these technologies we have come up with several possible designs and ways of using these technologies in our implementation. Here we describe some solutions that were discarded.
 
@@ -207,6 +220,12 @@ Automatic detection of what transmission rate can be used in a particular config
 
 Having an underlying communication mechanism that is difficult or even impossible to configure "right" while maintaining performance is a showstopper for the Dob, so any solution using OpenPGM either directly or through ZeroMQ was discarded.
 
+==== Conclusion
+After a detailed and thorough evaluation of ZeroMQ/OpenPGM we have realized that there are no existing products that fulfill our requirements without introducing big risks into our project. We have decided to settle on using the *RPTS* protocol or a subset thereof, and do the implementation ourselves.
+
+Note however that we will not be an interoperable DDS or anything like it. We may not even implement the whole of RTPS, instead we will specify a subset that we will implement and that covers our needs.
+
+An advantage of using at least this subset of RTPS is that we have a specification that we can rely on, instead of having to invent and document a protocol ourselves, and there are third party tools (e.g. Wireshark) we can use for debugging.
 
 == Requirements
 
@@ -271,22 +290,23 @@ From this RAW data System Picture has to produce an SP, that is identical on all
 An advantage of having the RAW and SP data available on all nodes is that it will be possible to view all of this data on each node (e.g. in Dobexplorer), instead of having to check on each node.
 
 ==== Transportation of SP and RAW within a node
-Since Control, dose_main and Dobexplorer are separate executables the SP and RAW data has to be transported between them. This will be achieved using local ZeroMQ PUB/SUB sockets, to avoid use of shared memory or platform specific IPC.
+Since Control, dose_main and Dobexplorer are separate executables the SP and RAW data has to be transported between them. This will be achieved using shared memory.
 
-So the System Picture in dose_main will publish its RAW data, and the System Picture in Control will publish its RAW and SP data.
+So the System Picture in dose_main will publish its RAW data, and the System Picture in Control will publish its RAW and SP data through shared memory.
 
 [[sp-raw-pub-sub]]
 .System Picture data
 image::sp_raw_pub_sub.png["System Picture Pub/Sub", width=401, link="sp_raw_pub_sub.png"]
 
-All of these ZeroMQ sockets will use TCP/IP communication over the loopback interface (127.0.0.1), to make sure that it is computer-local.
-
 ==== Exclusion algorithm
 
-We have not decided on an algorithm yet, but it will most likely be based on whether a node is "slowing down" the other nodes to an unacceptable degree. A node will most likely have a few chances to recover from temporary glitches (by getting a pool distribution).
+We have not decided on an algorithm yet, but it will most likely be based on whether a node is "slowing down" the other nodes to an unacceptable degree.
 
 === Communication
 Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to System Picture who decides which nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
+
+////
+TODO: rewrite all this
 
 Only complete messages shall be delivered, and messages shall be delivered in correct order, i.e the order they were sent. Actually these requirements are already handled by ZeroMQ. Communication must also be able to detect when a message is lost and report it as a failure.
 
@@ -330,22 +350,31 @@ We would also like to use ZeroMQs TCP socket implementation for communication wi
 
 An issue for us is that there is no ZeroMQ support for unicast UDP. If we can't stick with the existing features of ZeroMQ and have to implement some functionality on our own, lots of the nice stuff in ZeroMQ must be re-implemented anyway.
 
-== Use cases
-The Dob supports three kinds of mechanism: entities, messages and requests (service requests and entity requests). Here we try to show how each of these are realized on the proposed design. Depending on if TCP or multicast is used for distribution the behavious varies. Since TCP has built in delivery guarantee and flow control in all situations, the main focus in this section will be on multicast using EPGM.
+////
+
+== Dob facilities on top of Communication
+The Dob supports three kinds of mechanism: entities, messages and requests (service requests and entity requests). Here we try to show how each of these are realized on the proposed design.
 
 [[uc_messages]]
 === Messages
 In the current Dob implementation there are no guarantees that messages are delivered to all subscribers, but if a message is sent on an acked priority level the Dob guarantees that the message will arrive to the node. But after the message has arrived to the node there are no guarantees that it is delivered to all subscribers (if a subscriber's in queue is full the message will not be delivered to that subscriber).
 
+TODO: write about how messages will behave in new implementation
+
+////
 The new implementation will always send messages on NFC sockets, often with a smallish recovery interval. To end users this means no logical changes from the current implementation and shall be thought of as exactly the same, but under the hood it will remove the ability to get the weird "delivery-to-node-but-not-to-subscriber-guarantee".
 
 Messages need to be sent on NFC sockets, since if we sent them on FC sockets a node may be excluded due to a lost message.
+////
 
 There is a separate article which discusses adding a facility for messages with some kind of guarantees, see the http://safir.sourceforge.net[Safir homepage] for more info.
 
 === Entities
-In the first implementation, entities will always be sent using FC. If a need arises, we will investigate further if transient entity types can be configured to use NFC sockets instead.
+TODO: write about how entities will behave in new implementation. Will we provide unacked entities?
 
 === Requests
-Requests are always addressed to one receiver and a response is always delivered back to the requestor. This pattern does not conform very well with the ZeroMQ pub-sub pattern. If we are going to send requests peer-to-peer using ZeroMQ we would have to use TCP (ZeroMQ does not support UDP unicast), and that would imply lots of open ports and TCP connections just to handle requests which at a first glance doesn't feel to be a good solution. We will instead make a first implementation using ZeroMQ pub-sub sockets even for requests and investigate what effects it will have on the overall performance. We think that requests are not a significantly big part of the total Dob-traffic and we make an assumption that the overhead generated by this approach can be neglected. If it turns out that the assumption was wrong, we have to consider implement our own UDP unicast mechanism later.
+Requests are always addressed to one receiver and a response is always delivered back to the requestor.
+
+TODO: write about how requests will be implemented.
+
 
