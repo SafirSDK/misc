@@ -204,9 +204,9 @@ ZeroMQ and the http://zguide.zeromq.org/page:all#Chapter-Advanced-Publish-Subscr
 .Communication configurations: To the left a pure multicast system. To the right we have added one TCP node.
 image::com_pgm.png["Communication configurations", width=401, link="com_pgm.png"]
 
-ZeroMQ over EPGM is a NAK based protocol, which essentially makes it impossible to know if a sender is transmitting data at a rate which all receivers can't keep up with. To allow us to use this we decided to try to implement some kind if flow control on top of the ZeroMQ EPGM sockets.
+ZeroMQ over EPGM is a NAK based protocol, which essentially makes it impossible to know if a sender is transmitting data at a rate which all receivers can't keep up with. To allow us to use this we decided to try to implement some kind of flow control on top of the ZeroMQ EPGM sockets.
 
-A flow controlled socket has a maximum send rate, defined by the node type, that a receiver must obey. If a receiver starts to send NAK's the sender will send RDATA if PGM is used, but if the receiver continues to lose messages, the receiver will eventually get an unrecoverable data loss which will be detected and reported by Communication. This may lead to a pool resynchronization or the node being excluded from the system. An unrecoverable data loss can only be repaired by a complete pool resynchronization a node would get a number of chances before exclusion.
+A flow controlled socket has a maximum send rate, defined by the node type, that a receiver must obey. If a receiver starts to send NAK's the sender will send RDATA if PGM is used, but if the receiver continues to lose messages, the receiver will eventually get an unrecoverable data loss which will be detected and reported by Communication. This may lead to a pool resynchronization or the node being excluded from the system. An unrecoverable data loss can only be repaired by a complete pool resynchronization, and if a node is constantly demanding pool resynchs it would be excluded from the system.
 
 After writing a few test programs and more evaluation we had to discard ZeroMQ, since it has no reliability guarantees, and no easy way of detecting when data has been lost. This is especially true when using EPGM as the underlying transport. Data can be discarded on the sender side or on the receiver side and it can be lost on the wire. Also, if the sender attempts to send more than ZeroMQ can handle data is discarded silently (see http://lists.zeromq.org/pipermail/zeromq-dev/2011-December/014721.html[] for more information).
 
@@ -221,7 +221,7 @@ Automatic detection of what transmission rate can be used in a particular config
 Having an underlying communication mechanism that is difficult or even impossible to configure "right" while maintaining performance is a showstopper for the Dob, so any solution using OpenPGM either directly or through ZeroMQ was discarded.
 
 ==== Conclusion
-After a detailed and thorough evaluation of ZeroMQ/OpenPGM we have realized that there are no existing products that fulfill our requirements without introducing big risks into our project. We have decided to settle on using the *RPTS* protocol or a subset thereof, and do the implementation ourselves.
+After a detailed and thorough evaluation of ZeroMQ/OpenPGM we have realized that there are no existing products that fulfill our requirements without introducing big risks into our project. We have decided to settle on using the *RTPS* protocol or a subset thereof, and do the implementation ourselves.
 
 Note however that we will not be an interoperable DDS or anything like it. We may not even implement the whole of RTPS, instead we will specify a subset that we will implement and that covers our needs.
 
@@ -276,7 +276,10 @@ This component will be based on the existing Snac component, with a few notable 
    - The low level part does most of the work, but does 'not' depend on Dose or Dots. This means that low level part will not have the Dob shared memories loaded, and can not be affected by a corrupt shared memory. 
    - The high level part provides Dob objects that behave the same way that the current Snac objects do.
  * Current Master and Slave concepts will most likely be kept.
-
+ * We will create a GUI that can be used to control the system and view its status.
+ * We will add a facility which makes it possible for users to inject project-specific information into the Snac objects.
+   - This makes it possible for a project to collect all system information in one structure.
+   - The GUI mentioned above can display project specific information.
 A first iteration of Control will probably just launch Safir SDK Core and then launch the existing Snac.
 
 TODO: should we use Boost.Process, not yet part of Boost. http://www.highscore.de/boost/process0.5/
