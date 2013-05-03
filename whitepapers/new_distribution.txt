@@ -392,3 +392,4 @@ TODO: write about how requests will be implemented.
  * Entities are always acked (unacked entities is an optimization that can be added later)
  * Messages are unacked
  * A "castrato node" must be able to live without all dou-files (object in object, etc). Filtering is done on receiver side.
+ * To check: How do dirtysubs queue grow?
