@@ -381,3 +381,14 @@ Requests are always addressed to one receiver and a response is always delivered
 TODO: write about how requests will be implemented.
 
 
+== Design requirements
+ * All nodes must be able to send and receive both unicast and multicast if there is one unicast node
+ * A unicast node can only be reached by unicast
+ * We do want both unicast and multicast
+ * A type is either Acked or not, never both
+ * We have to guarantee that important data gets through, regardless of how much other data there is
+ * DC and persistence is incompatible (or very difficult)
+ * No priorities on socket level (can be added in dose_main by round-robin or something like that)
+ * Entities are always acked (unacked entities is an optimization that can be added later)
+ * Messages are unacked
+ * A "castrato node" must be able to live without all dou-files (object in object, etc). Filtering is done on receiver side.
