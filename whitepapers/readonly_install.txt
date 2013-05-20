@@ -1,0 +1,21 @@
+// -*- coding: utf-8 -*-
+:encoding: UTF-8
+
+Readonly installation of Safir SDK Core
+=======================================
+Lars Hagström
+17 May 2013
+
+== Preface
+TODO: Describe problem / current situation
+
+ * dots_generated (runtime and sdk)
+ * lock files
+ * log files
+ * crash_dumps
+ * dope files
+ * shared memory files
+
+== Dots Generated
+
+The goal is to make the building of the separate dots_generated dlls (or shared libraries, but I'll write dll, since it is shorter) into more like building a normal dll. Currently all dlls are rebuilt every time dobmake is run, which is a waste of time for most of the dou files.
