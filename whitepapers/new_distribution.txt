@@ -236,31 +236,33 @@ This section describes the design of the new distribution mechanism and the rela
 
 === Overview
 
-In the design for the new communication mechanism we have strived to layer the functionality as much as possible. <<block-diagram, Below>> is a layer diagram that shows the new parts (highlighted) of Safir SDK Core.
+In the design for the new communication mechanism we have strived to layer the functionality as much as possible. <<block-diagram, Below>> is block diagram that shows the new parts (highlighted) of Safir SDK Core.
 
 [[block-diagram]]
 .Block diagram ("new" parts highlighted)
-image::block-diagram.png["Block Diagram", width=410, link="block-diagram.png"]
+image::block-diagram.png["Block Diagram", width=440, link="block-diagram.png"]
 
 The responsibilities of the new parts can be summarized as follows:
 
-Communication::
-  - Provides the low level node to node communication.
-  - Discovery of new nodes.
-  - Filters received data, to ensure that only data from nodes that are part of the system is handled.
-  - Abstracts addressing, so that other parts of the system does not have to worry about IP addresses and port numbers.
+Distribution::
+  Consists of two parts:
+  * Communication::
+        - Provides the low level node to node communication.
+        - Discovery of new nodes.
+        - Filters received data, to ensure that only data from nodes that are part of the system is handled.
+        - Abstracts addressing, so that other parts of the system does not have to worry about IP addresses and port numbers.
 
-System Picture::
-  - Decides which nodes are allowed to be part of the system.
-  - Data routing decisions
-  - Sync between nodes.
+  * System Picture::
+        - Decides which nodes are allowed to be part of the system.
+        - Data routing decisions
+        - Sync between nodes.
 
-Control LowLevel::
+Control::
   - Starts Safir SDK Core (dose_main, dope_main etc)
   - Starts user applications
   - Decides when/if Dobs on different nodes are allowed to communicate.
 
-Control HighLevel::
+Status::
   - Provides Dob objects of the application and group statuses of Control LowLevel.
   - Allows control of applications and groups through the Dob objects.
 
