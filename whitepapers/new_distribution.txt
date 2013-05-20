@@ -240,7 +240,7 @@ In the design for the new communication mechanism we have strived to layer the f
 
 [[block-diagram]]
 .Block diagram ("new" parts highlighted)
-image::block-diagram.png["Block Diagram", width=232, link="block-diagram.png"]
+image::block-diagram.png["Block Diagram", width=410, link="block-diagram.png"]
 
 The responsibilities of the new parts can be summarized as follows:
 
