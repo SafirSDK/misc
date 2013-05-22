@@ -307,6 +307,9 @@ image::sp_raw_pub_sub.png["System Picture Pub/Sub", width=401, link="sp_raw_pub_
 
 We have not decided on an algorithm yet, but it will most likely be based on whether a node is "slowing down" the other nodes to an unacceptable degree.
 
+
+TODO: Write about the list of node-id:s that can grow very big, and that we want to send cleanup decisions "up" to user or project.
+
 === Communication
 Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to System Picture who decides which nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
 
@@ -395,3 +398,4 @@ TODO: write about how requests will be implemented.
  * Messages are unacked
  * A "castrato node" must be able to live without all dou-files (object in object, etc). Filtering is done on receiver side.
  * To check: How do dirtysubs queue grow?
+
