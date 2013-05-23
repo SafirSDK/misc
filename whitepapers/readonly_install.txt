@@ -11,10 +11,16 @@ TODO: Describe problem / current situation
 
  * dots_generated (runtime and sdk)
  * lock files
+   - should go in /var/lock on linux
+   - where on windows?
  * log files
+   - syslog solves this problem for all logs except lll-logs
+   - what to do with lll?
  * crash_dumps
  * dope files
+   - Where do they go /var somewhere?
  * shared memory files
+   - Are they a problem at all?
 
 == Dots Generated
 
@@ -23,17 +29,21 @@ The goal is to make the building of the separate dots_generated dlls (or shared 
 
 === Things that need doing
 
-dots_v must read dou files from multiple places::
-       During generation of dll B dots_v may have to check dou files from dll A if there are dependencies.
 
 dots_kernel must read dou files from multiple places::
        Dou/dom files need to be stored in multiple places, so we need to read from all of them.
 
-Build of dlls must be able to specify dependencies::
-      Each dll build has to specify its dependencies, for dots_v to pick up, and to be able to link properly.
+We need to work out how parameter override should work::
+       A user must be able to override a parameter in a read-only file, so dots_kernel needs to have rules for this.
 
 dots_cpp (or equivalent) has to load all dots_generated dlls::
       All exes need to have all dlls loaded, regardless of whether they use them (explicitly) or not. They may use them indirectly by receiving data of a derived type (e.g. they subscribe to ParentType but receive a ChildType which is located in another dll).
+
+Build of dlls must be able to specify dependencies::
+      Each dll build has to specify its dependencies, for dots_v to pick up, and to be able to link properly.
+
+dots_v must read dou files from multiple places::
+       During generation of dll B dots_v may have to check dou files from dll A if there are dependencies.
 
 === Things to consider
 
