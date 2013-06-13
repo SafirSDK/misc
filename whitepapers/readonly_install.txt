@@ -8,30 +8,74 @@ Lars Hagström
 
 == Preface
 
-Some of the things that need to be considered:
+Currently Safir SDK puts all of its files into two directories, defined by SAFIR_RUNTIME and SAFIR_SDK environment variables. Some of the files and directories in there need to be writeable for it to be possible to run the system. And some directories/files need to be changed to add types into the system during development.
 
- * dots_generated (runtime and sdk)
+This is not ideal, since it really requires a project to put all their data into the Safir structure. It would be better to be able to separate the SDK stuff from the project stuff, so that the SDK can be installed as readonly and "used" rather than "changed" to build features on top of it.
+
+=== Issues
+
+Some of the things that need to be considered and changed:
+
+ * dots_generated (runtime and sdk) dlls and dou/dom files
  * lock files
-   - should go in /var/lock on linux
-   - where on windows?
+   - should go in /var/lock/safir on linux
+   - where on windows? c:\ProgramData\safir?
  * log files
    - syslog solves this problem for all logs except lll-logs
-   - what to do with lll?
+   - what to do with lll? Maybe we should make them go through syslog, and just keep the filtering on the sender side (as it is today).
  * crash_dumps
+   - Default should maybe be /tmp for linux? Gets cleared on reboot, which means we won't fill disk...
+   - %TEMP% on windows?
+   - Should be possible to configure where the dumps go.
  * dope files
-   - Where do they go? /var/ somewhere?
+   - /var/ somewhere on linux?
+   - ProgramData on windows?
  * shared memory files
    - Are they a problem at all?
+   - They go somewhere under ProgramData, currently.
+ * SAFIR_* environment variables
+   - These are used by our current users for knowing where to put their stuff. If we were to use them but change their meaning in some way it may break user code. Better to stop using them altogether and rely on some other mechanism.
 
-TODO: Describe problem / current situation
+Another issue that we should consider is whether we should make any changes to the way we behave w.r.t different users on the computer. Currently we mostly ignore the issue...
+
+.The goal:
+Safir SDK Core should be possible to install as readonly in an
+OS native way (msi, rpm, deb, etc), and users should be able to use
+the SDK without having to modify anything but clearly defined config
+files.
+
+
+== File/Directory Locations
+We should have a central ini-file that specifies the paths used by the rest of the system. 
+
+The first problem is how to find this file... It is probably a good idea to stop using the SAFIR_* environment variables for this, since they're not really a native mechanism for determining where a program is installed.
+
+[NOTE]
+================
+Where it makes sense, the OS:s binary load paths (e.g. PATH on Windows for dlls and exes) should be used. The idea is to use the native mechanisms as much as possible!
+================
+
+=== Linux
+  1. /etc/safir/locations.ini
+  2. $HOME/.config/safir/locations.ini
+
+The first found configuration file is the one that gets used. The reason for allowing both a system-wide and user-only config file is that it should be possible for a user to install the SDK on a Linux computer without having root access (i.e. just install it in his/her home directory)
+
+=== Windows
+Windows is not quite as easy as Linux. The "windows way" would be to use registry, but that http://rwmj.wordpress.com/2010/02/18/why-the-windows-registry-sucks-technically/[isn't] always good.
+
+Some information on windows paths can be found http://blogs.msdn.com/b/patricka/archive/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions.aspx[here].
+
+%ProgramData%\safir\locations.ini may not be a good idea, unless we have a configuration editor, since that folder is usually hidden (although config editor could just be a shortcut to notepad...)
+
+I don't know if system/user installation distinction makes sense on Windows. Is it possible to install an MSI as "just a user"?
+
 
 == Dots Generated
 
-The goal is to make the building of the separate dots_generated dlls (or shared libraries, but I'll write dll, since it is shorter) into more like building a normal dll. Currently all dlls are rebuilt every time dobmake is run, which is a waste of time for most of the dou files.
-
+The goal is to make the building of the separate dots_generated dlls (or shared libraries, but I'll write dll, since it is shorter) into more like building a normal dll. Currently all dlls are rebuilt every time dobmake is run, which is a waste of time for most of the dou files. It also means that there is no way to separate the stuff that belongs to the SDK from the project specific/user stuff, instead all is built at the same time, into one set of dlls.
 
 === Things that need doing
-
 
 dots_kernel must read dou files from multiple places::
        Dou/dom files need to be stored in multiple places, so we need to read from all of them.
@@ -50,7 +94,7 @@ dots_v must read dou files from multiple places::
 
 === Things to consider
 
-Each "dll" needs to be built from one directory (with dou and dom files in directly or in subdirectories). 
+Each dll needs to be built from one directory (with dou and dom files in directly or in subdirectories). 
 
 Maybe there should be a config file in each directory that specifies dependencies. This might be a CMakeLists.txt file that imports/uses some cmake files that we provide.
 
@@ -85,7 +129,7 @@ default_dou_directory=/usr/share/safir/
 
 [Core]
 ;dou_directory will be set to /usr/share/safir/Core
-;cpp library will be loaded from PATH
+;cpp library will be loaded from PATH on windows and ld config on Linux
 ;ada ???
 ;java ???
 ;dotnet loaded from GAC?
