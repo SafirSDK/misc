@@ -7,7 +7,8 @@ Lars Hagström
 17 May 2013
 
 == Preface
-TODO: Describe problem / current situation
+
+Some of the things that need to be considered:
 
  * dots_generated (runtime and sdk)
  * lock files
@@ -18,9 +19,11 @@ TODO: Describe problem / current situation
    - what to do with lll?
  * crash_dumps
  * dope files
-   - Where do they go /var somewhere?
+   - Where do they go? /var/ somewhere?
  * shared memory files
    - Are they a problem at all?
+
+TODO: Describe problem / current situation
 
 == Dots Generated
 
@@ -80,19 +83,19 @@ load_user_dots_ini=1   ;causes ~/.config/safir/dots.ini to
 ;default base directory for dou/dom files, library name will be appended.
 default_dou_directory=/usr/share/safir/
 
-;default place to look for the dlls/libraries. The names are inferred
-;from the section name. e.g. "libdots_generated-Core-cpp.so"
-default_library_location=/usr/lib/
-
-
 [Core]
 ;dou_directory will be set to /usr/share/safir/Core
-;library_location will be set to /usr/lib/
+;cpp library will be loaded from PATH
+;ada ???
+;java ???
+;dotnet loaded from GAC?
 dependencies=None
 
 [DoseTest]
+#Here we set directories explicitly
+#what happens with dotnet ada and java?
 dou_directory=/var/lib/safir/DoseTest
-library_location=/usr/lib/
+library_location=/usr/lib/ 
 dependencies=Core
 
 [DotsTest]
@@ -101,6 +104,4 @@ library_location=/usr/lib/
 dependencies=None
 ------------------------------------------
 
-Should there be a way of saying that "look for the dll on the PATH"?
-
-Should we really call them dots_generated?! Can we think of some slightly less cryptic name?
+Rename the dlls from dots_generated to safir_generated. We want to reduce the number of cryptic acronyms.
