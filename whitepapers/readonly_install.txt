@@ -45,10 +45,17 @@ the SDK without having to modify anything but clearly defined config
 files.
 
 
-== File/Directory Locations
-We should have a central ini-file that specifies the paths used by the rest of the system. 
+== Configuration file location
 
-The first problem is how to find this file... It is probably a good idea to stop using the SAFIR_* environment variables for this, since they're not really a native mechanism for determining where a program is installed.
+There are a few configuration files that we need to be able to find to use and start the system:
+
+ * logging.ini - contains logging settings
+ * locations.ini - contains locations of stuff we need, e.g. lock file and crash dump directories.
+ * dots.ini - contains dots configuration (see below).
+
+These should all be in one configuration file directory.
+
+The first problem is how to find this directory... It is probably a good idea to stop using the SAFIR_* environment variables for this, since they're not really a native mechanism for determining where a program is installed.
 
 [NOTE]
 ================
@@ -56,17 +63,18 @@ Where it makes sense, the OS:s binary load paths (e.g. PATH on Windows for dlls 
 ================
 
 === Linux
-  1. /etc/safir/locations.ini
-  2. $HOME/.config/safir/locations.ini
+The system should look for config files in these locations:
+  1. /etc/safir/
+  2. $HOME/.config/safir/
 
-The first found configuration file is the one that gets used. The reason for allowing both a system-wide and user-only config file is that it should be possible for a user to install the SDK on a Linux computer without having root access (i.e. just install it in his/her home directory)
+The first found configuration file is the one that gets used. The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a Linux computer without having root access (i.e. just install it in his/her home directory)
 
 === Windows
 Windows is not quite as easy as Linux. The "windows way" would be to use registry, but that http://rwmj.wordpress.com/2010/02/18/why-the-windows-registry-sucks-technically/[isn't] always good.
 
 Some information on windows paths can be found http://blogs.msdn.com/b/patricka/archive/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions.aspx[here].
 
-%ProgramData%\safir\locations.ini may not be a good idea, unless we have a configuration editor, since that folder is usually hidden (although config editor could just be a shortcut to notepad...)
+%ProgramData%\safir\config\ may not be a good idea, unless we have a configuration editor, since that folder is usually hidden (although config editor could just be a shortcut to notepad...)
 
 I don't know if system/user installation distinction makes sense on Windows. Is it possible to install an MSI as "just a user"?
 
@@ -119,6 +127,7 @@ At build time we need to specify our dependencies::
 
 
 === dots.ini file format
+(We should use a better name than dots.ini.)
 
 ------------------------------------------
 load_user_dots_ini=1   ;causes ~/.config/safir/dots.ini to 
