@@ -100,7 +100,7 @@ Build of dlls must be able to specify dependencies::
 dots_v must read dou files from multiple places::
        During generation of dll B dots_v may have to check dou files from dll A if there are dependencies.
 
-=== Things to consider
+=== Things to consider / Some random thoughts
 
 Each dll needs to be built from one directory (with dou and dom files in directly or in subdirectories). 
 
