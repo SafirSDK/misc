@@ -18,7 +18,7 @@ Some of the things that need to be considered and changed:
 
  * dots_generated (runtime and sdk) dlls and dou/dom files
  * lock files
-   - should go in /var/lock/safir on linux
+   - should go in /var/lock/safir_sdk_core on linux
    - where on windows? c:\ProgramData\safir?
  * log files
    - syslog solves this problem for all logs except lll-logs
@@ -51,33 +51,35 @@ There are a few configuration files that we need to be able to find to use and s
 
  * logging.ini - contains logging settings
  * locations.ini - contains locations of stuff we need, e.g. lock file and crash dump directories.
- * dots.ini - contains dots configuration (see below).
+ * typesystem.ini - contains typesystem configuration (see below).
 
-These should all be in one configuration file directory.
+These should all be in one configuration file directory. The locations that we look for this config directory need to be hard coded, but should be as OS-native as possible.
 
-The first problem is how to find this directory... It is probably a good idea to stop using the SAFIR_* environment variables for this, since they're not really a native mechanism for determining where a program is installed.
+Linux and Windows have different native places to put configuration files (the following locations are checked in order, and the first one found is used):
 
-[NOTE]
-================
-Where it makes sense, the OS:s binary load paths (e.g. PATH on Windows for dlls and exes) should be used. The idea is to use the native mechanisms as much as possible!
-================
+*Linux*::
 
-=== Linux
-The system should look for config files in these locations:
-  1. /etc/safir/
-  2. $HOME/.config/safir/
+  1. /etc/safir_sdk_core/ - system wide configuration
+  2. _HOME_/.config/safir_sdk_core/ - user configuration
+  3. $SAFIR_RUNTIME/data/core_config/
 
-The first found configuration file is the one that gets used. The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a Linux computer without having root access (i.e. just install it in his/her home directory)
++
+See http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html[the basedir-spec of freedesktop.org] for info on how to find user .config dir.
 
-=== Windows
-Windows is not quite as easy as Linux. The "windows way" would be to use registry, but that http://rwmj.wordpress.com/2010/02/18/why-the-windows-registry-sucks-technically/[isn't] always good.
+*Windows*::
 
-Some information on windows paths can be found http://blogs.msdn.com/b/patricka/archive/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions.aspx[here].
+  1. _CSIDL_COMMON_APPDATA_\safir_sdk_core\config\ - system wide configuration
+  2. _CSIDL_LOCAL_APPDATA_\safir_sdk_core\config\ - user configuration
+  3. %SAFIR_RUNTIME%\data\core_config\
 
-%ProgramData%\safir\config\ may not be a good idea, unless we have a configuration editor, since that folder is usually hidden (although config editor could just be a shortcut to notepad...)
++
+See these two links for information about windows paths that also explain the CSIDL stuff: "http://blogs.msdn.com/b/cjacks/archive/2008/02/05/where-should-i-write-program-data-instead-of-program-files.aspx[Where Should I Write Program Data...?]" and "http://blogs.msdn.com/b/patricka/archive/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions.aspx[Where Should I Store my Data and Config...?]".
++
+One problem is that these config directories are usually hidden, but we could provide a simple configuration editor in our install package (e.g. a shortcut to Notepad...)
 
-I don't know if system/user installation distinction makes sense on Windows. Is it possible to install an MSI as "just a user"?
+The configuration under $SAFIR_RUNTIME is a stopgap measure, and will be probably be removed once we reach the full goal of having the SDK as an installable package. Before we've reached that goal it makes it easier for customers to have the configuration in the runtime directory, but when we're there we want the configuration to be found where the native applications would store it.
 
+The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a computer without having root/admin access (i.e. just install it in his/her home directory). 
 
 == Dots Generated
 
@@ -109,7 +111,7 @@ Maybe there should be a config file in each directory that specifies dependencie
 How do we specify which directories need to be loaded by dots_kernel at startup?::
 
     * Environment variable?
-    * Or maybe a config file /etc/safir/dots.ini on Linux, that specifies which dlls and their corresponding dou/dom-directories should be loaded at startup.
+    * Or maybe a config file /etc/safir/typesystem.ini on Linux, that specifies which dlls and their corresponding dou/dom-directories should be loaded at startup.
       - This file is only editable by root, but maybe that is a good idea? How do we want this to work? 
       - Or maybe it should be a config file in $HOME? 
       - Or maybe both? Have the /etc-file specify whether we should look for a user-config file as well might be the best solution.
@@ -126,11 +128,11 @@ At build time we need to specify our dependencies::
 
 
 
-=== dots.ini file format
-(We should use a better name than dots.ini.)
+=== typesystem.ini file format
+(We should use a better name than typesystem.ini.)
 
 ------------------------------------------
-load_user_dots_ini=1   ;causes ~/.config/safir/dots.ini to 
+load_user_dots_ini=1   ;causes ~/.config/safir_sdk_core/typesystem.ini to 
                        ;be loaded after this file
 
 ;default base directory for dou/dom files, library name will be appended.
@@ -158,3 +160,9 @@ dependencies=None
 ------------------------------------------
 
 Rename the dlls from dots_generated to safir_generated. We want to reduce the number of cryptic acronyms.
+
+
+[NOTE]
+================
+Where it makes sense, the OS:s binary load paths (e.g. PATH on Windows for dlls and exes) should be used. The idea is to use the native mechanisms as much as possible! So avoid having any of the ini files pointing to full paths of, instead just give a name and use native mechanisms for finding the full path.
+================
