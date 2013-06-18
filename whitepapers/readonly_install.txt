@@ -4,7 +4,7 @@
 Readonly installation of Safir SDK Core
 =======================================
 Lars Hagström
-17 May 2013
+18 Jun 2013
 
 == Preface
 
@@ -12,29 +12,42 @@ Currently Safir SDK puts all of its files into two directories, defined by SAFIR
 
 This is not ideal, since it really requires a project to put all their data into the Safir structure. It would be better to be able to separate the SDK stuff from the project stuff, so that the SDK can be installed as readonly and "used" rather than "changed" to build features on top of it.
 
+The runtime and sdk directories together are sometimes referred to as a _tower_ for historic reasons. But this notion is something that we want to move away from.
+
+
+*Vill vi fortfarande kunna ha allt samlat i en katalog som man kan flytta på enkelt? Eller är MSI/deb/rpm det enda vi vill stödja?*
+
 === Issues
 
 Some of the things that need to be considered and changed:
 
- * dots_generated (runtime and sdk) dlls and dou/dom files
- * lock files
-   - should go in /var/lock/safir_sdk_core on linux
-   - where on windows? c:\ProgramData\safir?
- * log files
-   - syslog solves this problem for all logs except lll-logs
-   - what to do with lll? Maybe we should make them go through syslog, and just keep the filtering on the sender side (as it is today).
- * crash_dumps
-   - Default should maybe be /tmp for linux? Gets cleared on reboot, which means we won't fill disk...
-   - %TEMP% on windows?
-   - Should be possible to configure where the dumps go.
- * dope files
-   - /var/ somewhere on linux?
-   - ProgramData on windows?
- * shared memory files
-   - Are they a problem at all?
-   - They go somewhere under ProgramData, currently.
- * SAFIR_* environment variables
-   - These are used by our current users for knowing where to put their stuff. If we were to use them but change their meaning in some way it may break user code. Better to stop using them altogether and rely on some other mechanism.
+dots_generated dou/dom files in runtime::
+Need to be writeable to allow changes in system configuration in an installed product.
+
+dots_generated dou/dom files in sdk and dlls in runtime::
+These need to be writeable by a developer so that new types can be added and dobmake.py run
+
+lock files - currently in runtime/data/text/lluf::
+Need to be writeable to allow lock files to be used
+
+low level log files - currently in runtime/log::
+ - syslog solves this problem for all logs except lll-logs
+ - what to do with lll? Maybe we should make them go through syslog, and just keep the filtering on the sender side (as it is today).
+
+crash_dumps::
+ - Default should maybe be /tmp for linux? Gets cleared on reboot, which means we won't fill disk...
+ - %TEMP% on windows?
+ - Should be possible to configure where the dumps go.
+ - cyclic clearing? done in swre_logger, currently
+
+dope files::
+Already configurable in dou-parameter. Default should be changed, though.
+
+shared memory files::
+These are controlled by Boost.Interprocess, and we don't really have much control over them.
+
+SAFIR_* environment variables::
+These are used by our current users for knowing where to put their stuff. If we were to use them but change their meaning in some way it may break user code. Better to stop using them altogether and rely on some other mechanism.
 
 Another issue that we should consider is whether we should make any changes to the way we behave w.r.t different users on the computer. Currently we mostly ignore the issue...
 
