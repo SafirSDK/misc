@@ -97,57 +97,40 @@ The reason for allowing both a system-wide and user-only config files is that it
 
 == Dots Generated
 
-The goal is to make the building of the separate dots_generated dlls (or shared libraries, but I'll write dll, since it is shorter) into more like building a normal dll. Currently all dlls are rebuilt every time dobmake is run, which is a waste of time for most of the dou files. It also means that there is no way to separate the stuff that belongs to the SDK from the project specific/user stuff, instead all is built at the same time, into one set of dlls.
+The goal is to make the building of the separate dots_generated dlls into more like building a normal dll. Currently all dlls are rebuilt every time dobmake is run, which is a waste of time for most of the dou files. It also means that there is no way to separate the stuff that belongs to the SDK from the project specific/user stuff, instead all is built at the same time, into one set of dlls.
+
+Note that when we say "dll" in the above paragraph we really mean _dll_ or _shared library_ for C++ and Ada, _jar_ for Java and _assembly_ for C#. For the purposes of this section these terms are really interchangeable, and any changes done will need to apply to all of the dots_generated functionality for all language interfaces.
 
 === Things that need doing
 
 dots_kernel must read dou files from multiple places::
-       Dou/dom files need to be stored in multiple places, so we need to read from all of them.
+Dou/dom files need to be stored in multiple places, so we need to read from all of them.
 
 We need to work out how parameter override should work::
-       A user must be able to override a parameter in a read-only file, so dots_kernel needs to have rules for this.
+A user must be able to override a parameter in a read-only file, so dots_kernel needs to have rules for this.
 
-dots_cpp (or equivalent) has to load all dots_generated dlls::
-      All exes need to have all dlls loaded, regardless of whether they use them (explicitly) or not. They may use them indirectly by receiving data of a derived type (e.g. they subscribe to ParentType but receive a ChildType which is located in another dll).
+dots language bindings (e.g. dots_cpp) has to load all dots_generated dlls::
+All exes need to have all dlls loaded, regardless of whether they use them (explicitly) or not. They may use them indirectly by receiving data of a derived type (e.g. they subscribe to ParentType but receive a ChildType which is located in another dll).
 
 Build of dlls must be able to specify dependencies::
-      Each dll build has to specify its dependencies, for dots_v to pick up, and to be able to link properly.
+Each dll build has to specify its dependencies, for dots_v to pick up, and to be able to link properly.
 
 dots_v must read dou files from multiple places::
-       During generation of dll B dots_v may have to check dou files from dll A if there are dependencies.
+During generation of dll B dots_v may have to check dou files from dll A if there are dependencies.
 
 === Things to consider / Some random thoughts
 
 Each dll needs to be built from one directory (with dou and dom files in directly or in subdirectories). 
 
-Maybe there should be a config file in each directory that specifies dependencies. This might be a CMakeLists.txt file that imports/uses some cmake files that we provide.
+Each directory needs to contain a config file that specifies dependencies. This might be a CMakeLists.txt file that imports/uses some cmake files that we provide.
 
-How do we specify which directories need to be loaded by dots_kernel at startup?::
-
-    * Environment variable?
-    * Or maybe a config file /etc/safir/typesystem.ini on Linux, that specifies which dlls and their corresponding dou/dom-directories should be loaded at startup.
-      - This file is only editable by root, but maybe that is a good idea? How do we want this to work? 
-      - Or maybe it should be a config file in $HOME? 
-      - Or maybe both? Have the /etc-file specify whether we should look for a user-config file as well might be the best solution.
-        * provides both ease of use for development machines
-        * and security for an installed system
-      - What does this mean on windows?
-
-At build time we need to specify our dependencies::
-    * Is this just "abstract" names as specified in the above config file?
-    * Or is it directories and exact dlls?
-      - It probably has to be the former, otherwise it probably gets very messy with all the language bindings
-      - This probably means that we don't use CMakeLists.txt-files in the dll directories, but some other config file format.
-        * Although having CMakeLists.txt in the dll directories would mean that we can build our dlls directly with the build script, which would be nice.
-
-
+The _typesystem.ini_ config file is used to specify which directories of dou files need to be loaded by dots_kernel at startup, and which dlls the dots language bindings need to load. See below for suggested ini file format.
 
 === typesystem.ini file format
-(We should use a better name than typesystem.ini.)
 
 ------------------------------------------
-load_user_dots_ini=1   ;causes ~/.config/safir_sdk_core/typesystem.ini to 
-                       ;be loaded after this file
+load_user_typesystem_ini=1   ;causes ~/.config/safir_sdk_core/typesystem.ini to 
+                             ;be loaded after this file
 
 ;default base directory for dou/dom files, library name will be appended.
 default_dou_directory=/usr/share/safir/
