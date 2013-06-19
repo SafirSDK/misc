@@ -15,35 +15,34 @@ This is not ideal, since it really requires a project to put all their data into
 The runtime and sdk directories together are sometimes referred to as a _tower_ for historic reasons. But this notion is something that we want to move away from.
 
 
-*Vill vi fortfarande kunna ha allt samlat i en katalog som man kan flytta på enkelt? Eller är MSI/deb/rpm det enda vi vill stödja?*
+[IMPORTANT]
+================
+Question: Vill vi fortfarande kunna ha allt samlat i en katalog som man kan flytta på enkelt? Eller är MSI/deb/rpm det enda vi vill stödja?
+================
 
 === Issues
 
 Some of the things that need to be considered and changed:
 
 dots_generated dou/dom files in runtime::
-Need to be writeable to allow changes in system configuration in an installed product.
+Need to be writeable to allow changes in system configuration in an installed product and during development.
 
 dots_generated dou/dom files in sdk and dlls in runtime::
 These need to be writeable by a developer so that new types can be added and dobmake.py run
 
-lock files - currently in runtime/data/text/lluf::
-Need to be writeable to allow lock files to be used
+Lock Files::
+These are currently in runtime/data/text/lluf, and this directory needs to be writeable to allow lock files to be used.
 
-low level log files - currently in runtime/log::
- - syslog solves this problem for all logs except lll-logs
- - what to do with lll? Maybe we should make them go through syslog, and just keep the filtering on the sender side (as it is today).
+Low Level Logs::
+These are currently stored in a subdirectory to runtime/log, if the log directory exists. If low level logs are wanted the log directory needs to be writeable.
 
-crash_dumps::
- - Default should maybe be /tmp for linux? Gets cleared on reboot, which means we won't fill disk...
- - %TEMP% on windows?
- - Should be possible to configure where the dumps go.
- - cyclic clearing? done in swre_logger, currently
+Crash Dumps::
+Crash dumps are currently stored under runtime/data/crash_dumps. This directory needs to be writeable for crash dumps to work.
 
-dope files::
+Dope Files::
 Already configurable in dou-parameter. Default should be changed, though.
 
-shared memory files::
+Shared Memory Files::
 These are controlled by Boost.Interprocess, and we don't really have much control over them.
 
 SAFIR_* environment variables::
@@ -60,7 +59,9 @@ files.
 
 == Configuration file location
 
-There are a few configuration files that we need to be able to find to use and start the system:
+If we are to move away from the use of environment varibles for defining where files are expected to be found we need to introduce some configuration files that control how the SDK works, and where it expects other files to be located.
+
+These are the configuration files that we need to be able to find to use and start the system:
 
  * logging.ini - contains logging settings
  * locations.ini - contains locations of stuff we need, e.g. lock file and crash dump directories.
@@ -178,4 +179,49 @@ Rename the dlls from dots_generated to safir_generated. We want to reduce the nu
 [NOTE]
 ================
 Where it makes sense, the OS:s binary load paths (e.g. PATH on Windows for dlls and exes) should be used. The idea is to use the native mechanisms as much as possible! So avoid having any of the ini files pointing to full paths of, instead just give a name and use native mechanisms for finding the full path.
+================
+
+== Lock Files
+
+The lock file directory should be configurable in _locations.ini_. 
+
+On Windows the default should be +C:\ProgramData\safir_sdk_core\locks+.
+
+On Linux the default should be +/var/run/safir_sdk_core/locks+.
+
+== Low Level Logs
+
+The low level logging component currently has built in "magic" for determining whether logging should be on or off, by checking whether the log directory exists or not, and by checking a magic file in the log directory.
+
+This should be changed so that the low level logging settings are controlled by editing the _logging.ini_ configuration file.
+
+Default log file destination should be +C:\ProgramData\safir_sdk_core\log+ on Windows, and +/var/log/safir_sdk_core+ on Linux.
+
+[IMPORTANT]
+================
+Question: Should we change low level logs to go through the new syslog facility?
+================
+
+== Crash Dumps
+
+The dump file directory should be configurable in _locations.ini_. 
+
+On Windows the default should be +C:\ProgramData\safir_sdk_core\crash_dumps+.
+
+[IMPORTANT]
+================
+Question: What should the linux default be?!
+================
+
+== Dope Files
+
+The default value (in Safir.Dob.PersistenceParameters.dou) should be changed to +C:\ProgramData\safir_sdk_core\persistence+ on Windows and +/var/lib/safir_sdk_core+ on Linux.
+
+== Shared Memory Files
+
+We do not have a way to control where these files are put, but we should document where they usually end up, and maybe provide a tool to clean up the files.
+
+[IMPORTANT]
+================
+Question: Should we allow control over shared memory file permissions?
 ================
