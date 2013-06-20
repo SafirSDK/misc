@@ -4,7 +4,7 @@
 Readonly installation of Safir SDK Core
 =======================================
 Lars Hagström
-19 Jun 2013
+20 Jun 2013
 
 == Preface
 
