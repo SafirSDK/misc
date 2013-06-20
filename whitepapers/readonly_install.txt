@@ -45,6 +45,9 @@ Already configurable in dou-parameter. Default should be changed, though.
 Shared Memory Files::
 These are controlled by Boost.Interprocess, and we don't really have much control over them.
 
+Sate settings::
+Currently stored in runtime/bin/SateSettings.xml!
+
 SAFIR_* environment variables::
 These are used by our current users for knowing where to put their stuff. If we were to use them but change their meaning in some way it may break user code. Better to stop using them altogether and rely on some other mechanism.
 
@@ -120,6 +123,9 @@ Each dll build has to specify its dependencies, for dots_v to pick up, and to be
 
 dots_v must read dou files from multiple places::
 During generation of dll B dots_v may have to check dou files from dll A if there are dependencies.
+
+dots_java needs to read namespace mappings from multiple places::
+Namespace mapping files can be located in all the dou directories.
 
 ==== Things to consider / Some random thoughts
 
