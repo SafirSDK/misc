@@ -92,7 +92,7 @@ See http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html[the b
   3. %SAFIR_RUNTIME%\data\core_config\
 
 +
-See these two links for information about windows paths that also explain the CSIDL stuff: "http://blogs.msdn.com/b/cjacks/archive/2008/02/05/where-should-i-write-program-data-instead-of-program-files.aspx[Where Should I Write Program Data...?]" and "http://blogs.msdn.com/b/patricka/archive/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions.aspx[Where Should I Store my Data and Config...?]".
+See these two links for information about windows paths that also explain the _CSIDL_ stuff: "http://blogs.msdn.com/b/cjacks/archive/2008/02/05/where-should-i-write-program-data-instead-of-program-files.aspx[Where Should I Write Program Data...?]" and "http://blogs.msdn.com/b/patricka/archive/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions.aspx[Where Should I Store my Data and Config...?]".
 +
 One problem is that these config directories are usually hidden, but we could provide a simple configuration editor in our install package (e.g. a shortcut to Notepad...)
 
