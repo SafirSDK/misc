@@ -8,7 +8,7 @@ Lars Hagström
 
 == Preface
 
-Currently Safir SDK puts all of its files into two directories, defined by SAFIR_RUNTIME and SAFIR_SDK environment variables. Some of the files and directories in there need to be writeable for it to be possible to run the system. And some directories/files need to be changed to add types into the system during development.
+Currently Safir SDK puts all of its files into two directories, defined by SAFIR_RUNTIME and SAFIR_SDK environment variables. Some of the files and directories in there need to be writeable for it to be possible to run the system. And some directories/files need to be changed to add types into the system during development (i.e. to run dobmake.py).
 
 This is not ideal, since it really requires a project to put all their data into the Safir structure. It would be better to be able to separate the SDK stuff from the project stuff, so that the SDK can be installed as readonly and "used" rather than "changed" to build features on top of it.
 
@@ -24,10 +24,10 @@ Question: Vill vi fortfarande kunna ha allt samlat i en katalog som man kan flyt
 
 Some of the things that need to be considered and changed:
 
-dots_generated dou/dom files in runtime::
-Need to be writeable to allow changes in system configuration in an installed product and during development.
+dots_generated dou/dom files in _runtime/_::
+Some files or the whole directory needs to be writeable to allow changes in system configuration in an installed product and during development.
 
-dots_generated dou/dom files in sdk and dlls in runtime::
+dots_generated dou/dom files in _sdk/_ and dlls in _runtime/bin/_::
 These need to be writeable by a developer so that new types can be added and dobmake.py run
 
 Lock Files::
@@ -96,9 +96,9 @@ See these two links for information about windows paths that also explain the CS
 +
 One problem is that these config directories are usually hidden, but we could provide a simple configuration editor in our install package (e.g. a shortcut to Notepad...)
 
-The configuration under $SAFIR_RUNTIME is a stopgap measure, and will be probably be removed once we reach the full goal of having the SDK as an installable package. Before we've reached that goal it makes it easier for customers to have the configuration in the runtime directory, but when we're there we want the configuration to be found where the native applications would store it.
+The configuration under $SAFIR_RUNTIME is a stopgap measure, and will probably be removed once we reach the full goal of having the SDK as an installable package. But until we've reached that goal, it is easier for customers to have the configuration in the runtime directory, but when we're there we want the configuration to be found where the native applications would store it.
 
-The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a computer without having root/admin access (i.e. just install it in his/her home directory). 
+The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a computer without having root/admin access (i.e. just build it from source in his/her home directory). 
 
 [[dots_generated]]
 === Dots Generated
