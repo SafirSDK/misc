@@ -97,6 +97,7 @@ The configuration under $SAFIR_RUNTIME is a stopgap measure, and will be probabl
 
 The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a computer without having root/admin access (i.e. just install it in his/her home directory). 
 
+[[dots_generated]]
 === Dots Generated
 
 The goal is to make the building of the separate dots_generated dlls into more like building a normal dll. Currently all dlls are rebuilt every time dobmake is run, which is a waste of time for most of the dou files. It also means that there is no way to separate the stuff that belongs to the SDK from the project specific/user stuff, instead all is built at the same time, into one set of dlls.
@@ -220,3 +221,14 @@ Question: Should we allow control over shared memory file permissions?
 As a first step we will implement the changes suggested in <<config_files,Configuration file locations>>,  <<lock_files,Lock Files>>, <<crash_dumps,Crash Dumps>> and the logging locations from <<low_level_log,Low Level Logs>>.
 
 This will allow projects to have the _runtime_ directory as read-only.
+
+Also we will introduce a _typesystem.ini_ file as described in <<dots_generated, Dots Generated>>, but the only part of it that we will use is the _dou_directory_ parameter for each section. This will allow users to add a directory containing parameter override dou files.
+
+.typesystem.ini first step example
+------------------------------------------
+[Default]
+dou_directory=$(SAFIR_RUNTIME)/data/text/dots/classes
+
+[Override]
+dou_directory=/path/to/some/other/directory
+------------------------------------------
