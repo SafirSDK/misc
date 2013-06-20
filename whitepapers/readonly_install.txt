@@ -20,7 +20,7 @@ The runtime and sdk directories together are sometimes referred to as a _tower_ 
 Question: Vill vi fortfarande kunna ha allt samlat i en katalog som man kan flytta på enkelt? Eller är MSI/deb/rpm det enda vi vill stödja?
 ================
 
-=== Issues
+== Issues
 
 Some of the things that need to be considered and changed:
 
@@ -56,8 +56,10 @@ OS native way (msi, rpm, deb, etc), and users should be able to use
 the SDK without having to modify anything but clearly defined config
 files.
 
+== Proposed Solution
 
-== Configuration file location
+[[config_files]]
+=== Configuration file location
 
 If we are to move away from the use of environment varibles for defining where files are expected to be found we need to introduce some configuration files that control how the SDK works, and where it expects other files to be located.
 
@@ -95,13 +97,13 @@ The configuration under $SAFIR_RUNTIME is a stopgap measure, and will be probabl
 
 The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a computer without having root/admin access (i.e. just install it in his/her home directory). 
 
-== Dots Generated
+=== Dots Generated
 
 The goal is to make the building of the separate dots_generated dlls into more like building a normal dll. Currently all dlls are rebuilt every time dobmake is run, which is a waste of time for most of the dou files. It also means that there is no way to separate the stuff that belongs to the SDK from the project specific/user stuff, instead all is built at the same time, into one set of dlls.
 
 Note that when we say "dll" in the above paragraph we really mean _dll_ or _shared library_ for C++ and Ada, _jar_ for Java and _assembly_ for C#. For the purposes of this section these terms are really interchangeable, and any changes done will need to apply to all of the dots_generated functionality for all language interfaces.
 
-=== Things that need doing
+==== Things that need doing
 
 dots_kernel must read dou files from multiple places::
 Dou/dom files need to be stored in multiple places, so we need to read from all of them.
@@ -118,7 +120,7 @@ Each dll build has to specify its dependencies, for dots_v to pick up, and to be
 dots_v must read dou files from multiple places::
 During generation of dll B dots_v may have to check dou files from dll A if there are dependencies.
 
-=== Things to consider / Some random thoughts
+==== Things to consider / Some random thoughts
 
 Each dll needs to be built from one directory (with dou and dom files in directly or in subdirectories). 
 
@@ -126,7 +128,7 @@ Each directory needs to contain a config file that specifies dependencies. This 
 
 The _typesystem.ini_ config file is used to specify which directories of dou files need to be loaded by dots_kernel at startup, and which dlls the dots language bindings need to load. See below for suggested ini file format.
 
-=== typesystem.ini file format
+==== typesystem.ini file format
 
 ------------------------------------------
 load_user_typesystem_ini=1   ;causes ~/.config/safir_sdk_core/typesystem.ini to 
@@ -164,7 +166,8 @@ Rename the dlls from dots_generated to safir_generated. We want to reduce the nu
 Where it makes sense, the OS:s binary load paths (e.g. PATH on Windows for dlls and exes) should be used. The idea is to use the native mechanisms as much as possible! So avoid having any of the ini files pointing to full paths of, instead just give a name and use native mechanisms for finding the full path.
 ================
 
-== Lock Files
+[[lock_files]]
+=== Lock Files
 
 The lock file directory should be configurable in _locations.ini_. 
 
@@ -172,7 +175,8 @@ On Windows the default should be +C:\ProgramData\safir_sdk_core\locks+.
 
 On Linux the default should be +/var/run/safir_sdk_core/locks+.
 
-== Low Level Logs
+[[low_level_logs]]
+=== Low Level Logs
 
 The low level logging component currently has built in "magic" for determining whether logging should be on or off, by checking whether the log directory exists or not, and by checking a magic file in the log directory.
 
@@ -185,7 +189,8 @@ Default log file destination should be +C:\ProgramData\safir_sdk_core\log+ on Wi
 Question: Should we change low level logs to go through the new syslog facility?
 ================
 
-== Crash Dumps
+[[crash_dumps]]
+=== Crash Dumps
 
 The dump file directory should be configurable in _locations.ini_. 
 
@@ -196,11 +201,11 @@ On Windows the default should be +C:\ProgramData\safir_sdk_core\crash_dumps+.
 Question: What should the linux default be?!
 ================
 
-== Dope Files
+=== Dope Files
 
 The default value (in Safir.Dob.PersistenceParameters.dou) should be changed to +C:\ProgramData\safir_sdk_core\persistence+ on Windows and +/var/lib/safir_sdk_core+ on Linux.
 
-== Shared Memory Files
+=== Shared Memory Files
 
 We do not have a way to control where these files are put, but we should document where they usually end up, and maybe provide a tool to clean up the files.
 
@@ -208,3 +213,10 @@ We do not have a way to control where these files are put, but we should documen
 ================
 Question: Should we allow control over shared memory file permissions?
 ================
+
+
+== The First Step
+
+As a first step we will implement the changes suggested in <<config_files,Configuration file locations>>,  <<lock_files,Lock Files>>, <<crash_dumps,Crash Dumps>> and the logging locations from <<low_level_log,Low Level Logs>>.
+
+This will allow projects to have the _runtime_ directory as read-only.
