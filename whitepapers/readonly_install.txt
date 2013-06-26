@@ -230,6 +230,7 @@ Question: Should we allow control over shared memory file permissions?
 ================
 
 
+[[first_step]]
 == The First Step
 
 As a first step we will implement the changes suggested in <<config_files,Configuration file locations>>,  <<lock_files,Lock Files>>, <<crash_dumps,Crash Dumps>> and the logging locations from <<low_level_log,Low Level Logs>>.
@@ -247,7 +248,10 @@ dou_directory=$(SAFIR_RUNTIME)/data/text/dots/classes
 dou_directory=/path/to/some/other/directory
 ------------------------------------------
 
-== TODO
+== Current Status
+In Safir SDK Core version 4.4 we have implemented the changes suggested in <<first_step, The First Step>>.
+
+=== TODO
 
 A list of unsorted things that are not yet taken care of:
 
