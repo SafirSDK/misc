@@ -100,6 +100,12 @@ The configuration under $SAFIR_RUNTIME is a stopgap measure, and will probably b
 
 The reason for allowing both a system-wide and user-only config files is that it should be possible for a user to install the SDK on a computer without having root/admin access (i.e. just build it from source in his/her home directory). 
 
+[[special_variables]]
+==== Environment and "special" variable expansion
+Since the configuration files need to be able to refer to system directories they need to support environment variable expansion. E.g. +$(HOME)+ should expand to the value of that environment variable.
+
+On Windows platforms we should also support the _CSIDL_ values mentioned above, since Windows does not guarantee that there are always environment variables that correspond to them. For example the %PROGRAMDATA% environment variable is not guaranteed to be set or to point to the same directory as _CSIDL_COMMON_APPDATA_. So we should support _special variables_ as well as environment variables, e.g. +@\{CSIDL_COMMON_APPDATA\}+ will be expanded to the the location of that folder.
+
 [[dots_generated]]
 === Dots Generated
 
@@ -212,6 +218,8 @@ Question: What should the linux default be?!
 
 The default value (in Safir.Dob.PersistenceParameters.dou) should be changed to +C:\ProgramData\safir_sdk_core\persistence+ on Windows and +/var/lib/safir_sdk_core+ on Linux.
 
+We need to add expansion of the "special variables" (as described <<special_variables,above>> to dou parameters.
+
 === Shared Memory Files
 
 We do not have a way to control where these files are put, but we should document where they usually end up, and maybe provide a tool to clean up the files.
@@ -238,3 +246,14 @@ dou_directory=$(SAFIR_RUNTIME)/data/text/dots/classes
 [Override]
 dou_directory=/path/to/some/other/directory
 ------------------------------------------
+
+== TODO
+
+A list of unsorted things that are not yet taken care of:
+
+  - Support the See http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html[the basedir-spec] completely on Linux (an idea would be to use the special variable syntax for supporting these XDG_* environment variables, since they have fallbacks).
+  - Do the whole dots_generated thing.
+  - Make low level logger less magic.
+  - New syslog implementation should use ConfigReader.
+  - dots_kernel rewrite (aka dots_internal) should use ConfigReader (both for finding the dou files and expanding variables).
+  - Move dots shared memory size to typesystem.ini
