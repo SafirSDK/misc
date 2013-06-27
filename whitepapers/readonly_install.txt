@@ -257,7 +257,9 @@ A list of unsorted things that are not yet taken care of:
 
   - Support the See http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html[the basedir-spec] completely on Linux (an idea would be to use the special variable syntax for supporting these XDG_* environment variables, since they have fallbacks).
   - Do the whole dots_generated thing.
+  - maybe make dobmake.py aware of typesystem.ini even before the complete dots_generated rewrite is complete.
   - Make low level logger less magic.
   - New syslog implementation should use ConfigReader.
   - dots_kernel rewrite (aka dots_internal) should use ConfigReader (both for finding the dou files and expanding variables).
   - Move dots shared memory size to typesystem.ini
+  - Automatic tests need a way of overriding any user ini-configuration (tests usually need their own specific config)
