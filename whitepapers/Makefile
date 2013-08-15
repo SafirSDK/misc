@@ -17,7 +17,7 @@ all: new_distribution.pdf new_distribution.html messages.pdf messages.html reado
 
 vpath %.dia images
 %.png: %.dia
-	dia --export=$@ -t png $<
+	dia --export=$@ -t png-libart $<
 
 
 new_distribution.pdf: $(DEPS)
