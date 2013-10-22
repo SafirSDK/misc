@@ -228,8 +228,30 @@ Note however that we will not be an interoperable DDS or anything like it. We ma
 An advantage of using at least this subset of RTPS is that we have a specification that we can rely on, instead of having to invent and document a protocol ourselves, and there are third party tools (e.g. Wireshark) we can use for debugging.
 
 == Requirements
+Requirement on the distribution mechanism and on each sub-component.
 
-TODO: Write about new and existing requirements.
+=== Communication
+* Discover other nodes
+. Communication shall automatically discover other nodes in the system.
+. All nodes shall have unique id's.
+. It shall be possible to inject a seed to the discovery mechanism, that is an address to a node that might exist and be available for contact establishment.
+. Communication shall report a node as new only once.
+. For a node to be reported as new, Communication must first have received at least one data message from that node.
+. When Communication establishes contact with a new node, it shall send all nodes it has received from and all its seeds to the other node.
+. A node that has been reported as new can be included in the system.
+. A node that has been included in the system can later be excluded.
+. An excluded node shall never be allowed to be included in the system again.
+* Sending messages
+. Communication shall be able to send addressed messages to other included nodes in the system.
+. It shall be possible to address a message to all system nodes.
+. Communication shall automatically fragment messages to fit the defined MTU.
+. Communication shall automatically retransmit messages that have not been aknowledged for a certain amount of time.
+. Communication shall automatically send keep-alive messages to all other system nodes if it has been quiet certain amount of time.
+. Communication shall use sequence numbers to detect lost messages, duplicated messages, reordered messages etc.
+. Communication shall have a limited send buffer. If the host application 
+* Receiving messages
+. Communication shall deliver messages to the host application in correct order according to sequence numbers without any gaps.
+. Communication shall put together fragmented messages before delivering them to the host application.
 
 == Design
 This section describes the design of the new distribution mechanism and the related changes to Safir SDK Core.
@@ -311,13 +333,70 @@ We have not decided on an algorithm yet, but it will most likely be based on whe
 TODO: Write about the list of node-id:s that can grow very big, and that we want to send cleanup decisions "up" to user or project.
 
 === Communication
-Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to System Picture who decides which nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
+Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to the host (System Picture) who decides which nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
+The Communication design is divided into 4 logical parts:
+
+ * _Discoverer_ - Establishes contact with other nodes in the system.
+ * _Writer_ - Sends data to other nodes. Retransmits unacknowledged messages and sends keep-alive if there's nothing else to send for a while.
+ * _Reader_ - Receives data from sockets. Depending on the characteristics of the received data, internal control messages or application data, it is passed the correct mechanism.
+ * _DeliveryHandler_ - The delivery handler is the part of Communication that handles received application data. It orders and defragments incoming data and deliver whole messages to the host application.
+
+[[com-design-overview]]
+.Communication overview
+image::com_design_overview.png["Communication overview", width=500, link="com_design_overview.png"]
+
+The component is built on mechanisms offered by Boost.Asio, and driven by boost::asio::io_service. The design has been made to have no restrictions of how many threads can run the io_service. See <<com_conc_sync, Concurrency and synchronization>>.
+
+==== Exported interface
+An instance of Communication is automatically started when it is constructed and stopped when it is destructed. There are no methods like start and stop or similair.
+
+.Communication interface
+[width="80%",frame="topbot",options="header"]
+|======================
+|Method |Description
+
+|Constructor        
+|An instance of Communication is automatically started when it is constructed and stopped when it is destructed. There are no methods like start and stop or similair.
+
+|Destructor
+|Disconnects and deletes an instance of Communication.
+
+|Discover
+|Takes a collection of seed addresses to other nodes and injects into the _Discoverer_. This instance will then try to contact the seeds locate other nodes.
+
+|IncludeNode
+|After a node has been reported as new, it can be included in the system by calling this method. Communication will deliver any data from nodes that are not included in the system.
+
+|ExcludeNode
+|A system node can be excluded from the system by calling ExcludeNode. Once a node has been excluded it can never be included again.
+
+|SendAll
+|Send data to all system nodes.
+
+|SendTo
+|Send data to a specific system node.
+|======================
+
+==== Discover nodes
+Communication will automatically try to locate other nodes. If seeds have been injected the dicover mechanism will cyclically send Discover messages to the seeds until contact has been established. When a node receives a Discover message from another node it will respond with information about itself and all other nodes it has received anything from.
+Depending on how many nodes that is, it might have to send more than one message in respond to not exceed the defined MTU.
+When a NodeInfo message is received the same procedure is repeated for each node in the NodeInfo that was new to us. I.e it starts to send Discover messages to them.
+However we do not report any node as new until we have received anything from it, can be a Discover or a NodeInfo as response to a Discover.
+
+[[com-design-discover]]
+.Discover
+image::com_design_discover.png["Discover", width=600, link="com_design_discover.png"]
+The figure above shows what happens when Node#1 is started and the address to Node#2 is injected as a seed. The figure only shows what will happen in Node#1. It does not show that the other nodes will report Node#1 as new immediately when the Discover is received from Node#1.
+If no seeds have been injected, the only thing to do is waiting for other nodes to contact us. As soon as we receive a Discover from another node, we respond with a NodeInfo message and then also send a Discover back to the other node get all its node information. Just the way that Node #2-4 acts in the figure.
+
+==== Send messages
+
+==== Receive messages
+
+[[com_conc_sync]]
+==== Concurrency and synchronization
 
 ////
-TODO: rewrite all this
-
-Only complete messages shall be delivered, and messages shall be delivered in correct order, i.e the order they were sent. Actually these requirements are already handled by ZeroMQ. Communication must also be able to detect when a message is lost and report it as a failure.
-
 ==== Protocol
 ZeroMQ and the http://zguide.zeromq.org/page:all#Chapter-Advanced-Publish-Subscribe-Patterns[publish-subscribe] pattern will be used for all the low-level communication. Each node will have at least one publisher socket and one subscriber socket, and supported transport protocols are TCP and EPGM which is pgm multicast on top of UDP. The new distribution concept will introduce something called <<NodeTypes, node types>> where it is specified if TCP or EPGM should be used. It will be allowed to mix nodes using multicast and TCP in the same system. What makes this possible is that a multicast node must also be able to talk TCP but a TCP node must not speak multicast.
 
