@@ -378,23 +378,26 @@ An instance of Communication is automatically started when it is constructed and
 |======================
 
 ==== Discover nodes
-Communication will automatically try to locate other nodes. If seeds have been injected the dicover mechanism will cyclically send Discover messages to the seeds until contact has been established. When a node receives a Discover message from another node it will respond with information about itself and all other nodes it has received anything from.
+Communication will automatically try to locate other nodes. If seeds have been injected the discover mechanism will cyclically send Discover messages to the seeds until contact has been established. When a node receives a Discover message from another node it will respond with information about itself and all other nodes it has received anything from.
 Depending on how many nodes that is, it might have to send more than one message in respond to not exceed the defined MTU.
-When a NodeInfo message is received the same procedure is repeated for each node in the NodeInfo that was new to us. I.e it starts to send Discover messages to them.
-However we do not report any node as new until we have received anything from it, can be a Discover or a NodeInfo as response to a Discover.
+When a NodeInfo message is received the same procedure is repeated for each node in the NodeInfo that was new to us. I.e we start to send Discover messages to them.
+However we do not report any node as new until we have received anything from it, can be a Discover or a NodeInfo in respond to a Discover.
 
 [[com-design-discover]]
 .Discover
-image::com_design_discover.png["Discover", width=600, link="com_design_discover.png"]
+image::com_design_discover.png["Discover", width=500, link="com_design_discover.png"]
 The figure above shows what happens when Node#1 is started and the address to Node#2 is injected as a seed. The figure only shows what will happen in Node#1. It does not show that the other nodes will report Node#1 as new immediately when the Discover is received from Node#1.
 If no seeds have been injected, the only thing to do is waiting for other nodes to contact us. As soon as we receive a Discover from another node, we respond with a NodeInfo message and then also send a Discover back to the other node get all its node information. Just the way that Node #2-4 acts in the figure.
 
 ==== Send messages
+Coming soon
 
 ==== Receive messages
+Coming soon
 
 [[com_conc_sync]]
 ==== Concurrency and synchronization
+Coming soon
 
 ////
 ==== Protocol
