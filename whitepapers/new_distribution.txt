@@ -28,10 +28,12 @@ Addition of specific "join" cases will allow more uses::
   Disconnected node will keep all entities owned on other nodes as "read only";;
     An operator console with this setting will still be able to display the "last known" state of all entities. No modification will be allowed and no requests will be served.
   Disconnected node will become empty;;
-    An operator console with this setting will still become "empty", i.e. all non-local entities will be deleted (this is the current behavior). When the node is reconnected it will receive all remote entities again. 
+    An operator console with this setting will still become "empty", i.e. all non-local entities will be deleted (this is the current behavior). When the node is reconnected it will receive all remote entities again.
+  TODO;;
+    Add description for server node.  
 
 Less static configuration::
-  We want to provide a "dhcp"-like functionality for configuring nodes, so that instead of configuring the node identities and other details that should be internal you specify a node type, e.g. "operator console" or "Database server", and from that we internally work out what node id a node should have. This would make adding new nodes a lot easier.
+  We want to provide a "dhcp"-like functionality for configuring nodes, so that instead of configuring the node identities and other details that should be internal you specify a node type, e.g. "operator console" or "Database server", and from that we internally work out what node id a node should have. This would make adding new nodes a lot easier. *TODO* Is it a problem that a node changes its id? (Peters post-it case)
 
 Easier to display system status::
   We want to provide a unified picture of the system topology, both for use by the system itself to make sure the system remains robust, but this information can also be displayed to allow users and developers to understand what the system status is.
@@ -47,7 +49,7 @@ Some requirements:
 Platform independence of 3rd party dependencies::
   Chosen technologies shall run on Win32 and Linux.
 License::
-  Chosen technologies shall have a GPL compatible license, since Safir SDK Core license is GPLv3. See http://www.gnu.org/licenses/license-list.html for the GNU project list of compatible licenses.
+  Chosen technologies shall have acceptable dual-licenses so that Safir SDK Core can be licensed under a commercial license as well as GPLv3. See http://www.gnu.org/licenses/license-list.html for the GNU project list of compatible licenses.
 Real-Time Behaviour::
   Chosen technologies shall not prevent the Safir SDK Core from having bounded latency.
 Reliability::
