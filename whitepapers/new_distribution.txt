@@ -260,17 +260,19 @@ Data is sent in the clear. Any encryption shall be handled on the network level,
 
 === Requirements
 
+==== Network level requirements
+
 req_1::
     One system shall be able to contain at least 500 nodes.
     * In a system with 500 nodes it is expected that 10% of the nodes produce 90% of the payload traffic (i.e. excluding acks etc).
     * Testability: This requirement will be tested with 100 nodes combined with analysis.
 
 req_2::
-    Distribution mechanism shall support both IPv4 and IPv6.
+    The distribution mechanism shall support both IPv4 and IPv6.
     * One system shall be either IPv4 *or* IPv6, not both.
 
 req_3::
-    Distribution mechanism shall provide reliable and unreliable transports.
+    The distribution mechanism shall provide reliable and unreliable transports.
     * Implemented with acked and unacked communication.
 
 req_4::
@@ -282,11 +284,11 @@ req_5::
     * It is assumed that the network can be unreliable, produce out of order packets and duplicates.
 
 req_6::
-    Distribution mechanism shall be able to use UDP Multicast on networks that support it.
+    The distribution mechanism shall be able to use UDP Multicast on networks that support it.
     * No autodetect, configuration.
 
 req_7::
-    Distribution mechanism shall be able to use UDP Unicast.
+    The distribution mechanism shall be able to use UDP Unicast.
     * Useful for nodes that are not reachable by Multicast.
 
 req_8::
@@ -297,9 +299,9 @@ req_9:
     TTL shall be configurable.
 
 req_10::
-    Distribution mechanism shall detect and handle situations where the network packets can only be sent one way.
+    The distribution mechanism shall detect and handle situations where the network packets can only be sent one way.
     * e.g. firewall.
-    * Distribution mechanism is expected to exclude nodes that do not have two-way communication from the system.
+    * The distribution mechanism is expected to exclude nodes that do not have two-way communication from the system.
 
 req_12::
     It shall be possible to group nodes (into _node types_) according to their characteristics in the system. The characteristics are at least:
@@ -325,14 +327,26 @@ req_13::
     * I.e. sliding window size shall be configurable
  
 req_14::
-    
+    The distribution mechanism shall automatically discover other nodes in the system.
+    * There is no need for a node to have a static list of all other nodes.
 
- - ska klara mer komplexa nätverk
- - vissa noder har skakigare uppkoppling än andra
- - noder ska kunna kopplas i och ur mer dynamiskt
+req_15:
+    It shall be possible to configure a node name that is used for presentation purposes.
 
+req_16:
+    It shall be possible to send data payload of arbitrary size.
 
+==== System Picture
 
+Krav på utfrysningsalgoritm?
+Algoritm för att bestämma vad som är systemet?
+
+==== Control
+
+req_xx:
+    There shall be a mechanism that starts and stops Safir SDK Core.
+
+Vad vet och bestämmer Control som inte SP gör?
 
 
 Requirement on the distribution mechanism and on each sub-component.
