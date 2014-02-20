@@ -263,91 +263,120 @@ Data is sent in the clear. Any encryption shall be handled on the network level,
 ==== Network level requirements
 
 req_1::
-    One system shall be able to contain at least 500 nodes.
-    * In a system with 500 nodes it is expected that 10% of the nodes produce 90% of the payload traffic (i.e. excluding acks etc).
-    * Testability: This requirement will be tested with 100 nodes combined with analysis.
+    _Safir SDK Core_ shall have no implementation limits to the number of nodes.
+    * System characteristics and configuration...
+    * Network and CPU capacity and desired data throughput will limit this anyway.
+    * Expected size of systems is from one to 500 nodes.
 
 req_2::
-    The distribution mechanism shall support both IPv4 and IPv6.
+    Safir SDK Core shall support both IPv4 and IPv6.
     * One system shall be either IPv4 *or* IPv6, not both.
 
 req_3::
-    The distribution mechanism shall provide reliable and unreliable transports.
+    _Distribution_ shall provide reliable and unreliable transports.
+    * This is a requirement between different instances of dose_main, not on app to app level.
     * Implemented with acked and unacked communication.
+    * Note that this is a requirement on the network communication mechanism, not a requirement on Safir SDK Core as a whole.
 
 req_4::
-    The reliable transport shall guarantee delivery, order and no duplicates.
+    Distributions reliable transport shall guarantee delivery, order and no duplicates.
+    * This is a requirement between different instances of dose_main, not on app to app level.
     * It is assumed that the network can be unreliable, produce out of order packets and duplicates.
 
 req_5::
-    The unreliable transport shall guarantee order and no duplicates.
+    Distributions unreliable transport shall guarantee order and no duplicates.
+    * This is a requirement between different instances of dose_main, not on app to app level.
     * It is assumed that the network can be unreliable, produce out of order packets and duplicates.
 
 req_6::
-    The distribution mechanism shall be able to use UDP Multicast on networks that support it.
+    Distribution shall be able to use UDP Multicast on networks that support it.
     * No autodetect, configuration.
 
 req_7::
-    The distribution mechanism shall be able to use UDP Unicast.
+    Distribution shall be able to use UDP Unicast.
     * Useful for nodes that are not reachable by Multicast.
 
 req_8::
-    When using UDP Multicast distribution, the system shall cope with switches that implement IGPM snooping.
+    When using UDP Multicast, Distribution shall cope with switches that implement IGPM snooping.
     * Unclear whether there is anything that we need to do, or if this is an OS configuration issue.
 
 req_9:
-    TTL shall be configurable.
+    TTL shall be configurable in Distribution.
 
 req_10::
-    The distribution mechanism shall detect and handle situations where the network packets can only be sent one way.
-    * e.g. firewall.
-    * The distribution mechanism is expected to exclude nodes that do not have two-way communication from the system.
+    Distribution and Control shall detect and handle situations where the network packets can only be sent one way.
+    * e.g. firewall or failed IGMP snooping.
+    * Distribution and Control is expected to exclude nodes that do not have two-way communication from the system.
 
-req_12::
-    It shall be possible to group nodes (into _node types_) according to their characteristics in the system. The characteristics are at least:
+req_11::
+    Safir SDK Core shall make it possible to group nodes (into _node types_) according to their characteristics in the system. The characteristics are at least:
     * Multicast or Unicast
     * Dead-timeout
     * Heartbeat interval
     * Sliding window size
     * Ack/retransmission timeout
 
-req_13::
-    A slow node in the system shall not slow down the rest of the system.
+req_12::
+    A slow node in a Safir SDK Core system shall not slow down the rest of the system.
     * A "slow node" is a node that is not able to process incoming data in a timely fashion, either due to a slow network link or due to lacking processing power.
     * "Slowness" does not need to be detected automatically. It is expected to be a configuration issue.
 
-
-req_12::
-    It shall be possible to configure the system so that it handles high and low latency.
-    * I.e. timeouts shall be configurable
-    * I.e. sliding window size shall be configurable
-
-req_13::
-    It shall be possible to configure the system so that it handles high and low bandwidth well.
-    * I.e. sliding window size shall be configurable
  
-req_14::
-    The distribution mechanism shall automatically discover other nodes in the system.
+req_13::
+    Distribution shall automatically discover other nodes in the system.
     * There is no need for a node to have a static list of all other nodes.
 
-req_15:
+req_14::
     It shall be possible to configure a node name that is used for presentation purposes.
+    * These shall only be used for presentation purposes, and no checks for duplicates will be made.
 
-req_16:
+req_15::
     It shall be possible to send data payload of arbitrary size.
+    * E.g. data packets larger than maximum UDP message size will need to be fragmented.
 
-==== System Picture
 
-Krav på utfrysningsalgoritm?
-Algoritm för att bestämma vad som är systemet?
+Note that dose_com, the old distribution mechanism, had _Priority_ and _Distribution Channels_. These mechanisms provided some level of Quality of Service configurability on the network level. The problem with these mechanisms is that they did not affect the system all the way up to the application level. These old QoS mechanisms will not be implemented in the first version of the new distribution mechanism. Adding something similar to these mechanisms is possible in the future, but should take into account all levels, all the way up to the applications.
 
-==== Control
 
-req_xx:
-    There shall be a mechanism that starts and stops Safir SDK Core.
+req_16:: 
+    Distribution shall maintain a list of nodes that are part of the system, and keep it synchronized on all nodes.
 
-Vad vet och bestämmer Control som inte SP gör?
+req_17::
+    Control shall use this list (from above) to ensure that only these nodes talk to each other.
 
+req_18::
+    Nodes that misbehave shall be excluded from the system by Distribution and Control.
+
+req_19::
+    Distribution shall collect statistics that can be used in exclusion algorithms, presentation and debugging.
+    * Packet count
+    * Latency
+    * Packet loss
+    * Network hops?
+
+
+req_20::
+    Control shall be able to start dose_main when Distribution says that the current node is part of the system.
+
+req_21::
+    Control shall be able to stop dose_main when the current node has been excluded from the system.
+
+req_21::
+    Dose shall be able to send data separately to different node type groups.
+
+req_22::
+    Control shall start all the other executables in Safir SDK Core, e.g. foreach and dope_main.
+
+req_23::
+    Control shall monitor the status of applications that it has started.
+
+req_24::
+    Control shall be able to stop applications that it has started.
+
+req_25::
+    Status shall be able to mirror the status of Control and Distribution in Dob objects.
+
+How to handle changed ip address on castrato nodes?
 
 Requirement on the distribution mechanism and on each sub-component.
 
