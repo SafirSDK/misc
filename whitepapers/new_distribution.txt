@@ -229,6 +229,29 @@ Note however that we will not be an interoperable DDS or anything like it. We ma
 
 An advantage of using at least this subset of RTPS is that we have a specification that we can rely on, instead of having to invent and document a protocol ourselves, and there are third party tools (e.g. Wireshark) we can use for debugging.
 
+== Beskriv system vs system av system
+
+latens vs bandbredd
+
+iex stödjer hög latens och låg bandbredd
+
+doben stödjer allt från låg till hög latens men förväntar sig hög bandbredd
+
+iex skickar deltan
+
+doben skickar hela state
+
+doben har singelägarskap
+
+iex har delat ägarskap
+
+Att koda mot injektionsdeltan är komplicerat
+
+ett rent dobsystem är lättare att koda för
+
+iex använder man bara när man verkligen behöver det och bara på de typer som behöver skickas över iex-kanalen
+
+
 == Requirements
 
 
@@ -376,9 +399,31 @@ req_24::
 req_25::
     Status shall be able to mirror the status of Control and Distribution in Dob objects.
 
+req_26::
+    Control shall, together with Dose, guarantee that a node that wants to join is in a correct state to join.
+
+=== TODOs
+
+Ingen djävla latensmodell och trams om hård realtid!
+
 How to handle changed ip address on castrato nodes?
 
+TODO: Lägg till inkarnationsbegreppet!
+
+Skriv Dope-krav och ta bort fulredundansvarianten. Lås i db!
+
+Objektsdefinitioner ska vara lika på alla noder. Parametrar får vara olika. Kanske nån annan mekanism.
+
+Behöver ett kapitel som definierar och förklarar System vs System av System. När använder man vad?!
+
 Requirement on the distribution mechanism and on each sub-component.
+
+Little/big endian?
+
+Ska vi ha någon magic byte, eller annan trafikkrocksdetektion? CRC kanske är den bästa lösningen.
+
+
+Ta med prioriteter i krav och design, men implementera inte. På vilken nivå ska prioriteterna ligga?
 
 === Communication
 * Discover other nodes
