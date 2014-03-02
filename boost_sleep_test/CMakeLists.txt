@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(BoostSleep CXX)
 
-#INCLUDE($ENV{SAFIR_SDK}/data/build/safir_sdk_core_config.cmake)
+#set(BOOST_ROOT $ENV{SAFIR_SDK})
 
 set(Boost_NO_BOOST_CMAKE ON)
 set(Boost_USE_MULTITHREADED ON)
