@@ -22,7 +22,7 @@ void Timeout()
 
 int main()
 {
-    for(int i = 0; i < 10000; ++i)
+    for(int i = 0; i < 10; ++i)
     {
         std::vector<boost::shared_ptr<boost::thread> > threads;
         
@@ -46,7 +46,7 @@ int main()
         }
     }
 
-    std::cout << "Success" << std::endl;
+    //    std::cout << "Success" << std::endl;
 
     return 0;
 }
