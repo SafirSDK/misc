@@ -6,6 +6,8 @@ project(BoostSleep CXX)
 
 set(Boost_NO_BOOST_CMAKE ON)
 set(Boost_USE_MULTITHREADED ON)
+ADD_DEFINITIONS(-DBOOST_THREAD_DONT_USE_DATETIME)
+
 FIND_PACKAGE(Boost COMPONENTS chrono thread system)
 
 if(Boost_FOUND)
