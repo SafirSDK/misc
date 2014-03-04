@@ -323,7 +323,7 @@ req_8::
     When using UDP Multicast, Distribution shall cope with switches that implement IGPM snooping.
     * Unclear whether there is anything that we need to do, or if this is an OS configuration issue.
 
-req_9:
+req_9::
     TTL shall be configurable in Distribution.
 
 req_10::

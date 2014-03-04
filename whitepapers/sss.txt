@@ -1,0 +1,56 @@
+// -*- coding: utf-8 -*-
+:encoding: UTF-8
+
+
+Requirements for Safir SDK Core
+===============================
+
+
+
+== Background and Introduction
+
+=== "System of Systems" vs "System"
+
+==== Split/Join
+Not our problem!
+
+== Typical systems
+
+=== SjöC idag
+
+=== SjöC i framtiden
+
+=== Tacticall
+
+=== SLB i vagn
+
+
+=== SLB i stab
+
+
+=== SLB i singelnod
+
+== Requirements
+
+=== Distribution
+
+=== Redundancy
+
+=== Persistence
+
+=== Database interface
+
+=== Types and parameters
+
+=== OS, Platform and Compiler support
+
+=== Error and event logging
+
+=== Languages?
+
+=== Time
+
+
+=== Snac/Control
+
+=== Context
