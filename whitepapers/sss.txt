@@ -5,8 +5,6 @@
 Requirements for Safir SDK Core
 ===============================
 
-
-
 == Background and Introduction
 
 === "System of Systems" vs "System"
@@ -113,25 +111,42 @@ req_1::
   
 
 ==== Addressing  
-
+TODO
 
 === Redundancy
+TODO
 
 === Persistence
+TODO
 
 === Database interface
+TODO
 
 === Types and parameters
+req_1:: Parameters shall be possible to define and store separate from the application. 
+req_2:: A parameter shall consist of a name and a value. The value can be of a simple type, which is either an integer, a float or a string or an object composed by simple types and/or objects. 
+req_3:: An application shall be able to reference and read the value of a parameter. 
+req_4:: It shall be possible to configure a parameter value.
 
 === OS, Platform and Compiler support
+req_1:: Safir SDK Core shall support the latest Ubunutu LTS 32 and 64 bit versions.
+req_2:: Safir SDK Core shall support the Windows 7 and Windows 8 64 bit versions.
+req_3:: Safir SDK Core shall support Visual Studio 2010 and later.
+req_4:: Safir SDK Core shall support the gcc version shipped with latstest Ubuntu LTS.
 
 === Error and event logging
 
-=== Languages?
+=== Languages
+req_1:: Safir SDK Core shall provide programming interfaces in C++, Java, .Net and Ada.
 
 === Time
 
 
 === Snac/Control
 
+
 === Context
+
+
+
+
