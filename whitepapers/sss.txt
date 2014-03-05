@@ -34,6 +34,87 @@ Not our problem!
 
 === Distribution
 
+==== Entities
+An entity is a class of which there can be objects (known as instances) that are stored in the Dob and has one (and only one) owner. Only the owner is allowed to modify the object. Any application can subscribe for a entity instances, which means that it will receive updates whenever the instances are changed. Applications can also send requests to the entity owner asking it to change something in the object.
+
+Entity updates are guaranteed to reach all subscribers, with one important caveat; subscribers are not guaranteed to see all intermediate states of an entity.
+
+req_1::
+    Safir SDK Core shall keep a local object cache with entity instances on each node.
+
+req_2::
+    Safir SDK Core shall keep all local object caches synchronized.
+
+req_3::
+    Safir SDK Core shall provide a mechanism for applications to register handlers for entity classes.
+
+req_4::
+    Safir SDK Core shall provide a mechanism for applications that has a registered handler to create entity instances of the class.
+
+req_5::
+    Safir SDK Core shall ensure that an entity instance has one, and only one, owner.
+
+req_6:: 
+    Safir SDK Core shall provide a mechanism for entity owners to update entities.
+
+req_7:: 
+    Safir SDK Core shall provide a mechanism for entity owners to delete entities.
+
+req_8::
+    Safir SDK Core shall provide a mechanism for applications to send requests to handlers to create entities.
+
+req_9::
+    Safir SDK Core shall provide a mechanism for applications to send update requests for existing entities. The update requests shall be delivered to the entity owner.
+
+req_10::
+    Safir SDK Core shall provide a mechanism for applications to send delete requests for existing entities. The delete requests shall be delivered to the entity owner.
+
+req_3::
+    Safir SDK Core shall provide a mechanism for entity handlers/owners to send responses to received requests.
+
+req_11::
+    Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance creations.
+
+req_12::
+    Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance updates.
+
+req_13::
+    Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance deletes.
+
+req_14::
+    Safir SDK Core shall provide a mechanism for applications to read entity instance states.
+
+==== Services
+A Service has one or more handlers (known as a Service Handler) to which any application (known as a Requestor) can send service requests. For each service request that is sent, a response is received. The response is sent by the Service Handler, and indicates the result of the operation.
+
+req_1::
+    Safir SDK Core shall provide a mechanism for applications to register handlers for service classes.
+
+req_2::
+    Safir SDK Core shall provide a mechanism for applications to send requests to service handlers.
+
+req_3::
+    Safir SDK Core shall provide a mechanism for service handlers to send responses to received requests.
+
+==== Messages
+AWI: Fortsätt här!
+Messages are data that any application can subscribe to and any application can send. Messages do not have owners in any useful sense. When an application sends a message, the Dob forwards it to all subscribers of that message.
+
+No record is kept of messages, i.e. they are not stored in the Dob in any way. So once the message has been sent there is no way of getting hold of it again.
+
+Messages do not have guaranteed delivery. If some application cannot keep up with the rate of messages it will miss messages. If you need guaranteed delivery, messages are not what you are looking for.
+
+
+==== Requests/Responses
+The following requirements applies to entity create requests, entity update requests, entity delete requests, service requests and their corresponding responses.
+
+req_1::
+    If a request can not be delivered or if the receiver of the request does not send a response within a configurable amount of time, Safir SDK Core shall generate a timeout response to the requestor.
+  
+
+==== Addressing  
+
+
 === Redundancy
 
 === Persistence
