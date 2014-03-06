@@ -266,6 +266,8 @@ Lägg till några långsamma noder
 
 Tacticall-liknande, två servrar, massor med klienter med taskig koppling.
 
+Kan vi stödja att klienter inte kan nå varandra? Baserat på nodtyp?
+
 === Definitions
 
 System::
