@@ -9,14 +9,43 @@ Requirements for Safir SDK Core
 
 === "System of Systems" vs "System"
 
+TODO: är "system" verkligen ett bra ord. fattar folk det? Se speciellt meningen i Client/Server med redundans.
+
 ==== Split/Join
 Not our problem!
 
 == Typical systems
+This section aims to define some typical systems where Safir SDK Core can be used for inter-process and inter-computer communication. It is meant to give a framework in which to view the requirements that follow in later sections.
 
-=== SjöC idag
+These typical systems are only examples, and more kinds of systems and mixtures between these types are also possible.
 
-=== SjöC i framtiden
+=== Single computer system
+All business logic applications and gui applications run on the same computer and use Safir SDK Core for inter-process communication. There are no requirements for redundancy.
+
+Network topology:: N/A
+
+=== Client/Server system
+All business logic applications run on a server, and there are some or many clients that may or may not all be connected at the same time. All the gui applications typically run on the clients.
+
+Clients send no or very little data between each other, the majority of data is sent to and from the server. Clients may loose contact with the server and be allowed to reconnect automatically.
+
+Network topology:: The clients may be situated on the same LAN as the server, but clients may also be on a WAN or on the other side of VPN tunnels. Different clients may have different connectivity to the server, and clients may not be able to send or receive network packets from all other clients.
+
+=== Client/Server system with redundancy
+
+As above, but instead of one server there may be two or more servers with redundancy. This means that when a server fails another server will take over its responsibilities with no or very little delay. The redundant server may provide identical or degraded service to the clients.
+
+A failed server will not be allowed to reconnect to the system until the software on the server is in a state where it will not contaminate the system with out of date or incorrect data.
+
+Network topology:: The servers are expected to have good connectivity between them, even if bandwidth may be low and latency may be high. But network failures between the servers are expected to be few. The servers may be located close to each other on the same LAN or far from each other on a WAN or a VPN.
++
+If the connectivity between the servers is bad there will be many redundancy failovers which will cause a lot of network traffic and server reboots.
+
+=== Complex RT/IS System
+
+This type of system contains multiple servers with different responsibilities. The servers all have redundancy.
+
+=== Sj&ouml;C i framtiden
 
 === Tacticall
 

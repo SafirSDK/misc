@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 #add dependencies here (.dia files are automatically converted to .png if dia is installed)
-DEPS := safir_logging.txt new_distribution.txt messages.txt readonly_install.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png com_design_overview.png com_design_discover.png Makefile
+DEPS := safir_logging.txt new_distribution.txt messages.txt readonly_install.txt block-diagram.png sp_raw_pub_sub.png com_pgm.png com_design_overview.png com_design_discover.png Makefile sss.txt
 
 default: all
 
@@ -12,12 +12,20 @@ help:
 	echo "   new_distribution.html - build single page html" 
 	echo " Check the Makefile for other targets"
 
-all: new_distribution.pdf new_distribution.html messages.pdf messages.html readonly_install.pdf readonly_install.html safir_logging.pdf safir_logging.html
+all: new_distribution.pdf new_distribution.html messages.pdf messages.html readonly_install.pdf readonly_install.html safir_logging.pdf safir_logging.html sss.pdf sss.html
 
 
 vpath %.dia images
 %.png: %.dia
 	dia --export=$@ -t png-libart $<
+
+sss.pdf: $(DEPS)
+	echo "Building SSS pdf"
+	a2x -L -f pdf -d book --xsltproc-opts="--stringparam section.autolabel 1 --stringparam section.label.includes.component.label 1 --stringparam toc.section.depth 3" --dblatex-opts "-P latex.output.revhistory=0" sss.txt
+
+sss.html: $(DEPS)
+	echo "Building SSS html"
+	asciidoc -d book -a toc -a toclevels=4 -a numbered sss.txt
 
 
 new_distribution.pdf: $(DEPS)
