@@ -142,7 +142,6 @@ The following requirements applies to entity create requests, entity update requ
 
 req_1::
     If a request can not be delivered or if the receiver of the request does not send a response within a configurable amount of time, Safir SDK Core shall generate a timeout response to the requestor.
-  
 
 ==== Addressing  
 TODO
@@ -157,6 +156,8 @@ TODO
 TODO
 
 === Types and parameters
+Safir SDK Core shall provide a typesystem that can be used between nodes and between applications written in various programming languages.
+
 req_2:: Safir SDK Core shall provide basic types like integers and floating values.
 req_1:: Safir SDK Core shall permit custom specific types to be created and distributed by the Dob.
 
@@ -172,24 +173,23 @@ req_3:: Safir SDK Core shall support Visual Studio 2010 and later.
 req_4:: Safir SDK Core shall support the gcc version shipped with latstest Ubuntu LTS.
 
 === Error and event logging
-Logging functionality is provided to report errors and information detected by software.
+Logging functionality is provided to report errors and information detected by software. All timestamps shall be fetched from the local computer clock.
 
 req_1:: Safir SDK Core shall provide a mechanism for logging erors and information.
-req_2:: Logs shall contain timestamp, category and a log text.
+req_2:: Logs shall contain timestamp based on the computer clock, category and a log text.
 
 === Languages
+It shall be possible to use Safir SDK Core from different programming languages. Applications written i different languages shall be able to communicate seamlessly.
+
 req_1:: Safir SDK Core shall provide programming interfaces in C++.
 req_2:: Safir SDK Core shall provide programming interfaces in Java.
 req_3:: Safir SDK Core shall provide programming interfaces in .Net.
 req_4:: Safir SDK Core shall provide programming interfaces in Ada.
 
-=== Time
-TODO
-
 === Snac/Control
 TODO
 
 === Context
-TODO
-
+Information shall be posible to separate into different contexts within the same system. For example real information should never be mixed up with replayed or simulated information.
+req_1:: Safir SDK Core shall support separation of information belonging to different contexts.
 
