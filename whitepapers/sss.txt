@@ -31,9 +31,16 @@ Clients send no or very little data between each other, the majority of data is 
 
 Network topology:: The clients may be situated on the same LAN as the server, but clients may also be on a WAN or on the other side of VPN tunnels. Different clients may have different connectivity to the server, and clients may not be able to send or receive network packets from all other clients.
 
+=== Vehicle mounted Client/Server system
+
+Same configuration as "Client/Server system" above, but with two vital differences:
+
+1. One or more clients may intermittently have very bad connectivity, e.g. due to a slip ring.
+1. The network may fail intermittently due to power failures.
+
 === Client/Server system with redundancy
 
-As above, but instead of one server there may be two or more servers with redundancy. This means that when a server fails another server will take over its responsibilities with no or very little delay. The redundant server may provide identical or degraded service to the clients.
+As "Client/Server system" above, but instead of one server there may be two or more servers with redundancy. This means that when a server fails another server will take over its responsibilities with no or very little delay. The redundant server may provide identical or degraded service to the clients.
 
 A failed server will not be allowed to reconnect to the system until the software on the server is in a state where it will not contaminate the system with out of date or incorrect data.
 
@@ -43,7 +50,8 @@ If the connectivity between the servers is bad there will be many redundancy fai
 
 === Complex RT/IS System
 
-This type of system contains multiple servers with different responsibilities. The servers all have redundancy.
+This type of system contains multiple servers with different responsibilities, and all or most of the servers have redundancy. There are many clients, some of which have good connectivity and some that have bad connectivity.
+
 
 === Sj&ouml;C i framtiden
 TODO
