@@ -150,21 +150,22 @@ TODO
 TODO
 
 === Persistence
-TODO
+Persistency services are provided to allow applications to store data persistently in order to survive a shutdown of the system or an application.
 
-=== Database interface
-TODO
+req_1:: It shall be possible to configure entity types to be persistent.
+req_2:: Types marked as persistent shall be automatically persisted.
+req_3:: Persistent objects shall be automatically retrieved and passed to the the correct handler when it is started.
 
 === Types and parameters
 Safir SDK Core shall provide a typesystem that can be used between nodes and between applications written in various programming languages.
 
-req_2:: Safir SDK Core shall provide basic types like integers and floating values.
-req_1:: Safir SDK Core shall permit custom specific types to be created and distributed by the Dob.
+req_1:: Safir SDK Core shall provide basic types like integers and floating values.
+req_2:: Safir SDK Core shall permit custom specific types to be created and distributed by the Dob.
 
-req_1:: Parameters shall be possible to define and store separate from the application. 
-req_2:: A parameter shall consist of a name and a value. The value can be of a simple type, which is either an integer, a float or a string or an object composed by simple types and/or objects. 
-req_3:: An application shall be able to reference and read the value of a parameter. 
-req_4:: It shall be possible to configure a parameter value.
+req_3:: Parameters shall be possible to define and store separate from the application. 
+req_4:: A parameter shall consist of a name and a value. The value can be of a simple type, which is either an integer, a float or a string or an object composed by simple types and/or objects. 
+req_5:: An application shall be able to reference and read the value of a parameter. 
+req_6:: It shall be possible to configure a parameter value.
 
 === OS, Platform and Compiler support
 req_1:: Safir SDK Core shall support the latest Ubunutu LTS 32 and 64 bit versions.
@@ -186,10 +187,17 @@ req_2:: Safir SDK Core shall provide programming interfaces in Java.
 req_3:: Safir SDK Core shall provide programming interfaces in .Net.
 req_4:: Safir SDK Core shall provide programming interfaces in Ada.
 
-=== Snac/Control
-TODO
+=== System control
+System control mechanism starts and stops the entire system including the Dob. It will also keep an unambiguous view of the system, i.e which nodes are part of the system and where individual applications are executiung.
+
+req_1:: Safir SDK Core shall provide a start mechanism that starts the system.
+req_2:: Safir SDK Core shall provide a stop mechanism that stops the system.
+req_3:: The start/stop mechanism shall be configurable to start external applications that is not part of Safir SDK Core.
+req_4:: The start/stop mechanism shall be able start and stop applications on any node in the system.
+req_4:: The control mechanism provide an unambiguous view of wich nodes are part of the system.
 
 === Context
 Information shall be posible to separate into different contexts within the same system. For example real information should never be mixed up with replayed or simulated information.
+
 req_1:: Safir SDK Core shall support separation of information belonging to different contexts.
 
