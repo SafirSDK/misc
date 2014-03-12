@@ -46,20 +46,25 @@ If the connectivity between the servers is bad there will be many redundancy fai
 This type of system contains multiple servers with different responsibilities. The servers all have redundancy.
 
 === Sj&ouml;C i framtiden
+TODO
 
 === Tacticall
+TODO
 
 === SLB i vagn
-
+TODO
 
 === SLB i stab
-
+TODO
 
 === SLB i singelnod
+TODO
 
 == Requirements
+TODO
 
 === Distribution
+TODO
 
 ==== Entities
 An entity is a class of which there can be objects (known as instances) that are stored in the Dob and has one (and only one) owner. Only the owner is allowed to modify the object. Any application can subscribe for a entity instances, which means that it will receive updates whenever the instances are changed. Applications can also send requests to the entity owner asking it to change something in the object.
@@ -152,6 +157,9 @@ TODO
 TODO
 
 === Types and parameters
+req_2:: Safir SDK Core shall provide basic types like integers and floating values.
+req_1:: Safir SDK Core shall permit custom specific types to be created and distributed by the Dob.
+
 req_1:: Parameters shall be possible to define and store separate from the application. 
 req_2:: A parameter shall consist of a name and a value. The value can be of a simple type, which is either an integer, a float or a string or an object composed by simple types and/or objects. 
 req_3:: An application shall be able to reference and read the value of a parameter. 
@@ -164,18 +172,24 @@ req_3:: Safir SDK Core shall support Visual Studio 2010 and later.
 req_4:: Safir SDK Core shall support the gcc version shipped with latstest Ubuntu LTS.
 
 === Error and event logging
+Logging functionality is provided to report errors and information detected by software.
+
+req_1:: Safir SDK Core shall provide a mechanism for logging erors and information.
+req_2:: Logs shall contain timestamp, category and a log text.
 
 === Languages
-req_1:: Safir SDK Core shall provide programming interfaces in C++, Java, .Net and Ada.
+req_1:: Safir SDK Core shall provide programming interfaces in C++.
+req_2:: Safir SDK Core shall provide programming interfaces in Java.
+req_3:: Safir SDK Core shall provide programming interfaces in .Net.
+req_4:: Safir SDK Core shall provide programming interfaces in Ada.
 
 === Time
-
+TODO
 
 === Snac/Control
-
+TODO
 
 === Context
-
-
+TODO
 
 
