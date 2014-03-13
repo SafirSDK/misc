@@ -45,7 +45,7 @@ Network topology:: The clients may be situated on the same LAN as the server, bu
 Same configuration as ``Client/Server system'' above, but with two vital differences:
 
 1. One or more clients may intermittently have very bad connectivity, e.g. due to a slip ring.
-1. The network may fail intermittently due to power failures.
+2. The network may fail intermittently due to power failures.
 
 ==== Client/Server system with redundancy
 
@@ -155,9 +155,6 @@ req_1::
 ==== Addressing  
 TODO
 
-=== Redundancy
-TODO
-
 === Persistence
 Persistency services are provided to allow applications to store data persistently in order to survive a shutdown of the system or an application.
 
@@ -196,14 +193,17 @@ req_2:: Safir SDK Core shall provide programming interfaces in Java.
 req_3:: Safir SDK Core shall provide programming interfaces in .Net.
 req_4:: Safir SDK Core shall provide programming interfaces in Ada.
 
-=== System control
-System control mechanism starts and stops the entire system including the Dob. It will also keep an unambiguous view of the system, i.e which nodes are part of the system and where individual applications are executiung.
+=== System control and redundancy
+Node supervision along with redundancy is provided to detect and act on unexpected application or node losses. The system control mechanism starts and stops the entire system including the Dob and will also keep an unambiguous view of the system, i.e which nodes are part of the system and where individual applications are executiung.
 
-req_1:: Safir SDK Core shall provide a start mechanism that starts the system.
-req_2:: Safir SDK Core shall provide a stop mechanism that stops the system.
-req_3:: The start/stop mechanism shall be configurable to start external applications that is not part of Safir SDK Core.
-req_4:: The start/stop mechanism shall be able start and stop applications on any node in the system.
-req_4:: The control mechanism provide an unambiguous view of wich nodes are part of the system.
+req_1:: It shall be possible to supervise the existence of a node .
+req_2:: It shall be possible to automatically restart a node after an uncontrolled stop. 
+req_3:: It shall be possible to define a fallback system configuration as an addition to the basic system configuration. The fallback system configuration shall be automatically switched to when the basic configuration fails.  
+req_4:: Safir SDK Core shall provide a start mechanism that starts the system.
+req_5:: Safir SDK Core shall provide a stop mechanism that stops the system.
+req_6:: The start/stop mechanism shall be configurable to start external applications that is not part of Safir SDK Core.
+req_7:: The start/stop mechanism shall be able start and stop applications on any node in the system.
+req_8:: The control mechanism provide an unambiguous view of wich nodes are part of the system.
 
 === Context
 Information shall be posible to separate into different contexts within the same system. For example real information should never be mixed up with replayed or simulated information.
