@@ -77,7 +77,9 @@ If the connectivity between the servers is bad there will be many redundancy fai
 
 This type of system contains multiple servers with different responsibilities, and all or most of the servers have redundancy. There are many clients, some of which have good connectivity and some that have bad connectivity.
 
-TODO: skriv om RT-data och IS-data? transienter? plotdata?
+This type of system has a continuous high load of data, the transmission of which requires soft real-time performance. Some of the data is of a transient kind, e.g. data that is updated every second.
+
+Other data in the system has no RT requirements, but may periodically generate a lot of traffic, e.g. database searches.
 
 As described above in ``Client/Server system with redundancy'' the connectivity between the redundant servers is expected to be good.
 
