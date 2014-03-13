@@ -5,9 +5,80 @@
 Requirements for Safir SDK Core
 ===============================
 
-== Background and Introduction
+== Introduction
 
-This section aims to provide an introduction into some of the concepts of Safir SDK Core, and to provide a frame of reference for the rest of the document.
+=== Scope
+TODO: Bör det stå ^(R)^ efter Safir överallt i alla dokument och loggor?
+
+This document establishes the requirements for Safir^(R)^ SDK Core.
+
+
+TODO: ska detta vara med?
+
+The requirements are logically grouped in chapters. Within chapters the requirements are assigned an identifier on the form _n, where n is a positive number starting at 1 and incremented by 1 for each new requirement.
+
+The requirements can be individually identified through combining the sub chapter identifier with the requirement identifier. An example of this is cap_fun_ipc_1 for requirement _1 in sub chapter Inter process communication (<cap_fun_ipc>).
+
+=== Revision History
+
+1.0A 2014-03-13::
+     First draft, based on information from SSS-106323
+
+=== Definitions
+
+TODO: vad ska vara med här?! Det här är norpat direkt från SSSen, utan urskiljning.
+
+Application::
+Application realizing a functionally separated part of the business logic in a system. Belongs to the APP subsystem.
+Bearing::
+Defined as an azimuth originating in a foot point.
+Configure::
+Using the word ’configure’ in a requirement descriptive text implies that there is no need for recompilation of applications in order to make changes available to the system. However an offline tool might need to be run in order to verify the semantic and syntactic correctness of the configuration.
+Distributed class::
+A class whose objects are stored and distributed in the system by usage of the middleware mechanism provided by SysK. 
+There exists three different kinds of distributed classes: entities, services and request. Upon invokation of a request on a service or entity a response is received. The response is not considered being a “true” distributed class.
+A distributed class is a complex type containing elements of simple types or items of complex types.
+Distributed object ::
+An instance of a distributed class
+Local track::
+Track created by external sensor, external link or manually within the system.
+Member::
+A variable (name, type, value) in a class.
+Presentation application::
+Application realizing a functionally separated part of the operator interface in a system. Belongs to the PRS subsystem.
+Political time::
+The actual time in a human readable version. Only valid within the time zone of the system. Can be calculated from the UTC time and current time zone. 
+Property::
+The definition of a property implies that an object implements a certain interface. The object does not need to be aware of the property. At configuration a properties members are connected to the object members. E.g. The property “Has_Position” could be used to get the position from any object defined to implement “Has_Position”.
+Runtime System::
+An executable system based on SysK, prepared through compilation and parameterisation to meet the requirements of a specific system.
+Spatial Ace::
+Map engine delivered by Carmenta.
+System::
+The system is defined as the nodes connected by the LAN and containing an instance of the middleware provide by SysK for distributed classes.
+System time::
+An internal representation of the time that has elapsed since the start of the system. This representation is valid for fast time stamping, but cannot be used for history logging purposes or outside of the system. The system time is monotonously increasing.
+System track::
+Track created by correlation of one or more local tracks. A local track is a track that is reported from a tracking source or a tactical link.
+Target::
+Defined by position, speed and course.
+Topic::
+A topic is defined as a collection of entities and messages. Topics are configured during integration. The reason for introduction of topics is to ease the access to information by an application, i.e. instead of subscribing to all classes within a topic the application can subscribe to the topic and then obtain all classes in the topic.
+A topic is implemented as a class and the classes belonging to the topic inherits from the topic class (base class). 
+Tracks::
+Targets and bearings.
+Type Extension::
+The use of inheritance to define a class with additional members.
+UTC time::
+Coordinated universal time, the actual time universally expressed. Should be used when interacting with external systems. The UTC time is used as system time.
+
+== Background
+
+=== Architecture in systems using Safir SDK Core
+
+A fundamental design tenet in Safir systems is to separate business logic from presentation services. This is achieved by using an architecture with services that allow business logic applications and presentation service applications to exchange data in an efficient manner. The fundamental data distribution services are contained in Safir SDK Core, which is descibed in this document.
+
+Safir SDK Core is the basic means to start developing and then deploying a system based on the Safir architecture. 
 
 === System vs System of Systems
 
@@ -69,8 +140,7 @@ As described above in ``Client/Server system with redundancy'' the connectivity 
 
 One or more of the clients can be placed at a remote location, connected via a WAN or a VPN link.
 
-== Requirements
-TODO
+== Safir SDK Core Requirements
 
 === Distribution
 TODO
