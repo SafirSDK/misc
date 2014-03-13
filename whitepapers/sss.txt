@@ -146,7 +146,7 @@ One or more of the clients can be placed at a remote location, connected via a W
 TODO
 
 ==== Entities
-An entity is a class of which there can be objects (known as instances) that are stored in the Dob and has one (and only one) owner. Only the owner is allowed to modify the object. Any application can subscribe for a entity instances, which means that it will receive updates whenever the instances are changed. Applications can also send requests to the entity owner asking it to change something in the object.
+An entity is a class of which there can be objects (known as instances) that are stored in the Dob and has one (and only one) owner. Only the owner is allowed to modify the object. Any application can subscribe for an entity instances, which means that it will receive updates whenever the instances are changed. Applications can also send requests to the entity owner asking it to change something in the object.
 
 Entity updates are guaranteed to reach all subscribers, with one important caveat; subscribers are not guaranteed to see all intermediate states of an entity.
 
@@ -208,12 +208,9 @@ req_3::
     Safir SDK Core shall provide a mechanism for service handlers to send responses to received requests.
 
 ==== Messages
-AWI: Fortsätt här!
-Messages are data that any application can subscribe to and any application can send. Messages do not have owners in any useful sense. When an application sends a message, the Dob forwards it to all subscribers of that message.
+Messages are data that any application can subscribe to and any application can send. When an application sends a message, it is forwarded to all subscribers of that message. Messages do not have guaranteed delivery. If some application cannot keep up with the rate of messages it will miss messages.
 
-No record is kept of messages, i.e. they are not stored in the Dob in any way. So once the message has been sent there is no way of getting hold of it again.
 
-Messages do not have guaranteed delivery. If some application cannot keep up with the rate of messages it will miss messages. If you need guaranteed delivery, messages are not what you are looking for.
 
 
 ==== Requests/Responses
