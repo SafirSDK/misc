@@ -7,40 +7,65 @@ Requirements for Safir SDK Core
 
 == Background and Introduction
 
-=== "System of Systems" vs "System"
+This section 
+=== ``System of Systems'' vs ``System''
 
 TODO: är "system" verkligen ett bra ord. fattar folk det? Se speciellt meningen i Client/Server med redundans.
 
-==== Split/Join
-Not our problem!
+latens vs bandbredd
 
-== Typical systems
+iex stödjer hög latens och låg bandbredd
+
+doben stödjer allt från låg till hög latens men förväntar sig hög bandbredd
+
+iex skickar deltan
+
+doben skickar hela state
+
+doben har singelägarskap
+
+iex har delat ägarskap
+
+Att koda mot injektionsdeltan är komplicerat
+
+ett rent dobsystem är lättare att koda för
+
+iex använder man bara när man verkligen behöver det och bara på de typer som behöver skickas över iex-kanalen
+
+
+==== Split/Join
+
+_Split_/_Join_ is a mechanism whereby one or several computers in a system are disconnected from the rest, forming a separate system. At a later time they are reconnected, and _the information sets in the two systems are merged automatically_ to produce one system with a coherent and synchronized information set.
+
+The distribution mechanism in Safir SDK Core is not expected to provide Split/Join functionality. However, the distribution mechanism shall provide the fundamental tools needed to add Split/Join functionality when Safir SDK Core is used to build Systems of Systems.
+
+=== Typical systems
 This section aims to define some typical systems where Safir SDK Core can be used for inter-process and inter-computer communication. It is meant to give a framework in which to view the requirements that follow in later sections.
 
 These typical systems are only examples, and more kinds of systems and mixtures between these types are also possible.
 
-=== Single computer system
+==== Single computer system
 All business logic applications and gui applications run on the same computer and use Safir SDK Core for inter-process communication. There are no requirements for redundancy.
 
 Network topology:: N/A
 
-=== Client/Server system
+==== Client/Server system
 All business logic applications run on a server, and there are some or many clients that may or may not all be connected at the same time. All the gui applications typically run on the clients.
 
 Clients send no or very little data between each other, the majority of data is sent to and from the server. Clients may loose contact with the server and be allowed to reconnect automatically.
 
 Network topology:: The clients may be situated on the same LAN as the server, but clients may also be on a WAN or on the other side of VPN tunnels. Different clients may have different connectivity to the server, and clients may not be able to send or receive network packets from all other clients.
 
-=== Vehicle mounted Client/Server system
+==== Vehicle mounted Client/Server system
 
-Same configuration as "Client/Server system" above, but with two vital differences:
+Same configuration as ``Client/Server system'' above, but with two vital differences:
 
 1. One or more clients may intermittently have very bad connectivity, e.g. due to a slip ring.
 1. The network may fail intermittently due to power failures.
 
-=== Client/Server system with redundancy
+==== Client/Server system with redundancy
 
-As "Client/Server system" above, but instead of one server there may be two or more servers with redundancy. This means that when a server fails another server will take over its responsibilities with no or very little delay. The redundant server may provide identical or degraded service to the clients.
+As ``Client/Server system'' above, but instead of one server there may be two or more servers with redundancy. This means that when a server fails another server will take over its responsibilities with no or very little delay. The redundant server may provide identical or degraded service to the clients.
 
 A failed server will not be allowed to reconnect to the system until the software on the server is in a state where it will not contaminate the system with out of date or incorrect data.
 
@@ -48,25 +73,15 @@ Network topology:: The servers are expected to have good connectivity between th
 +
 If the connectivity between the servers is bad there will be many redundancy failovers which will cause a lot of network traffic and server reboots.
 
-=== Complex RT/IS System
+==== Complex RT/IS System
 
 This type of system contains multiple servers with different responsibilities, and all or most of the servers have redundancy. There are many clients, some of which have good connectivity and some that have bad connectivity.
 
+TODO: skriv om RT-data och IS-data? transienter? plotdata?
 
-=== Sj&ouml;C i framtiden
-TODO
+As described above in ``Client/Server system with redundancy'' the connectivity between the redundant servers is expected to be good.
 
-=== Tacticall
-TODO
-
-=== SLB i vagn
-TODO
-
-=== SLB i stab
-TODO
-
-=== SLB i singelnod
-TODO
+One or more of the clients can be placed at a remote location, connected via a WAN or a VPN link.
 
 == Requirements
 TODO
