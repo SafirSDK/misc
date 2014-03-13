@@ -7,31 +7,15 @@ Requirements for Safir SDK Core
 
 == Background and Introduction
 
-This section 
-=== ``System of Systems'' vs ``System''
+This section aims to provide an introduction into some of the concepts of Safir SDK Core, and to provide a frame of reference for the rest of the document.
 
-TODO: är "system" verkligen ett bra ord. fattar folk det? Se speciellt meningen i Client/Server med redundans.
+=== System vs System of Systems
 
-latens vs bandbredd
+A _System_ in Safir SDK Core terms is one or more computers connected by the distribution mechanism of Safir SDK Core, the _Dob_ (Distributed Objects). These computers are able to communicate using the Dob. The Dob has certain expectations about the network environment and topology, for example it expects bandwidth to be high. The Dob does not support Split/Join (se below).
 
-iex stödjer hög latens och låg bandbredd
+A _System of Systems_ in Safir SDK Core terms is for example a system where multiple vehicles each have a Safir SDK Core system that all communicate with each other over radio, and is resilient to very low bandwidth and communication failures, e.g. due to a silent zone.
 
-doben stödjer allt från låg till hög latens men förväntar sig hög bandbredd
-
-iex skickar deltan
-
-doben skickar hela state
-
-doben har singelägarskap
-
-iex har delat ägarskap
-
-Att koda mot injektionsdeltan är komplicerat
-
-ett rent dobsystem är lättare att koda för
-
-iex använder man bara när man verkligen behöver det och bara på de typer som behöver skickas över iex-kanalen
-
+Safir SDK Core does not provide a mechanism to synchronize between systems, it is only meant for communication within a system. However, it provides some of the building blocks needed to build an inter-system synchronization mechanism.
 
 ==== Split/Join
 
