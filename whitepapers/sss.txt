@@ -13,9 +13,7 @@ This document establishes the requirements for Safir SDK Core.
 
 TODO: *Skriv om detta!*
 
-The requirements are logically grouped in chapters. Within chapters the requirements are assigned an identifier on the form _n, where n is a positive number starting at 1 and incremented by 1 for each new requirement.
-
-The requirements can be individually identified through combining the sub chapter identifier with the requirement identifier. An example of this is cap_fun_ipc_1 for requirement _1 in sub chapter Inter process communication (<cap_fun_ipc>).
+The requirements are logically grouped in chapters. All requirements are assigned a unique identifier on the form <chap>_n, where <chap> is an abbreviation of the chapter name and n is a positive integer.
 
 === Revision History
 
@@ -35,7 +33,7 @@ Application::
 An executable that uses Safir SDK Core. May be a GUI presentation layer app or a pure business logic application without GUI.
 
 Configure::
-Using the word ’configure’ in a requirement descriptive text implies that there is no need for recompilation of applications in order to make changes available to the system.
+The word `configure' in a requirement text implies that there is no need for recompilation in order to make changes available to the system.
 
 Type Extension::
 The use of inheritance to define a class with additional members.
@@ -47,27 +45,11 @@ Distributed Objects, the distribution mechanism of Safir SDK Core that provides 
 
 === Architecture in systems using Safir SDK Core
 
-TODO: *Tona ner detta.*
+A fundamental design tenet of the Safir architecture guidelines is to split or separate a system's functionality into smaller parts, each part being implemented in one application. For example this could mean that a system consists of ten applications that contain only business logic and ten applications that contain only gui. These applications would then use Safir SDK Core data distribution service, the _Dob_, to exchange data in an efficient manner.
 
-A fundamental design tenet of the Safir architecture guidelines is to split or separate a system's functionality into smaller components or applications
+Separating functionality into different applications allows a system to be deployed in a flexible manner. All applications could run on a single computer, or they could be spread across several computers, completely transparently to the applications.
 
-separate business logic from presentation services. This is achieved by using an architecture with services that allow business logic applications and presentation service applications to exchange data in an efficient manner. The fundamental data distribution services are contained in Safir SDK Core, which is descibed in this document.
-
-=== Not in our Scope
-
-==== System vs System of Systems
-
-A _System_ in Safir SDK Core terms is one or more computers connected by the distribution mechanism of Safir SDK Core, the _Dob_. These computers are able to communicate using the Dob. The Dob has certain expectations about the network environment and topology, for example it expects reasonable connectivity. The Dob does not support Split/Join (se below).
-
-A _System of Systems_ in Safir SDK Core terms is for example a system where multiple vehicles each have a Safir SDK Core system that all communicate with each other over radio, and is resilient to very low bandwidth and frequent communication failures, e.g. due to a radio silent zone.
-
-Safir SDK Core does not provide a mechanism to synchronize between systems, it is only meant for communication within a system. However, it provides some of the building blocks needed to build an inter-system synchronization mechanism.
-
-==== Split/Join
-
-_Split_/_Join_ is a mechanism whereby one or several computers in a system are disconnected from the rest, forming a separate system. At a later time they are reconnected, and _the information sets in the two systems are merged automatically_ to produce one system with a coherent and synchronized information set.
-
-The distribution mechanism in Safir SDK Core is not expected to provide Split/Join functionality. However, the distribution mechanism shall provide the fundamental tools needed to add Split/Join functionality when Safir SDK Core is used to build Systems of Systems.
+This document describes the fundamental data distribution services contained in Safir SDK Core, which is descibed in this document.
 
 === Typical systems
 This section aims to define some typical systems where Safir SDK Core can be used for inter-process and inter-computer communication. It is meant to give a framework in which to view the requirements that follow in later sections.
@@ -114,6 +96,25 @@ Other data in the system has no real-time requirements, but may periodically gen
 As described above in ``Client/Server system with redundancy'' the connectivity between the redundant servers is expected to be good.
 
 One or more of the clients can be placed at a remote location, connected via a WAN or a VPN link.
+
+=== Limitation of Scope
+
+This section attempts to describe some things that Safir SDK Core is _not_. Implicitly it also describes functionality that can be built on top of Safir SDK Core, such as Safir SDK, the commercial product available from Saab AB.
+
+==== System vs System of Systems
+
+A _System_ in Safir SDK Core terms is one or more computers connected by the distribution mechanism of Safir SDK Core, the _Dob_. These computers are able to communicate using the Dob. The Dob has certain expectations about the network environment and topology, for example it expects reasonable connectivity. The Dob does not support Split/Join (se below).
+
+A _System of Systems_ in Safir SDK Core terms is for example a system where multiple vehicles each have a Safir SDK Core system that all communicate with each other over radio, and is resilient to very low bandwidth and frequent communication failures, e.g. due to a radio silent zone.
+
+Safir SDK Core does not provide a mechanism to synchronize between systems, it is only meant for communication within a system. However, it provides some of the building blocks needed to build an inter-system synchronization mechanism.
+
+==== Split/Join
+
+_Split_/_Join_ is a mechanism whereby one or several computers in a system are disconnected from the rest, forming a separate system. At a later time they are reconnected, and _the information sets in the two systems are merged automatically_ to produce one system with a coherent and synchronized information set.
+
+The distribution mechanism in Safir SDK Core is not expected to provide Split/Join functionality. However, the distribution mechanism shall provide the fundamental tools needed to add Split/Join functionality when Safir SDK Core is used to build Systems of Systems.
+
 
 == Safir SDK Core Requirements
 
