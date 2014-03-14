@@ -213,28 +213,34 @@ Persistency services are provided to allow applications to store data persistent
 req_1:: It shall be possible to configure entity types to be persistent.
 req_2:: Types marked as persistent shall be automatically persisted.
 req_3:: Persisted entity instances shall be automatically passed to the handler on startup.
-
-TODO: definiera vad vi ska kunna spara till. Fil, MySQL, MariaDb, Mimer, PostgreSQL
+req_4:: It shall be possible to configure persistency services to use a MySQL database for storage.
+req_5:: It shall be possible to configure persistency services to use a MariaDb database for storage.
+req_6:: It shall be possible to configure persistency services to use a Mimer database for storage.
+req_7:: It shall be possible to configure persistency services to use a PostgreSQL database for storage.
+req_8:: It shall be possible to configure persistency services to use plain files for storage.
 
 === Types
 Safir SDK Core shall provide a type system that can be used to construct complex types that can be exchanged between nodes and between applications written in various programming languages.
 
 req_1:: Safir SDK Core shall provide basic types like integers and floating point values.
-
 req_2:: Safir SDK Core shall permit creation of user defined enumeration types.
-
 req_3:: Safir SDK Core shall permit creation of user defined classes consisting of the predefined types and other user defined types.
 
 ==== Parameters
-TODO: beskriv vad en parameter är och att man kan läsa dem
-TODO: skriv om req_5 så att man bara fattar vad en parameter kan ha för typer av värden.
-TODO: vad är reference?
+A parameter is a name-value pair that can be configured when the system is not started and read during runtime. Parameters cannot be changed during runtime. The value can be of any type that is supported by the type system, both simple types like integers or string and complex user defined types. Parameters can also referee to other parameters of the same type, that is using the same value as another parameter.
 
-req_5:: A parameter shall consist of a name and a value. The value can be of a simple type, which is either an integer, a float or a string or an object composed by simple types and/or objects.
-
-req_6:: An application shall be able to reference and read the value of a parameter. 
+req_1:: A parameter shall consist of a name and a value.
+req_2:: All types supported by the type system shall be valid as parameter types.
+req_3:: An application shall be able to read parameters at runtime.
+req_4:: It shall be possible to configure a parameter to reference another parameter.
 
 ==== Properties
+Properties can be explained as interfaces and attributes that can be loosly attached to a class. The class itself has no awareness of what properties it has. Properties can contain members that can be mapped to members in the class or mapped to parameter values.
+
+req_1:: 
+sätta property på klasser utan ändra typen
+interface
+mappa till members eller parametrar
 
 TODO: bygg in den här definitionen på nåt bra sätt i fritexten
 
@@ -280,13 +286,11 @@ req_6:: The start/stop mechanism shall be configurable to start external applica
 req_7:: The start/stop mechanism shall be able start and stop applications on any node in the system.
 req_8:: The control mechanism shall provide an unambiguous view of wich nodes are part of the system.
 
-
 === Context
 TODO: bättre fritext!
 
 Information shall be posible to separate into different contexts within the same system. For example real information should never be mixed up with replayed or simulated information.
 
 req_1:: Safir SDK Core shall support separation of information into different contexts.
-
 req_2:: An application that is connected to the Dob in one context shall not be able to access data from other contexts.
 
