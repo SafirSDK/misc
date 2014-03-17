@@ -125,6 +125,8 @@ Messages are data that any application can subscribe to and any application can 
 
 TODO: ...
 
+TODO: Bör vi beskriva behovet av oackade messages i ett krav?
+
 ==== Entities
 
 TODO: ta bort objekt, använd instans.
@@ -181,6 +183,7 @@ req_13::
 req_14::
     Safir SDK Core shall provide a mechanism for applications to read entity instance states.
 
+TODO: Bör vi beskriva behovet av oackade entities i ett krav. och beskriva i fritext att de kan användas för cykliska entiteter.
 
 ==== Services
 A Service has one or more handlers (known as a Service Handler) to which any application (known as a Requestor) can send service requests. For each service request that is sent, a response is received. The response is sent by the Service Handler, and indicates the result of the operation.
@@ -295,3 +298,10 @@ Information shall be posible to separate into different contexts within the same
 req_1:: Safir SDK Core shall support separation of information into different contexts.
 req_2:: An application that is connected to the Dob in one context shall not be able to access data from other contexts.
 
+
+
+=== Performance
+
+TODO: ska vi ha prestandakrav?
+
+TODO: Borde vi ha inbyggd möjlighet att mäta latens? Se REGISTER_TIMES-koden i dose...
