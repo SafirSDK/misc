@@ -47,8 +47,7 @@ A fundamental design tenet of the Safir architecture guidelines is to split or s
 
 Separating functionality into different applications allows a system to be deployed in a flexible manner. All applications could run on a single computer, or they could be spread across several computers, completely transparently to the applications.
 
-This document describes the fundamental data distribution services contained in Safir SDK Core, which is descibed in this document.
-
+This document describes the fundamental mechanisms contained in Safir SDK Core, foremost among which is the data distribution service.
 
 === Typical systems
 This section aims to define some typical systems where Safir SDK Core can be used for inter-process and inter-computer communication. It is meant to give a framework in which to view the requirements that follow in later sections.
@@ -73,6 +72,8 @@ Same configuration as ``Client/Server system'' above, but with two vital differe
 
 1. One or more clients may intermittently have very bad connectivity, e.g. due to a slip ring.
 2. The network may fail intermittently due to power failures.
+
+Network topology:: Everything is situated on the same LAN, but some connections may intermittently be in adegraded state or fail completely.
 
 ==== Client/Server system with redundancy
 
@@ -305,3 +306,50 @@ req_2:: An application that is connected to the Dob in one context shall not be 
 TODO: ska vi ha prestandakrav?
 
 TODO: Borde vi ha inbyggd möjlighet att mäta latens? Se REGISTER_TIMES-koden i dose...
+
+
+=== Performance
+
+Instead of providing a set of requirements for the exact performance that the distribution mechanism of Safir SDK Core shall provide this section describes a few different load scenarios.
+
+perf_req_1:: Safir SDK Core shall be able to handle the load scenarios described below. (TODO: kan man skriva så?)
+
+Since computer hardware is developing at a rapid pace it is not sensible to specify exactly which hardware the scenarios should be run on. Instead these scenarios are expected to be tested on "reasonably new and powerful" hardware:
+
+* Midrange Intel x86_64 processor less than two years old.
+* At least 4Gb RAM installed.
+* Midrange harddrive that is less than two years old.
+* Nothing except the operating system running on the computer.
+
+These specifications apply to all computers in the load scenarios, except where otherwise noted.
+
+Applies to all supported operating systems(kan vi testa det, eller ska alla scenarierna vara med blandade os?!??!)
+
+==== Load Scenario 1
+
+(sjöc)
+
+exempelvis
+
+* 20 noder
+* en nod producerar 5000 spårtransienter/s och 500 statics/s
+* en nod producerar 1000 spårtransienter/s och 50 statics/s
+* en nod producerar 5000 messages/s
+* 15 noder producerar 20 requests/s
+* två noder prenumererar på allt och producerar systemspår?
+
+* ska vi ställa krav på latens?
+
+==== Load Scenario 2
+
+(tacticall)
+
+exempelvis
+
+* 100 långsamma noder (testbart bara ifall vi kan köra virtuellt någonstans!)
+* 2 servrar som producerar data
+* klienterna skickar requests, och prenumererar på data
+
+==== Load Scenario 3
+
+standalone?
