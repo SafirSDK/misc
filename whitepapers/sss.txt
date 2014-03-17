@@ -10,20 +10,18 @@ Requirements for Safir SDK Core
 === Scope
 This document establishes the requirements for Safir SDK Core.
 
-
-TODO: *Skriv om detta!*
-
 The requirements are logically grouped in chapters. All requirements are assigned a unique identifier on the form <chap>_n, where <chap> is an abbreviation of the chapter name and n is a positive integer.
 
 === Revision History
 
-.Revision History
 [width="80%",cols="10%,15%,75%",options="header",frame="topbot",grid="none"]
 |=========================================================
 |Version|Date      |Comment
 
-|1.0A   |2014-03-13|
-First draft, based on information from SSS-106323
+|1.0A   |2014-03-14|
+First draft, based on information from ``SSS-106323 1.3'' and
+``pm384898_rr_safir_sdk_requirements_model.doc revision 155515
+version 1.2''
 
 |=========================================================
 
@@ -50,6 +48,7 @@ A fundamental design tenet of the Safir architecture guidelines is to split or s
 Separating functionality into different applications allows a system to be deployed in a flexible manner. All applications could run on a single computer, or they could be spread across several computers, completely transparently to the applications.
 
 This document describes the fundamental data distribution services contained in Safir SDK Core, which is descibed in this document.
+
 
 === Typical systems
 This section aims to define some typical systems where Safir SDK Core can be used for inter-process and inter-computer communication. It is meant to give a framework in which to view the requirements that follow in later sections.
@@ -253,7 +252,7 @@ Safir SDK Core is designed and implemented to be platform and compiler independe
 
 req_1:: Safir SDK Core shall support the latest Ubuntu Long Term Support release, on x86 and x86_64 platforms.
 req_2:: Safir SDK Core shall support the latest RedHat Enterprise Linux release on x86_64 platforms.
-req_3:: Safir SDK Core shall support the Windows 7 and Windows 8 on x86 and x86_64 platforms.
+req_3:: Safir SDK Core shall support the Windows 7 on x86 and x86_64 platforms.
 req_4:: Safir SDK Core shall support Visual Studio 2010, 2012 and 2013.
 
 === Error and event logging
@@ -265,6 +264,7 @@ req_1:: Safir SDK Core shall provide a mechanism that allows applications to per
 req_2:: The logging mechanism shall be able to send logs to the platform native logging mechanism (e.g. Windows Event Log)
 req_3:: The logging mechanism shall be able to send logs using the Syslog protocol as defined in RFC3164.
 req_4:: Logs shall contain timestamp based on the computer clock, category and a log text.
+req_5:: When running an application it shall be possible to enable and disable application defined logging (i.e. for debugging).
 
 === Languages
 It shall be possible to use Safir SDK Core from different programming languages. Applications written in different languages shall be able to communicate seamlessly.
@@ -285,6 +285,7 @@ req_5:: Safir SDK Core shall provide a stop mechanism that stops the system.
 req_6:: The start/stop mechanism shall be configurable to start external applications that is not part of Safir SDK Core.
 req_7:: The start/stop mechanism shall be able start and stop applications on any node in the system.
 req_8:: The control mechanism shall provide an unambiguous view of wich nodes are part of the system.
+req_9:: The start/stop mechanism shall monitor the processes started through it.
 
 === Context
 TODO: bättre fritext!
