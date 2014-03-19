@@ -282,7 +282,7 @@ plat_req_1:: Safir SDK Core shall support the latest Ubuntu Long Term Support re
 plat_req_2:: Safir SDK Core shall support the latest RedHat Enterprise Linux release on x86_64 platforms.
 plat_req_3:: Safir SDK Core shall support the Windows 7 on x86 and x86_64 platforms.
 plat_req_4:: Safir SDK Core shall support Visual Studio 2010, 2012 and 2013.
-plat_req_4:: 
+plat_req_5:: It shall be possible to install the Safir SDK Core software in accordance with the established standard for each supported plattform.
 
 === Error and event logging
 Logging functionality is provided to allow applications to report errors, events and other information. Log timestamps are expected to conform to the format specified by the logging mechanism, e.g. syslog or windows event log, and the timestamp will be based on the local computer clock.
