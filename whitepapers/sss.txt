@@ -75,6 +75,7 @@ Same configuration as ``Client/Server system'' above, but with two vital differe
 
 Network topology:: Everything is situated on the same LAN, but some connections may intermittently be in adegraded state or fail completely.
 
+[[typical_redundant]]
 ==== Client/Server system with redundancy
 
 As ``Client/Server system'' above, but instead of one server there may be two or more servers with redundancy. This means that when a server fails another server will take over its responsibilities with no or very little delay. The redundant server may provide identical or degraded service to the clients.
@@ -387,7 +388,10 @@ context_req_2:: An application that is connected to the Dob in one context shall
 
 Instead of providing a set of requirements for the exact performance that the distribution mechanism of Safir SDK Core shall provide this section describes a few different load scenarios.
 
-perf_req_1:: Safir SDK Core shall be able to handle the load scenarios described below. (TODO: kan man skriva så?)
+perf_req_1:: Safir SDK Core shall be able to handle the load scenarios described below.
+perf_req_2:: The load scenario tests shall be performed on the following platforms:
+             * Windows 7 x86_64 and Visual Studio 2013
+             * Latest Ubuntu Long Term Support release on x86_64
 
 Since computer hardware is developing at a rapid pace it is not sensible to specify exactly which hardware the scenarios should be run on. Instead these scenarios are expected to be tested on "reasonably new and powerful" hardware:
 
@@ -398,8 +402,6 @@ Since computer hardware is developing at a rapid pace it is not sensible to spec
 
 These specifications apply to all computers in the load scenarios, except where otherwise noted.
 
-Applies to all supported operating systems(kan vi testa det, eller ska alla scenarierna vara med blandade os?!??!)
-
 perf_req_2:: For all major and minor releases (e.g. 5.0 and 5.1, but not 5.1.1) results from running these scenarios shall be documented and made available to customers and potential customers.  
 
 perf_req3:: The documented results shall contain at least the following:
@@ -408,6 +410,7 @@ perf_req3:: The documented results shall contain at least the following:
 * Latency statistics
 * Loss statistics for unacknowledged data
 * Maximum achieved throughput
+* Average CPU load
 
 Some definitions needed for the scenarios:
 
@@ -425,9 +428,9 @@ This scenario is intended to be an approximate instantiation of the typical syst
 
 * 20 computers with equivalent hardware, each running one node.
 * Node A owns 1000 instances of +CyclicEntity+, each updated at 1Hz.
-* Node A owns 1000 instances of +StaticEntity+, each updated at random intervals between 1 and 5 minutes.
+* Node A owns 1000 instances of +StaticEntity+, with twenty random instances being updated every second.
 * Node B owns 4000 instances of +CyclicEntity+, each updated at 0.1Hz.
-* Node B owns 4000 instances of +StaticEntity+, each updated at random intervals between 3 and 8 minutes.
+* Node B owns 4000 instances of +StaticEntity+, with twenty random instances being updated every second.
 * Node C and D each produce 500 +CyclicMessage+ per second.
 * Node E handles +ReqResp+ requests.
 * 15 nodes each produce 10 update requests per second on random +StaticEntity+ instances.
@@ -436,17 +439,16 @@ This scenario is intended to be an approximate instantiation of the typical syst
 
 ==== Load Scenario 2
 
-(tacticall)
+This scenario is intended to be an approximate instantiation of the typical system described in <<typical_redundant>>.
 
-exempelvis
+* 2 computers each running one ``Server'' node.
+* Server A own 10000 instances of +StaticEntity+, with 100 random instances being updated every second.
+* Server B subscribes to all entities.
+* 100 ``Client'' nodes that may be slower (either due to slower network connection or slower hardware) than the two servers. 
+* All client nodes subscribe to all entities
+* All client nodes each produce 1 update request per second on random +StaticEntity+ instances.
+* Every minute one random client node restarts.
+* The network shall have a component connected that introduces errors into the the network traffic, e.g. by discarding packets and changing packet order.
 
-* 100 långsamma noder (testbart bara ifall vi kan köra virtuellt någonstans!)
-* 2 servrar som producerar data
-* klienterna skickar requests, och prenumererar på data
+Multiple client nodes may run on the same hardware, e.g. through virtualization. The clients may also be run on a cloud hosting service, to reduce the need for purchasing dedicated hardware.
 
-==== Load Scenario 3
-
-standalone?
-
-
-packetstorm?
