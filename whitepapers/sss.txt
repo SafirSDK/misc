@@ -85,6 +85,8 @@ Network topology:: The servers are expected to have good connectivity between th
 +
 If the connectivity between the servers is bad there will be many redundancy failovers which will cause a lot of network traffic and server reboots.
 
+
+[[typical_complex]]
 ==== Complex System with Soft Real-Time requirements
 
 This type of system contains multiple servers with different responsibilities, and all or most of the servers have redundancy. There are many clients, some of which have good connectivity and some that have bad connectivity.
@@ -117,6 +119,24 @@ The distribution mechanism in Safir SDK Core is not expected to provide Split/Jo
 
 
 == Safir SDK Core Requirements
+
+=== License and Delivery
+
+TODO: 
+
+- GPLv3 and compatible licenses
+- 3rd party stuff must be compatible
+- etc
+
+- leverans av källkod på publik site?
+- Enligt kraven i GPLv3
+- installerare i framtiden?
+
+=== Documentation
+
+doc_req_1:: The external interfaces of Safir SDK Core shall be well documented in a User's Guide.
+
+
 
 === Distribution
 The Dob provides three distribution mechanisms; Messages, Services and Entities. These three fulfil different needs in a distributed real time system, and have different characteristics and provide different guarantees.
@@ -365,13 +385,6 @@ context_req_2:: An application that is connected to the Dob in one context shall
 
 === Performance
 
-TODO: ska vi ha prestandakrav?
-
-TODO: Borde vi ha inbyggd möjlighet att mäta latens? Se REGISTER_TIMES-koden i dose...
-
-
-=== Performance
-
 Instead of providing a set of requirements for the exact performance that the distribution mechanism of Safir SDK Core shall provide this section describes a few different load scenarios.
 
 perf_req_1:: Safir SDK Core shall be able to handle the load scenarios described below. (TODO: kan man skriva så?)
@@ -387,20 +400,39 @@ These specifications apply to all computers in the load scenarios, except where 
 
 Applies to all supported operating systems(kan vi testa det, eller ska alla scenarierna vara med blandade os?!??!)
 
+perf_req_2:: For all major and minor releases (e.g. 5.0 and 5.1, but not 5.1.1) results from running these scenarios shall be documented and made available to customers and potential customers.  
+
+perf_req3:: The documented results shall contain at least the following:
+* Hardware specifications of test platform
+* Software versions used (e.g. operating system and dependencies)
+* Latency statistics
+* Loss statistics for unacknowledged data
+* Maximum achieved throughput
+
+Some definitions needed for the scenarios:
+
++CyclicEntity+:: An entity with ten members, with a serialized size of less than 150 bytes. This entity shall be sent without acknowledgements over the network.
+
++StaticEntity+:: An entity with 40 members, with a serialized size of around 3000 bytes. This entity shall be sent with acknowledgements over the network.
+
++CyclicMessage+:: A message with 200 members, with a serialized size of around 4000 bytes. This message shall be sent without guaranteed delivery.
+
++ReqResp+:: A service with a small request size (5 members, serialized size around 100 bytes) and a large response size (20 members, serialized size around 50Kb).
+
 ==== Load Scenario 1
 
-(sjöc)
+This scenario is intended to be an approximate instantiation of <<typical_complex>>.
 
-exempelvis
-
-* 20 noder
-* en nod producerar 5000 spårtransienter/s och 500 statics/s
-* en nod producerar 1000 spårtransienter/s och 50 statics/s
-* en nod producerar 5000 messages/s
-* 15 noder producerar 20 requests/s
-* två noder prenumererar på allt och producerar systemspår?
-
-* ska vi ställa krav på latens?
+* 20 computers with equivalent hardware, each running one node.
+* Node A owns 1000 instances of +CyclicEntity+, each updated at 1Hz.
+* Node A owns 1000 instances of +StaticEntity+, each updated at random intervals between 1 and 5 minutes.
+* Node B owns 4000 instances of +CyclicEntity+, each updated at 0.1Hz.
+* Node B owns 4000 instances of +StaticEntity+, each updated at random intervals between 3 and 8 minutes.
+* Node C and D each produce 500 +CyclicMessage+ per second.
+* Node E handles +ReqResp+ requests.
+* 15 nodes each produce 10 update requests per second on random +StaticEntity+ instances.
+* 15 nodes each produce 10 +ReqResp+ requests per second.
+* All nodes subscribe to all entity updates.
 
 ==== Load Scenario 2
 
@@ -415,3 +447,6 @@ exempelvis
 ==== Load Scenario 3
 
 standalone?
+
+
+packetstorm?
