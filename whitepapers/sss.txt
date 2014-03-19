@@ -7,6 +7,19 @@ Requirements for Safir SDK Core
 
 == Introduction
 
+=== License
+
+    Copyright (C) Saab AB.
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the GNU Free Documentation License, Version 1.3
+    or any later version published by the Free Software Foundation;
+    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    A copy of the license is included in the source code distribution and it
+    is also available from https://www.gnu.org/licenses.
+
+TODO: har vi några invariant sections?
+
+
 === Scope
 This document establishes the requirements for Safir SDK Core.
 
@@ -121,21 +134,22 @@ The distribution mechanism in Safir SDK Core is not expected to provide Split/Jo
 
 == Safir SDK Core Requirements
 
-=== License and Delivery
+=== License
 
-TODO: 
+Safir SDK Core is an Open Source product, however it is also available under a commercial closed-source license from Saab AB.
+The GNU licenses that are used are available from https://www.gnu.org/licenses/[].
 
-- GPLv3 and compatible licenses
-- 3rd party stuff must be compatible
-- etc
+lic_req_1:: The Safir SDK Core source code shall be made available under the GNU General Public License version 3.
+lic_req_2:: The Safir SDK Core documentation shall be made available under the GNU Free Documentation License version 1.3
+lic_req_3:: Third party libraries that are used by Safir SDK Core shall be available under a license that is compatible with GNU General Public License version 3.
 
-- leverans av källkod på publik site?
-- Enligt kraven i GPLv3
-- installerare i framtiden?
+Since Safir SDK Core is also available under a closed-source commercial license that allows customers to build proprietary closed-source systems it is important that the third party libraries allow this.
+
+lic_req_4:: Third party libraries that are used by Safir SDK Core shall be available under a license that allows for closed-source distribution of derivative works.
 
 === Documentation
 
-doc_req_1:: The external interfaces of Safir SDK Core shall be well documented in a User's Guide.
+doc_req_1:: Safir SDK Core shall be well documented in a User's Guide.
 
 === Distribution
 The Dob provides three distribution mechanisms; Messages, Services and Entities. These three fulfil different needs in a distributed real time system, and have different characteristics and provide different guarantees.
