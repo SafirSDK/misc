@@ -119,18 +119,18 @@ The distribution mechanism in Safir SDK Core is not expected to provide Split/Jo
 == Safir SDK Core Requirements
 
 === Distribution
-TODO
+The Dob provides three distribution mechanisms; Messages, Services and Entities. These three fulfil different needs in a distributed real time system, and have different characteristics and provide different guarantees.
 
 ==== Messages
 Messages are data that any application can subscribe to and any application can send. When an application sends a message, it is forwarded to all subscribers of that message.
 
-There are two types of messages; messages that are guaranteed to be delivered and messages that don't have this guarantee. The requirements that are specific for a certain type are found in the corresponding subsections.
+There are two types of messages; messages that are guaranteed to be delivered and messages that don't have this guarantee. The requirements that are specific for only one of these types are found in the corresponding subsections.
 
 mes_req_1::
     Safir SDK Core shall provide a mechanism for applications to send messages that are received by zero or more subscribers.
 
 mes_req_2::
-    Safir SDK Core shall provide a mechanism for applications to subscribe to messeages.
+    Safir SDK Core shall provide a mechanism for applications to subscribe to messages.
 
 mes_req_3::
     Safir SDK Core shall guarantee that the message order is kept between sender and receiver.
@@ -148,7 +148,7 @@ mesunack_req_1::
     Safir SDK Core shall provide a mechanism for applications to send messages without guaranteed delivery.
 
 ===== Messages with guaranteed delivery
-Messages with guaranteed delivery are used when messages must be delivered to all current subscribers. The sender is notified if the delivery to one or more subscribers did fail.
+Messages with guaranteed delivery are used when messages must be delivered to all current subscribers. The sender is informed about the outcome of the send operation, that is, if the message was successfully delivered to all subscribers or if the delivery to one or more subscribers did fail.
 
 mesack_req_1::
     Safir SDK Core shall provide a mechanism for applications to send messages with guaranteed delivery.
@@ -245,7 +245,7 @@ reqrep_req_4::
     In the case of an overflow Safir SDK Core shall notify the application when it’s possible to start sending requests again.
 
 ==== Handler registration subscriptions
-It is possible for applications to subscribe to the registration of entity and service handlers. This is useful to be able to monitor the status of other applications in the system.
+It is possible for applications to subscribe to the registration/unregistration of entity and service handlers. This is useful to be able to monitor the status of other applications in the system.
 
 If a registration goes down and up “very quickly”, the subscriber is guaranteed to get at least one notification that the handler has temporarily been unregistered. Compare that with entity subscribers, who are not guaranteed to get told if an entity is deleted and then recreated immediately
 
@@ -262,7 +262,22 @@ addr_req_1::
     Safir SDK Core shall provide a mechanism for requestors to address a handler by a logical name that is completly transparent to where the receiver is located.
 
 addr_req_2::
-    Safir SDK Core shall provide a mechanism for message senders to send messages without any knowledge of the location of the subscribers. 
+    Safir SDK Core shall provide a mechanism for message senders to send messages without any knowledge of the location of the subscribers.
+
+==== Queues
+For each connection there is a set of associated queues, Outbound request/reply queue, Inbound request/reply queue, Outbound message queue and Inbound message queue.
+
+que_reg_1::
+    It shall be possible to configure the length of the outbound request/reply queue separately for each connection.
+
+que_req_2::
+    It shall be possible to configure the length of the inbound request/reply queue separately for each connection.
+
+que_req_3::
+    It shall be possible to configure the length of the outbound message queue separately for each connection.
+
+que_req_4::
+    It shall be possible to configure the length of the inbound message queue separately for each connection.
 
 === Persistence
 Persistency services are provided to allow applications to store data persistently in order to survive a restart of the system or an application.
