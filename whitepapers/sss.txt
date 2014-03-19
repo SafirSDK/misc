@@ -137,8 +137,6 @@ TODO:
 
 doc_req_1:: The external interfaces of Safir SDK Core shall be well documented in a User's Guide.
 
-
-
 === Distribution
 The Dob provides three distribution mechanisms; Messages, Services and Entities. These three fulfil different needs in a distributed real time system, and have different characteristics and provide different guarantees.
 
@@ -147,41 +145,24 @@ Messages are data that any application can subscribe to and any application can 
 
 There are two types of messages; messages that are guaranteed to be delivered and messages that don't have this guarantee. The requirements that are specific for only one of these types are found in the corresponding subsections.
 
-mes_req_1::
-    Safir SDK Core shall provide a mechanism for applications to send messages that are received by zero or more subscribers.
-
-mes_req_2::
-    Safir SDK Core shall provide a mechanism for applications to subscribe to messages.
-
-mes_req_3::
-    Safir SDK Core shall guarantee that the message order is kept between sender and receiver.
-
-mes_req_4::
-    Safir SDK Core shall issue an overflow to the message sender when a message can't be added to the outbound queue.
-
-mes_req_5::
-    In the case of an overflow Safir SDK Core shall notify the application when it’s possible to start sending messages again.
+mes_req_1:: Safir SDK Core shall provide a mechanism for applications to send messages that are received by zero or more subscribers.
+mes_req_2:: Safir SDK Core shall provide a mechanism for applications to subscribe to messages.
+mes_req_3:: Safir SDK Core shall guarantee that the message order is kept between sender and receiver.
+mes_req_4:: Safir SDK Core shall issue an overflow to the message sender when a message can't be added to the outbound queue.
+mes_req_5:: In the case of an overflow Safir SDK Core shall notify the application when it’s possible to start sending messages again.
 
 ===== Messages without guaranteed delivery
 Messages without guaranteed delivery are typically used for cyclic data where a few lost messages are acceptable. For example, messages can be lost due to network failures or if some application cannot keep up with the message rate. There is no way for the sender to know whether or not a message actually has been delivered.
 
-mesunack_req_1::
-    Safir SDK Core shall provide a mechanism for applications to send messages without guaranteed delivery.
+mesunack_req_1:: Safir SDK Core shall provide a mechanism for applications to send messages without guaranteed delivery.
 
 ===== Messages with guaranteed delivery
 Messages with guaranteed delivery are used when messages must be delivered to all current subscribers. The sender is informed about the outcome of the send operation, that is, if the message was successfully delivered to all subscribers or if the delivery to one or more subscribers did fail.
 
-mesack_req_1::
-    Safir SDK Core shall provide a mechanism for applications to send messages with guaranteed delivery.
-
-mesack_req_2::
-    Safir SDK Core shall provide a mechanism for the message sender to be notified when a message has been successfully delivery to all subscribers.
-
-mesack_req_3::
-    Safir SDK Core shall provide a mechanism for the message sender to be notified if the message delivery to one or more subscribers did fail.
-
-mesack_req_4::
-    It shall be possible to configure how long time to wait for responses from all subscribers before notifying the sender.
+mesack_req_1:: Safir SDK Core shall provide a mechanism for applications to send messages with guaranteed delivery.
+mesack_req_2:: Safir SDK Core shall provide a mechanism for the message sender to be notified when a message has been successfully delivery to all subscribers.
+mesack_req_3:: Safir SDK Core shall provide a mechanism for the message sender to be notified if the message delivery to one or more subscribers did fail.
+mesack_req_4:: It shall be possible to configure how long time to wait for responses from all subscribers before notifying the sender.
 
 ==== Entities
 An entity is a class of which there can be instances that are stored in the Dob. For every entity class there can be several entity handlers. A handler announces its intention to "handle" entity instances of a certain class by making a registration with the class. The handler that creates a particular instance is said to be the owner of that instance. An instance has one (and only one) owner. Only the owner is allowed to modify the instance.
@@ -190,115 +171,59 @@ Any application can send a request to create, update or delete an entity instanc
 
 Any application can subscribe for entity instances, which means that it will receive updates whenever the instances are changed. Entity updates are guaranteed to reach all subscribers, with one important caveat; subscribers are not guaranteed to see all intermediate states of an entity.
 
-ent_req_1::
-    Safir SDK Core shall keep a local object cache with entity instances on each node.
-
-ent_req_2::
-    Safir SDK Core shall keep all local object caches synchronized.
-
-ent_req_3::
-    Safir SDK Core shall provide a mechanism for applications to register handlers for entity classes.
-
-ent_req_4::
-    Safir SDK Core shall provide a mechanism for applications that has a registered handler to create entity instances of the class.
-
-ent_req_5::
-    Safir SDK Core shall ensure that an entity instance has one, and only one, owner.
-
-ent_req_6:: 
-    Safir SDK Core shall provide a mechanism for entity owners to update entities.
-
-ent_req_7:: 
-    Safir SDK Core shall provide a mechanism for entity owners to delete entities.
-
-ent_req_8::
-    Safir SDK Core shall provide a mechanism for applications to send requests to handlers to create entities.
-
-ent_req_9::
-    Safir SDK Core shall provide a mechanism for applications to send update requests for existing entities. The update requests shall be delivered to the entity owner.
-
-ent_req_10::
-    Safir SDK Core shall provide a mechanism for applications to send delete requests for existing entities. The delete requests shall be delivered to the entity owner.
-
-ent_req_11::
-    Safir SDK Core shall provide a mechanism for entity handlers/owners to send responses to received requests.
-
-ent_req_12::
-    Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance creations.
-
-ent_req_13::
-    Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance updates.
-
-ent_req_14::
-    Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance deletes.
-
-ent_req_15::
-    Safir SDK Core shall provide a mechanism for applications to read entity instance states.
- 
-ent_req_16::
-    It shall be possible to configure if entities shall be acknowledged or not. Unacknowledged entities is an optimization that can be used for entities that are cyclically (and frequently) updated
+ent_req_1:: Safir SDK Core shall keep a local object cache with entity instances on each node.
+ent_req_2:: Safir SDK Core shall keep all local object caches synchronized.
+ent_req_3:: Safir SDK Core shall provide a mechanism for applications to register handlers for entity classes.
+ent_req_4:: Safir SDK Core shall provide a mechanism for applications that has a registered handler to create entity instances of the class.
+ent_req_5:: Safir SDK Core shall ensure that an entity instance has one, and only one, owner.
+ent_req_6:: Safir SDK Core shall provide a mechanism for entity owners to update entities.
+ent_req_7:: Safir SDK Core shall provide a mechanism for entity owners to delete entities.
+ent_req_8:: Safir SDK Core shall provide a mechanism for applications to send requests to handlers to create entities.
+ent_req_9:: Safir SDK Core shall provide a mechanism for applications to send update requests for existing entities. The update requests shall be delivered to the entity owner.
+ent_req_10:: Safir SDK Core shall provide a mechanism for applications to send delete requests for existing entities. The delete requests shall be delivered to the entity owner.
+ent_req_11:: Safir SDK Core shall provide a mechanism for entity handlers/owners to send responses to received requests.
+ent_req_12:: Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance creations.
+ent_req_13:: Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance updates.
+ent_req_14:: Safir SDK Core shall provide a mechanism for applications to subscribe to entity instance deletes.
+ent_req_15:: Safir SDK Core shall provide a mechanism for applications to read entity instance states.
+ent_req_16:: It shall be possible to configure if entities shall be acknowledged or not. Unacknowledged entities is an optimization that can be used for entities that are cyclically (and frequently) updated
 
 ==== Services
 A Service has one or more handlers (known as a Service Handlers) to which any application (known as a Requestor) can send service requests. For each service request that is sent, a response is received. The response is sent by the Service Handler, and indicates the result of the operation.
 
-ser_req_1::
-    Safir SDK Core shall provide a mechanism for applications to register handlers for service classes.
-
-ser_req_2::
-    Safir SDK Core shall provide a mechanism for applications to send requests to service handlers.
-
-ser_req_3::
-    Safir SDK Core shall provide a mechanism for service handlers to send responses to received requests.
+ser_req_1:: Safir SDK Core shall provide a mechanism for applications to register handlers for service classes.
+ser_req_2:: Safir SDK Core shall provide a mechanism for applications to send requests to service handlers.
+ser_req_3:: Safir SDK Core shall provide a mechanism for service handlers to send responses to received requests.
 
 ==== Requests/Responses
 The following requirements applies to entity create requests, entity update requests, entity delete requests, service requests and their corresponding responses.
 
-reqrep_req_1::
-    If a request can not be delivered because there is no registered handler, Safir SDK Core shall generate an error response to the requestor.
-
-reqrep_req_2::
-    If the receiver of the request does not send a response within a configurable amount of time, Safir SDK Core shall generate an error response (timeout) to the requestor.
-
-reqrep_req_3::
-    Safir SDK Core shall issue an overflow to the requestor when a request can't be added to the outbound queue.
-
-reqrep_req_4::
-    In the case of an overflow Safir SDK Core shall notify the application when it’s possible to start sending requests again.
+reqrep_req_1:: If a request can not be delivered because there is no registered handler, Safir SDK Core shall generate an error response to the requestor.
+reqrep_req_2:: If the receiver of the request does not send a response within a configurable amount of time, Safir SDK Core shall generate an error response (timeout) to the requestor.
+reqrep_req_3:: Safir SDK Core shall issue an overflow to the requestor when a request can't be added to the outbound queue.
+reqrep_req_4:: In the case of an overflow Safir SDK Core shall notify the application when it’s possible to start sending requests again.
 
 ==== Handler registration subscriptions
 It is possible for applications to subscribe to the registration/unregistration of entity and service handlers. This is useful to be able to monitor the status of other applications in the system.
 
 If a registration goes down and up “very quickly”, the subscriber is guaranteed to get at least one notification that the handler has temporarily been unregistered. Compare that with entity subscribers, who are not guaranteed to get told if an entity is deleted and then recreated immediately
 
-hanreg_req_1::
-    Safir SDK Core shall provide a mechanism for applications to subscribe to registration and unregistration of entity and service handlers.
-
-hanreg_req_2::
-    Safir SDK Core shall guarantee that a subscriber gets at least one notification when a handler is temporarily unregistered one or more times.
+hanreg_req_1:: Safir SDK Core shall provide a mechanism for applications to subscribe to registration and unregistration of entity and service handlers.
+hanreg_req_2:: Safir SDK Core shall guarantee that a subscriber gets at least one notification when a handler is temporarily unregistered one or more times.
 
 ==== Addressing
 The addressing mechanism used by Safir SDK Core is completly transparent. The sender of a request or message doesn't know if the receiver is located on the same node or on a remote node.
   
-addr_req_1::
-    Safir SDK Core shall provide a mechanism for requestors to address a handler by a logical name that is completly transparent to where the receiver is located.
-
-addr_req_2::
-    Safir SDK Core shall provide a mechanism for message senders to send messages without any knowledge of the location of the subscribers.
+addr_req_1:: Safir SDK Core shall provide a mechanism for requestors to address a handler by a logical name that is completly transparent to where the receiver is located.
+addr_req_2:: Safir SDK Core shall provide a mechanism for message senders to send messages without any knowledge of the location of the subscribers.
 
 ==== Queues
 For each connection there is a set of associated queues, Outbound request/reply queue, Inbound request/reply queue, Outbound message queue and Inbound message queue.
 
-que_reg_1::
-    It shall be possible to configure the length of the outbound request/reply queue separately for each connection.
-
-que_req_2::
-    It shall be possible to configure the length of the inbound request/reply queue separately for each connection.
-
-que_req_3::
-    It shall be possible to configure the length of the outbound message queue separately for each connection.
-
-que_req_4::
-    It shall be possible to configure the length of the inbound message queue separately for each connection.
+que_reg_1:: It shall be possible to configure the length of the outbound request/reply queue separately for each connection.
+que_req_2:: It shall be possible to configure the length of the inbound request/reply queue separately for each connection.
+que_req_3:: It shall be possible to configure the length of the outbound message queue separately for each connection.
+que_req_4:: It shall be possible to configure the length of the inbound message queue separately for each connection.
 
 === Persistence
 Persistency services are provided to allow applications to store data persistently in order to survive a restart of the system or an application.
@@ -343,6 +268,7 @@ plat_req_1:: Safir SDK Core shall support the latest Ubuntu Long Term Support re
 plat_req_2:: Safir SDK Core shall support the latest RedHat Enterprise Linux release on x86_64 platforms.
 plat_req_3:: Safir SDK Core shall support the Windows 7 on x86 and x86_64 platforms.
 plat_req_4:: Safir SDK Core shall support Visual Studio 2010, 2012 and 2013.
+plat_req_4:: 
 
 === Error and event logging
 Logging functionality is provided to allow applications to report errors, events and other information. Log timestamps are expected to conform to the format specified by the logging mechanism, e.g. syslog or windows event log, and the timestamp will be based on the local computer clock.
