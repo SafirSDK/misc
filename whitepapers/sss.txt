@@ -421,7 +421,7 @@ Some definitions needed for the scenarios:
 
 ==== Load Scenario 1
 
-This scenario is intended to be an approximate instantiation of <<typical_complex>>.
+This scenario is intended to be an approximate instantiation of the typical system described in <<typical_complex>>.
 
 * 20 computers with equivalent hardware, each running one node.
 * Node A owns 1000 instances of +CyclicEntity+, each updated at 1Hz.
