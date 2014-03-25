@@ -33,7 +33,9 @@ Addition of specific "join" cases will allow more uses::
     Add description for server node.  
 
 Less static configuration::
-  We want to provide a "dhcp"-like functionality for configuring nodes, so that instead of configuring the node identities and other details that should be internal you specify a node type, e.g. "operator console" or "Database server", and from that we internally work out what node id a node should have. This would make adding new nodes a lot easier. *TODO* Is it a problem that a node changes its id? (Peters post-it case)
+  We want to provide a "dhcp"-like functionality for configuring nodes, so that instead of configuring the node identities and other details that should be internal you specify a node type, e.g. "operator console" or "Database server", and from that we internally work out what node id a node should have. This would make adding new nodes a lot easier.
++
+*TODO* Is it a problem that a node changes its id? (Peters post-it case)
 
 Easier to display system status::
   We want to provide a unified picture of the system topology, both for use by the system itself to make sure the system remains robust, but this information can also be displayed to allow users and developers to understand what the system status is.
@@ -256,39 +258,28 @@ iex använder man bara när man verkligen behöver det och bara på de typer som
 
 
 === Introduction
-TODO: några exempel på nätverk som vi ska klara av att hantera.
-
-Rent TTL=1-LAN med korkad switch
-
-Bättre switch (IGMP-snooping)
-
-Lägg till några långsamma noder
-
-Tacticall-liknande, två servrar, massor med klienter med taskig koppling.
-
-Kan vi stödja att klienter inte kan nå varandra? Baserat på nodtyp?
 
 === Definitions
 
-System::
-        TODO
 Node::
+        TODO
+System::
         TODO
 
 === Assumptions
 
-We rely on the IP stack for packet error detection. No additional checksumming on packets will be performed.
+* We rely on the IP stack for packet error detection. No additional checksumming on packets will be performed.
 
-No malicious packets are present on the network. The system will not detect packets that are intentionally trying to disrupt the system.
+* No malicious packets are present on the network. The system will not detect packets that are intentionally trying to disrupt the system.
 
-Data is sent in the clear. Any encryption shall be handled on the network level, e.g. with an encrypted VPN.
+* Data is sent in the clear. Any encryption shall be handled on the network level, e.g. with an encrypted VPN.
 
 === Requirements
 
 ==== Network level requirements
 
 req_1::
-    _Safir SDK Core_ shall have no implementation limits to the number of nodes.
+    Safir SDK Core shall have no implementation limits to the number of nodes.
     * System characteristics and configuration...
     * Network and CPU capacity and desired data throughput will limit this anyway.
     * Expected size of systems is from one to 500 nodes.
@@ -406,7 +397,9 @@ req_26::
 
 === TODOs
 
-Ingen djävla latensmodell och trams om hård realtid!
+Seed förväntas vara till bara ett system, om man seedar till flera system så får man skylla sig själv.
+
+Ska inkarnationsnumret på något sätt ingå i alla paket? Så att vi kan garantera att alla paket tillhör inkarnationen.
 
 How to handle changed ip address on castrato nodes?
 
@@ -416,8 +409,6 @@ Skriv Dope-krav och ta bort fulredundansvarianten. Lås i db!
 
 Objektsdefinitioner ska vara lika på alla noder. Parametrar får vara olika. Kanske nån annan mekanism.
 
-Behöver ett kapitel som definierar och förklarar System vs System av System. När använder man vad?!
-
 Requirement on the distribution mechanism and on each sub-component.
 
 Little/big endian?
@@ -426,6 +417,66 @@ Ska vi ha någon magic byte, eller annan trafikkrocksdetektion? CRC kanske är d
 
 
 Ta med prioriteter i krav och design, men implementera inte. På vilken nivå ska prioriteterna ligga?
+
+=== Node startup sequences
+
+SP~m~:: System Picture Master, i.e. the one that runs in Control
+SP~m~(Bully):: Active System Picture Master, i.e. the one that runs in Control and is Bully
+SP~s~:: System Picture Slave, i.e. the one that runs in dose_main
+Square brackets:: Candidate to join the System.
+
+==== One already running (B), another starting (A)
+
+.Communication interface
+[width="80%",frame="topbot",options="header"]
+|======================
+|Node A | Node B
+
+|COM~m~: Discover
+|COM~m~: NodeInfo
+
+|SP~m~ -> COM~m~: Include B
+|SP~m~ -> COM~m~: Include A
+
+|SP~m~: Xmit RAW
+|SP~m~: Xmit RAW & SP (101, B, [A])
+
+|SP~m~ -> Ctrl: SP (101, B, [A])
+|SP~m~(Bully) -> Ctrl: SP (101, B, [A])
+
+|SP~m~ -> SP~s~: SP (101, B, [A])
+|SP~m~(Bully) -> SP~s~: SP (101, B, [A])
+
+|SP~s~ -> dose: SP (101, B, [A])
+|SP~s~ -> dose: SP (101, B, [A])
+
+|Ctrl -> SP~m~: Join 101
+|
+
+|SP~m~: Xmit Join 101
+|Lite oklart hur detta och följande steg sker, Bully?
+
+|
+|SP~m~: Xmit SP (101, B, A)
+
+|SP~m~ -> Ctrl: SP (101, B, A)
+|SP~m(Bully)~ -> Ctrl: SP (101, B, A)
+
+|SP~m~ -> SP~s~: SP (101, B, A)
+|SP~m~(Bully) -> SP~s~: SP (101, B, A)
+
+|SP~s~ -> dose: SP (101, B, A)
+|SP~s~ -> dose: SP (101, B, A)
+
+|dose -> COM~s~: connect to B
+|dose -> COM~s~: connect to A
+
+
+
+|======================
+
+
+*Lemma*: Så fort SP~m~ har ny SP så skickas den till Ctrl och till SP~s~. Så fort SP~s~ har ny SP så skickas den till dose_main.
 
 === Communication
 * Discover other nodes
