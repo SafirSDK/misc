@@ -428,7 +428,7 @@ The System Picture in the Control executable (known as the master) is the one th
 .Deployed components in a node
 image::node.png["Node Diagram", width=445, link="node.png"]
 
-.*Some Definitions*
+.Some Definitions
 [width="50%",cols="15%,85%",frame="topbot",options="header"]
 |======================
 | | Explanation
@@ -521,7 +521,40 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 
 |======================
 
+==== Two starting at the same time, no others
 
+.Communication interface
+[width="80%",frame="topbot",options="header"]
+|======================
+|Node A | Node B
+
+|COM~m~: Discover
+|COM~m~: NodeInfo
+
+|SP~m~ -> COM~m~: Include B
+|SP~m~ -> COM~m~: Include A
+
+|SP~m~: Xmit RAW
+|SP~m~: Xmit RAW
+
+| SP~m~: No coordinator in X seconds, start election (?)
+| SP~m~: No coordinator in X seconds, start election
+
+| 
+| B becomes coordinator
+
+|
+| [SP~m~]: Updated SP (null, [B], \{A})
+
+|
+| Ctrl -> [SP~m~]: New incarnation number (102)
+
+|
+| [SP~m~]: Updated SP (102, [B], \{A})
+
+|======================
+
+Now we're in the case with one node joining an existing system, see above.
 
 === Communication
 * Discover other nodes
@@ -582,6 +615,63 @@ Status::
   - Provides Dob objects of the application and group statuses of Control LowLevel.
   - Allows control of applications and groups through the Dob objects.
 
+=== Node types
+
+A system can have several node types, and one node is of one and only one node type. Each node type has a number of characteristics that control how communication with nodes that belong to it will happen.
+
+.Some Definitions
+[width="70%",cols="20%,15%,65%",frame="topbot",options="header"]
+|======================
+| Property Name | Type | Comment
+
+| Name 
+| string 
+| Name of the node type
+
+| IsCastrato 
+| boolean
+| Nodes of this type are castrato nodes (see below).
+
+| TalksTo
+| list of string
+| List of node types that nodes of this type can talk to. '*' if all node types.
+
+| Multicast
+| boolean
+| Is the node able to communicate via multicast
+
+| DeadTimeout
+| duration
+| How much time may pass without getting a packet from this node before marking it as dead.
+
+| HeartbeatInterval
+| duration
+| How often shall heartbeats/keepalives be sent.
+
+| SlidingWindowSize
+| int
+| Size of the sliding window when communicating with this node.
+
+| RetryTimeout
+| duration
+| Time to wait for Ack before retrying transmission to this node.
+
+|======================
+
+
+[[castrato_nodes]]
+==== Castrato nodes
+
+One of the most fundamental node type properties is whether a node is a castrato node. Castrato nodes are the _only_ kind of nodes that, after it has been disconnected (e.g. network cable has been disconnected), can rejoin a system without being restarted. A castrato node is for example not allowed to own any global entities, which means that when it is rejoined into the system there can be no conflicts between entity owners.
+
+The properties of a castrato node are:
+
+* Can only register handlers for entities that are marked as local.
+* Can only register handlers for services that are marked as local or _RegisterRandom_ (TODO: describe this!)
+* Can subscribe to everything
+* Can send messages
+
+The RegisterRandom part is to allow a castrato node to subscribe to Messages with Guaranteed Delivery (See TODO).
 
 === Control - Application Start/Stop
 
