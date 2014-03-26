@@ -634,7 +634,7 @@ A system can have several node types, and one node is of one and only one node t
 
 | TalksTo
 | list of string
-| List of node types that nodes of this type can talk to. '*' if all node types.
+| List of node types that nodes of this type can talk to. \'*' if all node types.
 
 | Multicast
 | boolean
@@ -658,6 +658,7 @@ A system can have several node types, and one node is of one and only one node t
 
 |======================
 
+All nodes have the full node type configuration available at startup, and when a node starts it knows of which node type it is.
 
 [[castrato_nodes]]
 ==== Castrato nodes
