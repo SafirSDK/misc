@@ -818,12 +818,12 @@ The Dob supports three kinds of mechanism: entities, messages and requests (serv
 In the current Dob implementation there are no guarantees that messages are delivered to all subscribers, but if a message is sent on an acked priority level the Dob guarantees that the message will arrive to the node. But after the message has arrived to the node there are no guarantees that it is delivered to all subscribers (if a subscriber's in queue is full the message will not be delivered to that subscriber). 
 This "delivery-to-node-but-not-to-subscriber-guarantee" is hard to explain and we have not been able to figure out any relevant use case where it could be used. Contrary to this, the new implementation will have two distinct, and hopefully, easy-to-explain concepts; messages that are guaranteed to be delivered to the receiving applications and messages that don't have this guarantee.
 
-===== Messages without guaranteed delivery
+==== Messages without guaranteed delivery
 Messages without guaranteed delivery are typically used for cyclic data where a few lost messages are acceptable. For example, messages can be lost due to network failures or if some application cannot keep up with the message rate. There is no way for the sender to know whether or not a message actually has been delivered.
 
 Messages of this type are always sent unacked on the network level.
 
-===== Messages with guaranteed delivery
+==== Messages with guaranteed delivery
 Messages with guaranteed delivery (secure messages) are used when messages must be delivered to all current subscribers. The sender is informed about the outcome of the send operation, i.e. if the message was successfully delivered to all subscribers or if the delivery to one or more subscribers did fail.
 
 The current approach is to use the Foreach mechanism to implement messages with guaranteed delivery. There is a separate article which discusses the details, see the http://safir.sourceforge.net[Safir homepage] for more info. The implementation is based on that service requests are used and that the message subscribers do register service handlers for global service types.
