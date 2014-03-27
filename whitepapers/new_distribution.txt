@@ -393,6 +393,9 @@ req_25::
 req_26::
     Control shall, together with Dose, guarantee that a node that wants to join is in a correct state to join.
 
+req_27::
+    Distribution shall use a CRC32 checksum to ensure data integrity when transmitting over the network.
+
 === Quality of Service
 
 ==== Distribution channels
@@ -417,8 +420,6 @@ Seed förväntas vara till bara ett system, om man seedar till flera system så 
 
 Ska inkarnationsnumret på något sätt ingå i alla paket? Så att vi kan garantera att alla paket tillhör inkarnationen.
 
-How to handle changed ip address on castrato nodes?
-
 TODO: Lägg till inkarnationsbegreppet!
 
 Skriv Dope-krav och ta bort fulredundansvarianten. Lås i db!
@@ -428,9 +429,6 @@ Objektsdefinitioner ska vara lika på alla noder. Parametrar får vara olika. Ka
 Requirement on the distribution mechanism and on each sub-component.
 
 Little/big endian?
-
-Ska vi ha någon magic byte, eller annan trafikkrocksdetektion? CRC kanske är den bästa lösningen.
-
 
 Ta med prioriteter i krav och design, men implementera inte. På vilken nivå ska prioriteterna ligga?
 
@@ -652,7 +650,7 @@ A system can have several node types, and one node is of one and only one node t
 
 | TalksTo
 | list of string
-| List of node types that nodes of this type can talk to. \'*' if all node types.
+| List of node types that nodes of this type can talk to. \'\*' if all node types. Only for nodes where IsCastrato is true can this be anything other than \'*'.
 
 | Multicast
 | boolean
@@ -686,11 +684,19 @@ One of the most fundamental node type properties is whether a node is a castrato
 The properties of a castrato node are:
 
 * Can only register handlers for entities that are marked as local.
-* Can only register handlers for services that are marked as local or _RegisterRandom_ (TODO: describe this!)
+* Can only register handlers for services that are marked as local or _RegisterRandom_.
 * Can subscribe to everything
 * Can send messages
 
-The RegisterRandom part is to allow a castrato node to subscribe to Messages with Guaranteed Delivery (See TODO).
+TODO: Det ska heta nåt med Unique, inte Random!
+
+The RegisterRandom part is to allow a castrato node to subscribe to Messages with Guaranteed Delivery (see <<delivered_messages>>).
+
+When a castrato node has been disconnected from a system and then reconnected to the same or a different system it will start a new Discovery.
+
+A castrato node may change its IP address while it is disconnected, since discovery will ensure that the new IP address is known by its counterparts.
+
+A castrato node may connect to a system with a different incarnation number after disconnection. I.e. it should not remember incarnation numbers when it is disconnected.
 
 === Control - Application Start/Stop
 
@@ -823,6 +829,7 @@ Messages without guaranteed delivery are typically used for cyclic data where a 
 
 Messages of this type are always sent unacked on the network level.
 
+[[delivered_messages]]
 ==== Messages with guaranteed delivery
 Messages with guaranteed delivery are used when messages must be delivered to all current subscribers. The sender is informed about the outcome of the send operation, i.e. if the message was successfully delivered to all subscribers or if the delivery to one or more subscribers did fail.
 
@@ -861,3 +868,4 @@ TODO: write about how requests will be implemented.
  * A "castrato node" must be able to live without all dou-files (object in object, etc). Filtering is done on receiver side.
  * To check: How do dirtysubs queue grow?
 
+ * Hur funkar lamportklockor och stjärnnät?!
