@@ -672,6 +672,14 @@ A system can have several node types, and one node is of one and only one node t
 | duration
 | Time to wait for Ack before retrying transmission to this node.
 
+| Wanted types
+| list of regex
+| All types that match will be sent to the node (unless they also match an Unwanted, below). Only for nodes where IsCastrato is true can this be anything other than \'.*'.
+
+| Unwanted types
+| list of regex
+| Types that match will not be sent to the node. Must be empty if IsCastrato is false.
+
 |======================
 
 All nodes have the full node type configuration available at startup, and when a node starts it knows of which node type it is.
@@ -697,6 +705,34 @@ When a castrato node has been disconnected from a system and then reconnected to
 A castrato node may change its IP address while it is disconnected, since discovery will ensure that the new IP address is known by its counterparts.
 
 A castrato node may connect to a system with a different incarnation number after disconnection. I.e. it should not remember incarnation numbers when it is disconnected.
+
+===== Castrato nodes, registrations and ownership
+
+Kastratnoder kan endast registrera handlers för typer markerade som angry eller lokala.
+
+Kastratnoder kan endast äga instanser för typer markerade som angry eller lokala.
+
+Angry-typer kan inte vara varken Volatile, Permanent eller Injectable persistent.
+
+Vi betraktar överregistrering av angry-typ som programmerings- eller konfigurationsfel.
+
+ * Man kan inte göra pending registration på angry-typer.
+ * Vi loggar error om vi detekterar detta.
+ * Vi garanterar inte att vi kan detektera detta om det inte blir en faktisk överregistrering på någon nod. 
+
+Icke-kastratnoder forwarderar registreringsförändringar på angry-typer, oavsett hur topologin/TalksTo ser ut. 
+
+Man får bara entitetsinstanser och messages från noder som kan prata med en (dvs har ens nodtyp i sin TalksTo).
+
+Det här garanterar att systemet är konsistent (dock garanterar det inte alla noder har all information).
+
+===== Castrato nodes and incomplete dou-set
+
+Kastratnoder ska kunna ha ofullständiga dou-filsuppsättningar.
+
+På "toppnivå" kastar dose_main bort typer som den inte känner till.
+
+På objekt i objekt så packas de upp till den typ man känner till, dvs basklassen.
 
 === Control - Application Start/Stop
 
@@ -864,10 +900,6 @@ TODO: write about how requests will be implemented.
  * DC and persistence is incompatible (or very difficult)
  * No priorities on socket level (can be added in dose_main by round-robin or something like that)
  * Entities are always acked (unacked entities is an optimization that can be added later)
- * Messages are unacked
- * Should a "castrato node be able to live without all dou-files (object in object, etc)?
-
- * Hur funkar lamportklockor och stjärnnät?!
 
 == Miscellaneous issues
 
