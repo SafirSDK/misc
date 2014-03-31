@@ -691,45 +691,39 @@ One of the most fundamental node type properties is whether a node is a _light_ 
 
 The properties of a light node are:
 
-* Can only register handlers for services that are marked as local or _limited_.
+* Can only register handlers for services that are marked as local or _limited_ (see below).
 * Can only register handlers for entities that are marked as local or limited.
 * Can (obviously) only own instances of entity types that are marked as local or limited.
 * Can subscribe to everything
+* Will only receive messages, requests and entity instances from nodes that can TalkTo it.
 * Can send messages
 
-When a light node has been disconnected from a system and then reconnected to the same or a different system it will start a new Discovery.
 
-A light node may change its IP address while it is disconnected, since discovery will ensure that the new IP address is known by its counterparts.
+When a light node has been disconnected from a system and then reconnected to the same or a different system it will start a new Discovery. It may also change its IP address while it is disconnected, since the discovery will ensure that the new IP address is known by its counterparts.
 
 A light node may connect to a system with a different incarnation number after disconnection. I.e. it should not remember incarnation numbers when it is disconnected.
 
-===== Light nodes, registrations and ownership
+===== Limited types
 
-Kastratnoder kan endast registrera handlers för typer markerade som limited eller lokala.
+A limited type is an Entity or Service type with a few limitations that make it possible for light nodes to register handlers and own instances of them. The limitations are there to ensure that a light node can reconnect to a system after it has been disconnected.
 
-Kastratnoder kan endast äga instanser för typer markerade som limited eller lokala.
+* A limited type can have no persistence, i.e. it has neither Volatile, Permanent or Injectable persistence.
+* Pending registrations of a limited type is not allowed.
+* Overregistration of a limited type is considered a programming or configuration error.
+ - An error will be logged if an overregistration is detected.
+ - There is no guarantee that all overregistrations will be detected.
 
-Limited-typer kan inte vara varken Volatile, Permanent eller Injectable persistent.
+===== Registrations and ownership of limited types
 
-Vi betraktar överregistrering av limited-typ som programmerings- eller konfigurationsfel.
+All regular (i.e. non-light) nodes forward changes in registrations on limited types to everyone. This will ensure that everyone gets changes in registration on limited types, although it will produce a certain amount of overhead. The overhead is only registration states of limited types, so it should be only a small amount of traffic in all sensible systems.
 
- * Man kan inte göra pending registration på limited-typer.
- * Vi loggar error om vi detekterar detta.
- * Vi garanterar inte att vi kan detektera detta om det inte blir en faktisk överregistrering på någon nod. 
-
-Icke-kastratnoder forwarderar registreringsförändringar på limited-typer, oavsett hur topologin/TalksTo ser ut. 
-
-Man får bara entitetsinstanser och messages från noder som kan prata med en (dvs har ens nodtyp i sin TalksTo).
-
-Det här garanterar att systemet är konsistent (dock garanterar det inte alla noder har all information).
+The forwarding of registrations will ensure that two light nodes cannot have the same type registered, and hence it will ensure that ownership is consistent. Of course it does not guarantee that all nodes contain the same information, since some entity instances may not be present on all nodes. But that will be obvious to the user because of the TalksTo field in the node type.
 
 ===== Light nodes and incomplete dou-set
 
-Kastratnoder ska kunna ha ofullständiga dou-filsuppsättningar.
+A light can contain only a subset (it must be a consistent subset, of course) of the dou files. 
 
-På "toppnivå" kastar dose_main bort typer som den inte känner till.
-
-På objekt i objekt så packas de upp till den typ man känner till, dvs basklassen.
+If dose_main receives data of a type that it does not know about it will discard it, and for objects that are embedded in other objects the data will be unpacked to the base type, which dots knows about.
 
 === Control - Application Start/Stop
 
