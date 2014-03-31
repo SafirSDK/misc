@@ -4,7 +4,7 @@
 New Distribution Whitepaper
 ==========================
 :Author: Lars Hagström, Anders Widén and Joel Ottosson
-28 Mar 2013
+:date: 2014-03-31
 
 == Preface
 The purpose of this document is to describe the new distribution mechanism of Safir SDK Core and the related changes. It contains information on the benefits, the requirements and the design.
