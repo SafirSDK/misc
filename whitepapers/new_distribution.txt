@@ -644,9 +644,9 @@ A system can have several node types, and one node is of one and only one node t
 | string 
 | Name of the node type
 
-| IsCastrato 
+| IsLight 
 | boolean
-| Nodes of this type are castrato nodes (see below).
+| Is th enode a _light_ node (see below).
 
 | TalksTo
 | list of string
@@ -674,22 +674,22 @@ A system can have several node types, and one node is of one and only one node t
 
 | Wanted types
 | list of regex
-| All types that match will be sent to the node (unless they also match an Unwanted, below). Only for nodes where IsCastrato is true can this be anything other than \'.*'.
+| All types that match will be sent to the node (unless they also match an Unwanted, below). Only for nodes where IsLight is true can this be anything other than \'.*'.
 
 | Unwanted types
 | list of regex
-| Types that match will not be sent to the node. Must be empty if IsCastrato is false.
+| Types that match will not be sent to the node. Must be empty if IsLight is false.
 
 |======================
 
 All nodes have the full node type configuration available at startup, and when a node starts it knows of which node type it is.
 
-[[castrato_nodes]]
-==== Castrato nodes
+[[light_nodes]]
+==== Light nodes
 
-One of the most fundamental node type properties is whether a node is a castrato node. Castrato nodes are the _only_ kind of nodes that, after it has been disconnected (e.g. network cable has been disconnected), can rejoin a system without being restarted. A castrato node is for example only allowed to own any global entities that are unique, which means that when it is rejoined into the system there can be no conflicts between entity owners.
+One of the most fundamental node type properties is whether a node is a _light_ node. Light nodes are the _only_ kind of nodes that, after it has been disconnected (e.g. network cable has been disconnected), can rejoin a system without being restarted. A light node is for example only allowed to own any global entities that are unique, which means that when it is rejoined into the system there can be no conflicts between entity owners.
 
-The properties of a castrato node are:
+The properties of a light node are:
 
 * Can only register handlers for services that are marked as local or _limited_.
 * Can only register handlers for entities that are marked as local or limited.
@@ -697,13 +697,13 @@ The properties of a castrato node are:
 * Can subscribe to everything
 * Can send messages
 
-When a castrato node has been disconnected from a system and then reconnected to the same or a different system it will start a new Discovery.
+When a light node has been disconnected from a system and then reconnected to the same or a different system it will start a new Discovery.
 
-A castrato node may change its IP address while it is disconnected, since discovery will ensure that the new IP address is known by its counterparts.
+A light node may change its IP address while it is disconnected, since discovery will ensure that the new IP address is known by its counterparts.
 
-A castrato node may connect to a system with a different incarnation number after disconnection. I.e. it should not remember incarnation numbers when it is disconnected.
+A light node may connect to a system with a different incarnation number after disconnection. I.e. it should not remember incarnation numbers when it is disconnected.
 
-===== Castrato nodes, registrations and ownership
+===== Light nodes, registrations and ownership
 
 Kastratnoder kan endast registrera handlers för typer markerade som limited eller lokala.
 
@@ -723,7 +723,7 @@ Man får bara entitetsinstanser och messages från noder som kan prata med en (d
 
 Det här garanterar att systemet är konsistent (dock garanterar det inte alla noder har all information).
 
-===== Castrato nodes and incomplete dou-set
+===== Light nodes and incomplete dou-set
 
 Kastratnoder ska kunna ha ofullständiga dou-filsuppsättningar.
 
@@ -867,12 +867,6 @@ Messages of this type are always sent unacked on the network level.
 Messages with guaranteed delivery are used when messages must be delivered to all current subscribers. The sender is informed about the outcome of the send operation, i.e. if the message was successfully delivered to all subscribers or if the delivery to one or more subscribers did fail.
 
 The current approach is to use the Foreach mechanism to implement messages with guaranteed delivery. There is a separate article which discusses the details, see the http://safir.sourceforge.net[Safir homepage] for more info. The implementation is based on that service requests are used and that the message subscribers do register service handlers for global service types.
-
-////
-The new implementation will always send messages on NFC sockets, often with a smallish recovery interval. To end users this means no logical changes from the current implementation and shall be thought of as exactly the same, but under the hood it will remove the ability to get the weird "delivery-to-node-but-not-to-subscriber-guarantee".
-
-Messages need to be sent on NFC sockets, since if we sent them on FC sockets a node may be excluded due to a lost message.
-////
 
 === Entities
 TODO: write about how entities will behave in new implementation. Will we provide unacked entities?
