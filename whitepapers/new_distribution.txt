@@ -502,7 +502,7 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 |[SP~m~]: Xmit SP (101, [B], A)
 
 |SP~m~ -> Ctrl: SP (101, [B], A)
-|[SP~m~]~ -> Ctrl: SP (101, [B], A)
+|[SP~m~] -> Ctrl: SP (101, [B], A)
 
 |SP~m~ -> SP~s~: SP (101, [B], A)
 |[SP~m~] -> SP~s~: SP (101, [B], A)
