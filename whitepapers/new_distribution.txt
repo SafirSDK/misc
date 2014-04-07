@@ -646,13 +646,13 @@ A system can have several node types, and one node is of one and only one node t
 
 | IsLight 
 | boolean
-| Is th enode a _light_ node (see below).
+| Is the node a _light_ node (see below).
 
 | TalksTo
 | list of string
 | List of node types that nodes of this type can talk to. \'\*' if all node types. Only for nodes where IsLight is true can this be anything other than \'*'.
 
-| Multicast
+| CanMulticast
 | boolean
 | Is the node able to communicate via multicast
 
