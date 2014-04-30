@@ -658,11 +658,11 @@ A system can have several node types, and one node is of one and only one node t
 
 | ControlPort
 | int
-| Port number used by Control executable
+| Port number used by Control executable for multicast communication.
 
 | DataPort
 | int
-| Port number used by dose_main executable
+| Port number used by dose_main executable for multicast communication.
 
 | HeartbeatInterval
 | duration
