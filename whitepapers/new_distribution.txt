@@ -652,17 +652,13 @@ A system can have several node types, and one node is of one and only one node t
 | list of string
 | List of node types that nodes of this type can talk to. \'\*' if all node types. Only for nodes where IsLight is true can this be anything other than \'*'.
 
-| MulticastAddress
+| MulticastAddressControl
 | string
-| Multicast address used for nodes of this type. An empty string indicates that nodes of this type can't be reached via multicast. 
+| Multicast address and port used for the control channel for nodes of this type. An empty string for this or MulticastAddressData indicates that nodes of this type can't be reached via multicast. 
 
-| ControlPort
-| int
-| Port number used by Control executable for multicast communication.
-
-| DataPort
-| int
-| Port number used by dose_main executable for multicast communication.
+| MulticastAddressData
+| string
+| Multicast address and port used for the data channel for nodes of this type. An empty string for this or MulticastAddressControl indicates that nodes of this type can't be reached via multicast. 
 
 | HeartbeatInterval
 | duration
