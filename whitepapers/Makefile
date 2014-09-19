@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 #add dependencies here (.dia files are automatically converted to .png if dia is installed)
-DEPS := safir_logging.txt new_distribution.txt messages.txt readonly_install.txt block-diagram.png node.png sp_raw_pub_sub.png com_pgm.png com_design_overview.png com_design_discover.png Makefile
+DEPS := safir_logging.txt new_distribution.txt messages.txt improved_olib.txt readonly_install.txt block-diagram.png node.png sp_raw_pub_sub.png com_pgm.png com_design_overview.png com_design_discover.png Makefile
 
 default: all
 
@@ -12,7 +12,7 @@ help:
 	echo "   new_distribution.html - build single page html" 
 	echo " Check the Makefile for other targets"
 
-all: new_distribution.pdf new_distribution.html messages.pdf messages.html readonly_install.pdf readonly_install.html safir_logging.pdf safir_logging.html
+all: new_distribution.pdf new_distribution.html messages.pdf messages.html improved_olib.pdf improved_olib.html readonly_install.pdf readonly_install.html safir_logging.pdf safir_logging.html
 
 
 vpath %.dia images
@@ -35,6 +35,14 @@ messages.pdf: $(DEPS)
 messages.html: $(DEPS)
 	echo "Building message html"
 	asciidoc -d book -a toc -a toclevels=4 -a numbered messages.txt
+
+improved_olib.pdf: $(DEPS)
+	echo "Building improved_olib pdf"
+	a2x -L -f pdf -d article --dblatex-opts "-P latex.output.revhistory=0 -Pdoc.layout=\"coverpage frontmatter mainmatter \"" improved_olib.txt
+
+improved_olib.html: $(DEPS)
+	echo "Building improved_olib html"
+	asciidoc -d book -a toc -a toclevels=4 -a numbered improved_olib.txt
 
 readonly_install.pdf: $(DEPS)
 	echo "Building readonly_install pdf"

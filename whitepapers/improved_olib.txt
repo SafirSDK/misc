@@ -1,0 +1,72 @@
+// -*- coding: utf-8 -*-
+:encoding: UTF-8
+
+Förbättrad Olib
+=============
+Lars Hagström
+19 September 2014
+
+== Bakgrund
+
+Olib är den komponent i Safir SDK Core som tillhandahåller en databasgränsyta i C++. Den
+är en "wrapper" runt ODBC, som försöker tillhandahålla ett generellt C-API till
+databaser.
+
+Dagens Olib (som vi nu kommer att kalla Olib v1) har egentligen bara fullt stöd för
+databasmotorn Mimer på Windows. För övriga databaser och plattformar finns bara begränsat
+stöd.
+
+Det här dokumentets syfte är att beskriva de problem som finns med Olib v1, vad målen med
+utvecklingen av Olib v2 är och vilka effekter på gränsytorna kommer att vara.
+
+== Problemen
+
+=== Begr&auml;nsat databasst&ouml;d
+
+Olib v1 har bara fullt stöd för kombinationen Mimer och Windows. Olib v1 går även att
+använda mot MySQL på Linux, men bara på Ubuntu/Debian, och inte på RedHat/Centos. På
+RedHat/Centos går det däremot att använda Mimer.
+
+De här begränsningarna beror på ett par saker:
+
+Odbc-gränsytor::
+På Windows finns det ett ODBC-API, medans det på Linux finns två olika, UnixODBC och
+iODBC. De två på Linux är inte helt kompatibla med varandra, bland annat i hanteringen av
+wide-strängar.
+
+Stränghantering::
+UnixODBC och iODBC har olika bredder på wide-strängar, 4 respektive 2 bytes, och Linux i
+sig har 4 bytes. Windows-implementationen använder 2 bytes, vilket även är Windows egen
+wideteckenbredd. Eftersom användare av Olib v1 exponeras för delar av detta blir det
+väldigt svårt att skriva plattforms- och databasoberoende applikationer.
+
+=== Datumtyper
+
+Olika databaser har olika bra stöd för datumtyper. Speciellt handlar det om upplösningen
+när man vill ha högre noggrannhet än sekunder.
+
+=== Licenshantering
+Vid användning av en kommersiell licens av Mimer så behövs några extra anrop för att
+injicera licensnycklar vid anslutning till databasen. Detta har Olib v1 i Safir SDK Core
+inget stöd för idag. Åtminstone en av våra kunder har gjort en fork av Olib v1 för att
+hantera detta, vilket ju är långt ifrån en ideal lösning.
+
+== Mål
+
+Målsättningen med Olib v2 är att införa stöd för fler databaser, och att göra det lättare
+att lägga till ännu fler databaser i framtiden. Ett absolut minimum är stöd för följande
+databaser:
+
+ * Mimer
+ * MySQL
+ * Microsoft SQL Server
+
+Därutöver skulle det vara bra om PostgreSQL stöddes.
+
+På Linux bör både UnixODBC och iODBC stödjas.
+
+Någon form av API som gör det möjligt att sköta Mimers licenshantering skall läggas till.
+
+Alla dessa saker skall stödjas utan att man måste kompilera om Olib.
+
+Om möjligt så bör Olib v2 vara bakåtkompatibelt med Olib v1 under en tid.
