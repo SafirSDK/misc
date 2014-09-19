@@ -51,7 +51,7 @@ injicera licensnycklar vid anslutning till databasen. Detta har Olib v1 i Safir 
 inget stöd för idag. Åtminstone en av våra kunder har gjort en fork av Olib v1 för att
 hantera detta, vilket ju är långt ifrån en ideal lösning.
 
-== Mål
+== M&aring;l
 
 Målsättningen med Olib v2 är att införa stöd för fler databaser, och att göra det lättare
 att lägga till ännu fler databaser i framtiden. Ett absolut minimum är stöd för följande
