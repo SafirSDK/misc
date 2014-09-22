@@ -43,13 +43,21 @@ väldigt svårt att skriva plattforms- och databasoberoende applikationer.
 === Datumtyper
 
 Olika databaser har olika bra stöd för datumtyper. Speciellt handlar det om upplösningen
-när man vill ha högre noggrannhet än sekunder.
+när man vill ha högre noggrannhet än sekunder. Eventuellt kan någon speciallösning
+behövas för vissa databaser.
 
 === Licenshantering
+
 Vid användning av en kommersiell licens av Mimer så behövs några extra anrop för att
 injicera licensnycklar vid anslutning till databasen. Detta har Olib v1 i Safir SDK Core
 inget stöd för idag. Åtminstone en av våra kunder har gjort en fork av Olib v1 för att
 hantera detta, vilket ju är långt ifrån en ideal lösning.
+
+=== Exponering av ODBC-typer
+
+Gränsytan till Olib v1 exponerar alla ODBCs datatyper, vilket även medför att windows.h
+visas upp för användaren. Det är bland annat detta som gjort att problemet med
+strängtyperna inte har uppenbarats tidigare.
 
 == M&aring;l
 
@@ -67,6 +75,67 @@ På Linux bör både UnixODBC och iODBC stödjas.
 
 Någon form av API som gör det möjligt att sköta Mimers licenshantering skall läggas till.
 
-Alla dessa saker skall stödjas utan att man måste kompilera om Olib.
+Alla dessa saker skall stödjas utan att man måste kompilera om Olib, och om möjligt så
+bör Olib v2 vara bakåtkompatibelt med Olib v1 under ett antal releaser.
 
-Om möjligt så bör Olib v2 vara bakåtkompatibelt med Olib v1 under en tid.
+Olib v2 bör inte visa upp några av typerna från ODBC, utan skall dölja dessa bakom
+ytan. Detta gör att det blir lättare att upptäcka problem vid portering till nya
+plattformar och databaser, och att det blir lättare att skriva applikationer som stödjer
+flera plattformar.
+
+
+== F&ouml;rslag
+
+=== Str&auml;nghantering
+
+Vi skulle vilja låta Olib v2 använda en och samma strängtyp på både Windows,
+Linux/UnixODBC och Linux/iODBC. Det som vi tror är det vettigaste sättet är att använda
++std::string+ med UTF-8-encoding. Det faller då på applikationerna att konvertera till och
+från +std::wstring+ och +std::string+ när så behövs.
+
+Då kan Olib använda UTF-8-strängar mot de databaser som stödjer detta, och för de
+databaser (exempelvis Microsoft SQL Server) som inte stödjer UTF-8 så kan den konvertera
+till det teckenformat som passar bäst (UCS-2 i MS SQL-fallet).
+
+Ifall det visar sig att någon applikation får prestandaproblem med denna lösning,
+exempelvis en applikation som skriver mycket strängar i ett system med en MS SQL-databas,
+så är det enkelt att lägga till ett icke-portabelt optimerat API för att slippa de extra
+konverteringarna.
+
+=== Eliminera ODBC-typer i gr&auml;nsytan
+
+Olib v1:s gränsytor består av mycket templates som är instantierade med ODBC-typer,
+vilket genererar beroenden till sql.h och windows.h. Om det är möjligt - utan att göra
+alltför stora gränsyteändringar - bör dessa beroenden flyttas ner i cpp-filerna, så att
+beroendena hamnar bakom dll-gränsytan.
+
+Det gör att exempelvis kopplingen mellan +SQL_C_FLOAT+, SQL_FLOAT+ och
++Safir::Dob::Typesystem::Float32+ inte blir en del av den publika gränsytan, utan
+användaren ser bara Dob-typen. Vid portering till en ny plattform eller databas där denna
+koppling inte är korrekt så kan man ändra under ytan utan att påverka användaren.
+
+=== St&ouml;d f&ouml;r b&aring;de UnixODBC och iODBC
+
+Om vi löser stränghanteringsproblematiken enligt ovanstående förslag så innebär det
+troligen att vi kommer att stödja både UnixODBC och iODBC. Om vi dessutom lyckas
+eliminera ODBC-typerna i gränsytan så bör det dessutom vara möjligt att stödja både
+UnixODBC och iODBC utan omkompilering av Olib.
+
+== Konsekvenser f&ouml;r existerande applikationer
+
+De föreslagna ändringarna är inte fullt bakåtkompatibla. I synnerhet är det hanteringen
+av strängar som kommer att ändras. En förutsättning för de andra förändringarna är att de
+kan göras utan stor påverkan på applikationerna.
+
+Eftersom Olib v2:s gränsyta kommer att använda +std::string+ och +char+ istället för
++std::wstring+ och +SQL_WCHAR+ så kommer förändringar att behöva göras i alla
+applikationer som skriver strängar till databas. I det enklaste fallet så är det bara att
+anropa +ToUtf8(...)+ på strängarna innan de skickas till Olib.
+
+Förutom rena kodändringar kommer även databastabellerna att behöva uppdateras. Med Olib
+v1 så använder man bland annat NVARCHAR och NCLOB för korta respektive långa
+strängkolumner. Dessa kommer att behöva ändras till att vara VARCHAR och CLOB för att
+fungera med en databas som kan lagra UTF-8-data. I en MS SQL-databas kommer det dock att
+även i fortsättningen vara NVARCHAR och NCLOB, eftersom MS SQL inte stödjer UTF-8.
+
+
