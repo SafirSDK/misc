@@ -157,3 +157,15 @@ Eftersom det finns många kombinationer av databaser, operativsystem och ODBC-gr
 finns idag är nära detta, men en del arbete behövs på dem, för att täcka alla
 datatyper. Dessutom kan en del arbete behövas med att anpassa dem till att stödja de nya
 databaserna.
+
+Givetvis behövs även de nya databaserna läggas till i testmiljön.
+
+== Tidsuppskattning
+
+Vi uppskattar att detta jobb tar 4 veckor för implementation och 4 veckor för automattester.
+
+En viss osäkerhet finns i dessa siffror då det kan visa sig att något av våra antaganden
+inte håller för någon databas. Siffrorna baserar sig på de antaganden vi gjort från
+tolkning av dokumentationen för databaserna. En erfarenhet av databaser är att det finns
+ganska mycket beteenden som inte är helt lätta att förstå innan man faktiskt skrivit
+koden och testat den.
