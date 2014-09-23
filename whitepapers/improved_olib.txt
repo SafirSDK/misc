@@ -8,31 +8,33 @@ Lars Hagström
 
 == Bakgrund
 
-Olib är den komponent i Safir SDK Core som tillhandahåller en databasgränsyta i C++. Den
-är en "wrapper" runt ODBC, som försöker tillhandahålla ett generellt C-API till
+Olib är den komponent i Safir SDK Core som tillhandahåller en databasgränsyta i C++. Olib
+är en "wrapper" runt ODBC som försöker tillhandahålla ett generellt C-API till
 databaser.
 
 Dagens Olib (som vi nu kommer att kalla Olib v1) har egentligen bara fullt stöd för
-databasmotorn Mimer på Windows. För övriga databaser och plattformar finns bara begränsat
+databasmotorn Mimer SQL på Windows. För övriga databaser och plattformar finns bara begränsat
 stöd.
 
 Det här dokumentets syfte är att beskriva de problem som finns med Olib v1, vad målen med
-utvecklingen av Olib v2 är och vilka effekter på gränsytorna kommer att vara.
+utvecklingen av Olib v2 är och vilka effekterna på gränsytorna kommer att vara.
 
 == Problemen
 
 === Begr&auml;nsat databasst&ouml;d
 
-Olib v1 har bara fullt stöd för kombinationen Mimer och Windows. Olib v1 går även att
+Olib v1 har bara fullt stöd för kombinationen Mimer SQL och Windows. Olib v1 går även att
 använda mot MySQL på Linux, men bara på Ubuntu/Debian, och inte på RedHat/Centos. På
-RedHat/Centos går det däremot att använda Mimer.
+RedHat/Centos går det däremot att använda Mimer SQL.
 
 De här begränsningarna beror på ett par saker:
 
 Odbc-gränsytor::
 På Windows finns det ett ODBC-API, medans det på Linux finns två olika, UnixODBC och
 iODBC. De två på Linux är inte helt kompatibla med varandra, bland annat i hanteringen av
-wide-strängar.
+wide-strängar. Olika Linux-distributioner använder olika ODBC-gränsytor, och exempelvis
+har iODBC betraktats som deprecated av Debian (jag är osäker på om det fortfarande
+gäller, utvecklingen av iODBC verkar ha tagit fart igen efter några års träda).
 
 Stränghantering::
 UnixODBC och iODBC har olika bredder på wide-strängar, 4 respektive 2 bytes, och Linux i
@@ -48,7 +50,7 @@ behövas för vissa databaser.
 
 === Licenshantering
 
-Vid användning av en kommersiell licens av Mimer så behövs några extra anrop för att
+Vid användning av en kommersiell licens av Mimer SQL så behövs några extra anrop för att
 injicera licensnycklar vid anslutning till databasen. Detta har Olib v1 i Safir SDK Core
 inget stöd för idag. Åtminstone en av våra kunder har gjort en fork av Olib v1 för att
 hantera detta, vilket ju är långt ifrån en ideal lösning.
@@ -56,8 +58,7 @@ hantera detta, vilket ju är långt ifrån en ideal lösning.
 === Exponering av ODBC-typer
 
 Gränsytan till Olib v1 exponerar alla ODBCs datatyper, vilket även medför att windows.h
-visas upp för användaren. Det är bland annat detta som gjort att problemet med
-strängtyperna inte har uppenbarats tidigare.
+visas upp för användaren.
 
 == M&aring;l
 
@@ -65,7 +66,7 @@ Målsättningen med Olib v2 är att införa stöd för fler databaser, och att g
 att lägga till ännu fler databaser i framtiden. Ett absolut minimum är stöd för följande
 databaser:
 
- * Mimer
+ * Mimer SQL
  * MySQL
  * Microsoft SQL Server
 
@@ -73,7 +74,7 @@ Därutöver skulle det vara bra om PostgreSQL stöddes.
 
 På Linux bör både UnixODBC och iODBC stödjas.
 
-Någon form av API som gör det möjligt att sköta Mimers licenshantering skall läggas till.
+Någon form av API som gör det möjligt att sköta Mimer SQLs licenshantering skall läggas till.
 
 Alla dessa saker skall stödjas utan att man måste kompilera om Olib, och om möjligt så
 bör Olib v2 vara bakåtkompatibelt med Olib v1 under ett antal releaser.
@@ -89,18 +90,28 @@ flera plattformar.
 === Str&auml;nghantering
 
 Vi skulle vilja låta Olib v2 använda en och samma strängtyp på både Windows,
-Linux/UnixODBC och Linux/iODBC. Det som vi tror är det vettigaste sättet är att använda
-+std::string+ med UTF-8-encoding. Det faller då på applikationerna att konvertera till och
-från +std::wstring+ och +std::string+ när så behövs.
+Linux/UnixODBC och Linux/iODBC. Förslaget är att använda +std::string+ med
+UTF-8-encoding. Det faller då på applikationerna att konvertera till och från
++std::wstring+ och +std::string+ när så behövs.
 
 Då kan Olib använda UTF-8-strängar mot de databaser som stödjer detta, och för de
 databaser (exempelvis Microsoft SQL Server) som inte stödjer UTF-8 så kan den konvertera
 till det teckenformat som passar bäst (UCS-2 i MS SQL-fallet).
 
 Ifall det visar sig att någon applikation får prestandaproblem med denna lösning,
-exempelvis en applikation som skriver mycket strängar i ett system med en MS SQL-databas,
-så är det enkelt att lägga till ett icke-portabelt optimerat API för att slippa de extra
-konverteringarna.
+exempelvis en applikation som skriver väldigt mycket strängar i ett system med en MS
+SQL-databas, så är det enkelt att lägga till ett icke-portabelt optimerat API för att
+slippa de extra konverteringarna.
+
+Information om hur databaserna hanterar UTF-8:
+
+PostgreSQL:: Fullt stöd för UTF-8.
+
+MySQL:: Stöd för UTF-8, men bara för sekvenser på upp till 3 bytes. Dvs 4-bytessekvenser stöds ej.
+
+Mimer SQL:: Fullt stöd för UTF-8.
+
+Microsoft SQL Server:: Har ej stöd för UTF-8. Lagring av Unicode sker med UCS-2.
 
 === Eliminera ODBC-typer i gr&auml;nsytan
 
@@ -139,3 +150,10 @@ fungera med en databas som kan lagra UTF-8-data. I en MS SQL-databas kommer det 
 även i fortsättningen vara NVARCHAR och NCLOB, eftersom MS SQL inte stödjer UTF-8.
 
 
+== Automattester
+
+Eftersom det finns många kombinationer av databaser, operativsystem och ODBC-gränsytor så
+är det mycket viktigt att få till så heltäckande automattester som möjligt. De tester som
+finns idag är nära detta, men en del arbete behövs på dem, för att täcka alla
+datatyper. Dessutom kan en del arbete behövas med att anpassa dem till att stödja de nya
+databaserna.
