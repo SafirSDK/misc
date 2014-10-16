@@ -67,11 +67,11 @@ istället för Olib.
 
  * QtSQL
  * SOCI
- * SQLAPI\+\+
+ * SQLAPI++
 
-SQLAPI\+\+ är den som verkar mest lovande just nu, och det är den vi tittat närmare på.
+SQLAPI++ är den som verkar mest lovande just nu, och det är den vi tittat närmare på.
 
-=== SQLAPI\+\+
+=== SQLAPI++
 
 Är "shareware", med en licenskostnad på 900 dollar för en livstids site-licens för
 utveckling. Ingen runtimelicens krävs.
@@ -81,17 +81,17 @@ med det stöd som man vill ha.
 
 ==== Allmänt
 
-Jag har provat SQLAPI\+\+ mot MS SQL Server, Mimer SQL och PostgreSQL på Windows 7, och
+Jag har provat SQLAPI++ mot MS SQL Server, Mimer SQL och PostgreSQL på Windows 7, och
 mot Mimer SQL på Linux.
 
 Det första intrycket är att det fungerar rätt bra. Interfacen ser relativt bra ut, och
 fungerar väl. Dock så blir det ganska snabbt problem när man interfacear mot flera olika
-databaser med samma kod. Detta är dock inte riktigt SQLAPI\+\+s fel, utan snarare ett
+databaser med samma kod. Detta är dock inte riktigt SQLAPI++s fel, utan snarare ett
 resultat av att databaserna har olika bra stöd för olika operationer.
 
 ==== Support
 
-Jag har ställt några frågor till SQLAPI\+\+s support och de (eller han, oklart hur många
+Jag har ställt några frågor till SQLAPI++s support och de (eller han, oklart hur många
 de är) har svarat inom en timme på en del ganska tekniska frågor. Så de verkar vara
 ganska rappa på att hjälpa till. De är inte "native English speakers", men fullt
 förståeligt.
@@ -103,12 +103,12 @@ att konfigurera detta i compile-time.
 
 ==== UTF-8 och Unicode
 
-SQLAPI\+\+ har stöd för ASCII/Codepages, UTF-8, UTF-16 och UTF-32 (på Linux). Här gäller
+SQLAPI\++ har stöd för ASCII/Codepages, UTF-8, UTF-16 och UTF-32 (på Linux). Här gäller
 det att hålla tungan rätt i mun för att få till kod som fungerar mot alla databaser och
-på båda plattformarna. Men det har ju än en gång inte rigtigt med SQLAPI\+\+ att göra,
+på båda plattformarna. Men det har ju än en gång inte rigtigt med SQLAPI++ att göra,
 utan är mer ett resultat av hur databaser fungerar.
 
-Under ytan så använder SQLAPI\+\+ "rätt" encoding när den kommunicerar med
+Under ytan så använder SQLAPI++ "rätt" encoding när den kommunicerar med
 databasen. Från Sergey: "Unicode SQLAPI passes UTF-16 / UTF-32 / UTF-8 data - depends on
 DBMS API. For example Oracle always use UTF16, MySQL - UTF8, ODBC - how it is defined at
 the compilation time."
@@ -120,7 +120,7 @@ heter SANumeric, vilket är lite oelegant. Oklart om det har någon prestandapå
 
 ==== Piecewise BLob
 
-SQLAPI\+\+ har stöd för SQLPutData/SQLGetData via ODBC, med något som de kallar Piecewise
+SQLAPI++ har stöd för SQLPutData/SQLGetData via ODBC, med något som de kallar Piecewise
 BLobs. Det fungerade bra mot MS SQL Server, men inte mot Mimer SQL eller PostgreSQL. Vad
 gäller PostgreSQL så har dess native-api inte stöd för detta alls, och varför det inte
 fungerar på Mimer vet jag inte.
