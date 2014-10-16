@@ -60,7 +60,7 @@ hantera detta, vilket ju är långt ifrån en ideal lösning.
 Gränsytan till Olib exponerar alla ODBCs datatyper, vilket även medför att windows.h
 visas upp för användaren.
 
-== Lösning - använd tredjepartsprodukt
+== L&ouml;sning - anv&auml;nd tredjepartsprodukt
 
 Det finns ett antal potentiella tredjepartsprodukter som man skulle kunna använda
 istället för Olib.
@@ -79,7 +79,7 @@ utveckling. Ingen runtimelicens krävs.
 Vid köp av licens får man tillgång till källkoden och kan alltså själv kompilera binärer
 med det stöd som man vill ha.
 
-==== Allmänt
+==== Allm&auml;nt
 
 Jag har provat SQLAPI++ mot MS SQL Server, Mimer SQL och PostgreSQL på Windows 7, och
 mot Mimer SQL på Linux.
@@ -134,7 +134,7 @@ Så i det här fallet får man, om man vill skriva databasoberoende kod, låta b
 använda piecewise BLobs. Man skulle ju kunna göra det mot vissa databaser som en
 optimering som slås på beroende på databasval.
 
-== Förkastad lösning - Uppdatera Olib
+== F&ouml;rkastad l&ouml;sning - Uppdatera Olib
 
 Denna lösning är för närvarande inte aktuell. Vi tittar just nu på tredjepartsbibliotek
 som skulle kunna ersätta Olib.
