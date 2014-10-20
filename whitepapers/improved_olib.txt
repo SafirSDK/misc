@@ -99,10 +99,11 @@ Länk till SQLAPI++: http://www.sqlapi.com/
 Vi har provkört SQLAPI++ mot MS SQL Server, Mimer SQL och PostgreSQL på Windows 7, och
 mot Mimer SQL och PostgreSQL på Linux.
 
-Det första intrycket är att det fungerar rätt bra. Interfacen ser relativt bra ut, och
-fungerar väl. Dock så blir det ganska snabbt problem när man interfacear mot flera olika
-databaser med samma kod. Detta är dock inte riktigt SQLAPI++s fel, utan snarare ett
-resultat av att databaserna och deras API:er har olika bra stöd för olika operationer.
+Det första intrycket är att SQLAPI++ fungerar bra. Interfacen ser bra ut, och fungerar
+väl. Dock så blir det ganska snabbt problem när man interfacear mot flera olika databaser
+med samma kod. Detta är dock inte riktigt SQLAPI++s fel, utan kommer sig av
+grundproblemet med att skriva ett generellt interface mot många olika databaser -
+databaserna och databasernas API:er har olika bra stöd för olika operationer.
 
 Under utvärderingen har vi fokuserat på hantering av strängar och BLob. Vi har med andra
 ord inte tittat närmare på stored procedures eller datumtyper, vilket är två intressanta
@@ -111,9 +112,9 @@ saker att titta närmare på.
 === Support
 
 Vi har ställt några frågor till SQLAPI++s support och en utvecklare har svarat inom en
-timme på en del ganska tekniska frågor. Så de verkar vara ganska rappa på att hjälpa
+timme på en del ganska tekniska frågor, så de verkar vara ganska rappa på att hjälpa
 till. De är inte "native English speakers", men de svar vi har fått har varit fullt
-förståeliga.
+förståeliga och mycket hjälpsamma.
 
 === UTF-8 och Unicode
 
@@ -146,7 +147,8 @@ for any special ODBC driver."
 
 Så i det här fallet får man, om man vill skriva databasoberoende kod, låta bli att
 använda piecewise BLobs. Man skulle ju kunna göra det mot vissa databaser som en
-optimering som slås på beroende på databasval.
+optimering som slås på beroende på databasval. Det är inte självklart att
+prestandavinsten är betydande med piecewise blobs.
 
 === &Ouml;vriga observationer
 
@@ -157,7 +159,6 @@ att konfigurera detta i compile-time.
 64-bit typer::
 För att få ut en int64 ur databasen så måste man gå en liten omväg via en datatyp som
 heter SANumeric, vilket är lite oelegant. Enligt utvecklarna är det så man ska göra.
-Oklart om det har någon relevant prestandapåverkan.
 
 == N&auml;sta steg
 
@@ -170,6 +171,8 @@ uppdateras till att gå direkt på ODBC-gränsytorna istället för att använda
 
 
 === Safir SDK och Saab-projekt
+
+Förslag på aktiviteter:
 
 1. Eventuellt bör även QtSQL utvärderas. Qt är ett beroende som SDKn och SLB redan har, och
 den tillför alltså ingen extra kostnad eller komplexitet för projekten. Dock har QtSQL
@@ -198,7 +201,7 @@ skrivas ner i någon form av lathund så att nästa utvecklare slipper gå i sam
 == F&ouml;rkastade l&ouml;sningar - Uppdatera Olib
 
 Den första lösningen vi tittade på var att uppdatera Olib så att den skulle uppfylla de
-nya kraven. Detta visade sig vara opraktiskt och troligen inte vara rätt lösning.
+nya kraven. Detta visade sig vara opraktiskt och verkade inte vara rätt lösning.
 
 Ett av de stora problemen är Olibs arkitektur. Det saknas en separation mellan API och
 backend, vilket gör att det är mycket svårt att göra plattforms- eller databasspecifika
@@ -210,7 +213,8 @@ Tanken med att välja exempelvis SQLAPI++ istället för att uppdatera Olib är 
 steg och gå upp på ett bibliotek som har stöd för betydligt fler databaser och är mer
 beprövat.
 
-Nedan följer lösningsförslaget så som det skrevs innan lösningen förkastades.
+Nedan följer lösningsförslaget så som det skrevs innan lösningen med att uppdatera Olib
+förkastades.
 
 === M&aring;ls&auml;ttning
 
