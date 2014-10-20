@@ -4,7 +4,7 @@
 Olibs framtid
 =============
 Lars Hagström
-16 Oktober 2014
+20 Oktober 2014
 
 == Bakgrund
 
@@ -39,7 +39,7 @@ gäller, utvecklingen av iODBC verkar ha tagit fart igen efter några års träd
 Stränghantering::
 UnixODBC och iODBC har olika bredder på wide-strängar, 4 respektive 2 bytes, och Linux i
 sig har 4 bytes. Windows-implementationen använder 2 bytes, vilket även är Windows egen
-wideteckenbredd. Eftersom användare av Olib v1 exponeras för delar av detta blir det
+wideteckenbredd. Eftersom användare av Olib exponeras för delar av detta blir det
 väldigt svårt att skriva plattforms- och databasoberoende applikationer.
 
 === Datumtyper
@@ -52,92 +52,167 @@ behövas för vissa databaser.
 
 Vid användning av en kommersiell licens av Mimer SQL så behövs några extra anrop för att
 injicera licensnycklar vid anslutning till databasen. Detta har Olib i Safir SDK Core
-inget stöd för idag. Åtminstone en av våra kunder har gjort en fork av Olib för att
-hantera detta, vilket ju är långt ifrån en ideal lösning.
+inget stöd för idag. Åtminstone en av våra användare har gjort en fork av Olib för att
+hantera detta, vilket är långt ifrån en ideal lösning.
 
-=== Exponering av ODBC-typer
+== M&ouml;jliga l&ouml;sningar
 
-Gränsytan till Olib exponerar alla ODBCs datatyper, vilket även medför att windows.h
-visas upp för användaren.
+Det finns åtminstone två möjliga lösningar på bristerna i Olib. Antingen uppdatera
+biblioteket så att det löser problemen, eller att byta ut det mot en tredjepartsprodukt
+som uppfyller våra krav.
 
-== L&ouml;sning - anv&auml;nd tredjepartsprodukt
+=== Uppdatera Olib
 
-Det finns ett antal potentiella tredjepartsprodukter som man skulle kunna använda
-istället för Olib.
+Ett försök har gjorts att uppdatera Olib (mer information finns i kapitlet
+<<discarded_solutions>>), men det visade sig vara svårt att åstadkomma en bra lösning som
+blir tillräckligt portabel för att passa in i Safir SDK Core.
+
+=== Anv&auml;nd tredjepartsprodukt
+
+När Olib togs fram, för ungefär 10 år sedan, fanns inget tillräckligt bra
+tredjepartsalternativ. Nu finns dock ett antal potentiella alternativ som skulle kunna
+ersätta Olib:
 
  * QtSQL
  * SOCI
  * SQLAPI++
 
-SQLAPI++ är den som verkar mest lovande just nu, och det är den vi tittat närmare på.
+Av dessa tre så verkar SQLAPI\++ vara den mest kompetenta, med stöd för många databaser
+och många funktioner. Nedan finns en utvärdering av SQLAPI++.
 
-=== SQLAPI++
+Fördelen med att ersätta Olib med ett tredjepartsbibliotek är att man slipper
+underhållskostnaden för Olib, samtidigt som man får något som är mer potent.
 
-Är "shareware", med en licenskostnad på 900 dollar för en livstids site-licens för
+== Utv&auml;rdering av SQLAPI++
+
+SQLAPI++ är "shareware", med en licenskostnad på 900 dollar för en livstids site-licens för
 utveckling. Ingen runtimelicens krävs.
 
 Vid köp av licens får man tillgång till källkoden och kan alltså själv kompilera binärer
-med det stöd som man vill ha.
+med det stöd som man vill ha. Dessutom ger det möjlighet till kodgranskning och egen
+rättning av buggar.
 
-==== Allm&auml;nt
+Länk till SQLAPI++: http://www.sqlapi.com/
 
-Jag har provat SQLAPI++ mot MS SQL Server, Mimer SQL och PostgreSQL på Windows 7, och
-mot Mimer SQL på Linux.
+=== Allm&auml;nt
+
+Vi har provkört SQLAPI++ mot MS SQL Server, Mimer SQL och PostgreSQL på Windows 7, och
+mot Mimer SQL och PostgreSQL på Linux.
 
 Det första intrycket är att det fungerar rätt bra. Interfacen ser relativt bra ut, och
 fungerar väl. Dock så blir det ganska snabbt problem när man interfacear mot flera olika
 databaser med samma kod. Detta är dock inte riktigt SQLAPI++s fel, utan snarare ett
-resultat av att databaserna har olika bra stöd för olika operationer.
+resultat av att databaserna och deras API:er har olika bra stöd för olika operationer.
 
-==== Support
+Under utvärderingen har vi fokuserat på hantering av strängar och BLob. Vi har med andra
+ord inte tittat närmare på stored procedures eller datumtyper, vilket är två intressanta
+saker att titta närmare på.
 
-Jag har ställt några frågor till SQLAPI++s support och de (eller han, oklart hur många
-de är) har svarat inom en timme på en del ganska tekniska frågor. Så de verkar vara
-ganska rappa på att hjälpa till. De är inte "native English speakers", men fullt
-förståeligt.
+=== Support
 
-==== Exceptions
+Vi har ställt några frågor till SQLAPI++s support och en utvecklare har svarat inom en
+timme på en del ganska tekniska frågor. Så de verkar vara ganska rappa på att hjälpa
+till. De är inte "native English speakers", men de svar vi har fått har varit fullt
+förståeliga.
 
-De exceptions som SQLAPI++ kastar ärver inte av std::exception per default. Dock finns möjlighet
-att konfigurera detta i compile-time.
-
-==== UTF-8 och Unicode
+=== UTF-8 och Unicode
 
 SQLAPI\++ har stöd för ASCII/Codepages, UTF-8, UTF-16 och UTF-32 (på Linux). Här gäller
 det att hålla tungan rätt i mun för att få till kod som fungerar mot alla databaser och
-på båda plattformarna. Men det har ju än en gång inte rigtigt med SQLAPI++ att göra,
-utan är mer ett resultat av hur databaser fungerar.
+på båda plattformarna. Men det har ju än en gång inte riktigt med SQLAPI++ att göra,
+utan är mer ett resultat av hur databaserna fungerar.
 
-Under ytan så använder SQLAPI++ "rätt" encoding när den kommunicerar med
-databasen. Från Sergey: "Unicode SQLAPI passes UTF-16 / UTF-32 / UTF-8 data - depends on
-DBMS API. For example Oracle always use UTF16, MySQL - UTF8, ODBC - how it is defined at
-the compilation time."
+Under ytan så använder SQLAPI++ "rätt" encoding när den kommunicerar med databasen. Så
+här förklarade Sergey Chumakov, utvecklare, det: "Unicode SQLAPI passes UTF-16 / UTF-32 /
+UTF-8 data - depends on DBMS API. For example Oracle always use UTF16, MySQL - UTF8, ODBC
+- how it is defined at the compilation time."
 
-==== 64-bit typer
+*Not*: För att det ska fungera korrekt med SQLAPI\++ måste man välja "Unicode-varianten" av
+SQLAPI\++, samt definiera ++SA_UNICODE++ i koden.
 
-För att få ut en int64 ur databasen så måste man gå en liten omväg via en datatyp som
-heter SANumeric, vilket är lite oelegant. Oklart om det har någon prestandapåverkan.
-
-==== Piecewise BLob
+=== Piecewise BLob
 
 SQLAPI++ har stöd för SQLPutData/SQLGetData via ODBC, med något som de kallar Piecewise
 BLobs. Det fungerade bra mot MS SQL Server, men inte mot Mimer SQL eller PostgreSQL. Vad
-gäller PostgreSQL så har dess native-api inte stöd för detta alls, och varför det inte
-fungerar på Mimer vet jag inte.
+gäller PostgreSQL så har dess native-api inte stöd för detta alls, men varför det inte
+fungerar på Mimer är oklart. Det är mycket möjligt att det går att få att fungera med
+lite mer jobb.
 
-Från Sergey: "For piecewise operations SQLAPI uses SQLPutData/SQLGetData instead of
-buffer binding (parameter of field data). I can say that SQL Server is the reference ODBC
-driver for us. The other driver implementation can be wrong or limited and we never
-correct the ODBC layer code for any special ODBC driver."
+Det här är vad deras utvecklare svarade när jag frågade om detta: "For piecewise
+operations SQLAPI uses SQLPutData/SQLGetData instead of buffer binding (parameter of
+field data). I can say that SQL Server is the reference ODBC driver for us. The other
+driver implementation can be wrong or limited and we never correct the ODBC layer code
+for any special ODBC driver."
 
 Så i det här fallet får man, om man vill skriva databasoberoende kod, låta bli att
 använda piecewise BLobs. Man skulle ju kunna göra det mot vissa databaser som en
 optimering som slås på beroende på databasval.
 
-== F&ouml;rkastad l&ouml;sning - Uppdatera Olib
+=== &Ouml;vriga observationer
 
-Denna lösning är för närvarande inte aktuell. Vi tittar just nu på tredjepartsbibliotek
-som skulle kunna ersätta Olib.
+Exceptions::
+De exceptions som SQLAPI++ kastar ärver inte av std::exception per default. Dock finns möjlighet
+att konfigurera detta i compile-time.
+
+64-bit typer::
+För att få ut en int64 ur databasen så måste man gå en liten omväg via en datatyp som
+heter SANumeric, vilket är lite oelegant. Enligt utvecklarna är det så man ska göra.
+Oklart om det har någon relevant prestandapåverkan.
+
+== N&auml;sta steg
+
+=== Safir SDK Core
+
+I nästa release av Safir SDK Core bör Olib sättas till deprecated och eventuellt även
+göras optional, så att det går att få en Core helt utan Olib. Vid någon framtida release
+kommer Olib även att plockas bort helt. För att detta ska fungera så måste Dope även
+uppdateras till att gå direkt på ODBC-gränsytorna istället för att använda Olib.
+
+
+=== Safir SDK och Saab-projekt
+
+1. Eventuellt bör även QtSQL utvärderas. Qt är ett beroende som SDKn och SLB redan har, och
+den tillför alltså ingen extra kostnad eller komplexitet för projekten. Dock har QtSQL
+inte stöd för lika många databaser som SQLAPI++ har.
+
+2. Kolla på hur licenshanteringen av Mimer SQL ska lösas. SQLAPI\++ har metoder för att
+hämta native-handtag och liknande, så det bör gå att göra detta och sedan använda
+Mimer-koderna i ett anrop till ++SQLSetConnectOption++.
+
+3. Det verkliga provet för att se om SQLAPI\++ är den rätta lösningen är att portera en
+verklig applikation till att använda SQLAPI\++ istället för Olib. Detta kommer att visa
+hur svår övergången är och vilka problem man kan räkna med att stöta på. Det är viktigt
+att man under denna portering verkligen testar på alla de databaser och plattformar som
+man vill ha stöd för, eftersom det annars säkerligen kommer att göras lösningar som inte
+fungerar i alla kombinationer. Lämpligen bör den valda applikationen ha både behov av
+datum i databasen och stored procedures, så att man får svar på hur SQLAPI++ fungerar med
+detta.
+
+4. De lärdomar som dras under denna portering bör givetvis
+skrivas ner i någon form av lathund så att nästa utvecklare slipper gå i samma fällor.
+
+
+5. Titta på hur C#-applikationer ska hantera databasoberoende.
+
+[[discarded_solutions]]
+== F&ouml;rkastade l&ouml;sningar - Uppdatera Olib
+
+Den första lösningen vi tittade på var att uppdatera Olib så att den skulle uppfylla de
+nya kraven. Detta visade sig vara opraktiskt och troligen inte vara rätt lösning.
+
+Ett av de stora problemen är Olibs arkitektur. Det saknas en separation mellan API och
+backend, vilket gör att det är mycket svårt att göra plattforms- eller databasspecifika
+anpassningar bakom ytan. Alla sådana ändringar slår ut mot applikationerna som använder
+Olib.
+
+Tanken med att välja exempelvis SQLAPI++ istället för att uppdatera Olib är att eftersom
+ändringar i applikationerna ändå måste göras så kan man lika gärna ta ett lite större
+steg och gå upp på ett bibliotek som har stöd för betydligt fler databaser och är mer
+beprövat.
+
+Nedan följer lösningsförslaget så som det skrevs innan lösningen förkastades.
+
+=== M&aring;ls&auml;ttning
 
 Målsättningen med Olib v2 är att införa stöd för fler databaser, och att göra det lättare
 att lägga till ännu fler databaser i framtiden. Ett absolut minimum är stöd för följande
