@@ -737,8 +737,8 @@ This component will be based on the existing Snac component, with a few notable 
  * Dependencies to ACE will be removed
  * Dependencies to non-Core parts of Safir SDK will be removed
  * Since we want Control to start the Dob it will use the new communication mechanism directly, instead of using the Dob.
- * Will have a low level part and a high level part.
-   - The low level part does most of the work, but does 'not' depend on Dose or Dots. This means that low level part will not have the Dob shared memories loaded, and can not be affected by a corrupt shared memory. 
+ * Will have a low level part and a high level part. 
+   - The low level part does most of the work, but does 'not' depend on Dose and its shared memory, and therefore can not be affected by corrupted shared memory locks. Control uses Dots to read parameters but since Dots shared memory is read-only the risk for a corruption is minimal.
    - The high level part provides Dob objects that behave the same way that the current Snac objects do.
  * Current Master and Slave concepts will most likely be kept.
  * We will create a GUI that can be used to control the system and view its status.
@@ -747,7 +747,7 @@ This component will be based on the existing Snac component, with a few notable 
    - The GUI mentioned above can display project specific information.
 A first iteration of Control will probably just launch Safir SDK Core and then launch the existing Snac.
 
-TODO: should we use Boost.Process, not yet part of Boost. http://www.highscore.de/boost/process0.5/
+The current approach is to use Boost.Process to manage system processes. http://www.highscore.de/boost/process0.5/
 
 === System Picture
 
