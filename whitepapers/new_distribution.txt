@@ -572,6 +572,161 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 
 Now we're in the case with one node joining an existing system, see above.
 
+=== Pool distribution and persistent data sequences
+
+This section describes node startup sequences with an emphasis on injection of persistent data from Dope and pool distribution.   
+
+==== One starting, alone
+
+[width="40%",frame="topbot",options="header"]
+|======================
+|Node B
+
+| SP~m~ -> Ctrl: SS(B)
+
+| Ctrl -> dose_main: Inject B
+
+| Ctrl -> dose_main: Start
+
+| dose_main: Allow -1 connections
+
+| Dope: Connects and injects persistent entities
+
+| Dope -> dose_main: PersistentDataReady
+
+| dose_main: Allow all connections
+
+|======================
+
+==== One already running (B), another starting (A)
+
+[width="80%",frame="topbot",options="header"]
+|======================
+|Node A | Node B
+
+|SP~m~ -> Ctrl: SS(A, B)
+|SP~m~ -> Ctrl: SS(A, B)
+
+|Ctrl -> dose_main: Inject A, B
+|Ctrl -> dose_main: Inject A
+
+|Ctrl -> dose_main: Start
+|
+
+|dose_main: Send RequestPoolDistribution to B
+|dose_main: Send RequestPoolDistribution to A
+
+|dose_main: Send HavePersistanceDataRequest to B
+|
+
+|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (PersistentDataReady is false on this node)
+|dose_main: Receive RequestPoolDistribution. Start pool distribution (PersistentDataReady is true on this node)
+
+|
+|dose_main: Send HavePersistanceDataResponse to A, HavePersistence is true
+
+|dose_main: Receive HavePersistanceDataResponse, HavePersistence is true
+|
+
+|dose_main: DisallowInitialSet, Allow -1 connections
+|
+
+|Dope: Connects, any persistent entities are discarded
+|
+
+|Dope -> dose_main: PersistentDataReady. Call ignored since InitialSetAllowed is false 
+|
+
+|
+|dose_main: Send PDComplete to A
+
+|dose_main: PDComplete received, set PersistentDataReady=true
+|
+
+|dose_main: Start pool distribution (PersistentDataReady is true on this node)
+|
+
+|dose_main: Allow all connections
+|
+
+|dose_main: Send PDComplete to B
+|
+
+|
+|dose_main: PDComplete received
+
+|======================
+
+
+==== Two starting at the same time, active Dope is on Node B
+
+[width="80%",frame="topbot",options="header"]
+|======================
+|Node A | Node B
+
+|SP~m~ -> Ctrl: SS(A, B)
+|SP~m~ -> Ctrl: SS(A, B)
+
+|Ctrl -> dose_main: Inject A, B
+|Ctrl -> dose_main: Inject B, A
+
+|Ctrl -> dose_main: Start
+|Ctrl -> dose_main: Start
+
+|dose_main: Send RequestPoolDistribution to B
+|dose_main: Send RequestPoolDistribution to A
+
+|dose_main: Send HavePersistanceDataRequest to B
+|dose_main: Send HavePersistanceDataRequest to A
+
+|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (PersistentDataReady is false on this node)
+|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (PersistentDataReady is false on this node)
+
+|dose_main: Send HavePersistanceDataResponse to B, HavePersistence is false
+|dose_main: Send HavePersistanceDataResponse to A, HavePersistence is false
+
+|dose_main: Receive HavePersistanceDataResponse, HavePersistence is false
+|dose_main: Receive HavePersistanceDataResponse, HavePersistence is false
+
+|dose_main: Allow -1 connections
+|dose_main: Allow -1 connections
+
+|Dope: Does not connect (not active) Note: We have to penetrate the Dope active/not active design in more depth. For instance, there is probably a need for the active Dope to take a DB lock.  
+|Dope: Connects (active), injects persistent entities
+
+|
+|Dope -> dose_main: PersistentDataReady.
+
+|
+|dose_main: Start pool distribution (PersistentDataReady is true on this node)
+
+|
+|dose_main: All connections are not allowed to connect since there is a node (A) that has not distributed its pool.
+
+|
+|dose_main: Send PDComplete to A
+
+|dose_main: PDComplete received, set PersistentDataReady=true
+|
+
+|dose_main: Start pool distribution (PersistentDataReady is true on this node)
+|
+
+|dose_main: Allow all connections (PersistentDataReady is true and got pool from all nodes)
+|
+
+|dose_main: Send PDComplete to B
+|
+
+|
+|dose_main: PDComplete received
+
+|
+|dose_main: Allow all connections (PersistentDataReady is true and got pool from all nodes)
+
+|======================
+
+
 === Communication
 * Discover other nodes
 . Communication shall automatically discover other nodes in the system.
