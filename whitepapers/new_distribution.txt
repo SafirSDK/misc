@@ -576,28 +576,6 @@ Now we're in the case with one node joining an existing system, see above.
 
 This section describes node startup sequences with an emphasis on injection of persistent data from Dope and pool distribution.   
 
-==== One starting, alone
-
-[width="40%",frame="topbot",options="header"]
-|======================
-|Node B
-
-| SP~m~ -> Ctrl: SS(B)
-
-| Ctrl -> dose_main: Inject B
-
-| Ctrl -> dose_main: Start
-
-| dose_main: Allow -1 connections
-
-| Dope: Connects and injects persistent entities
-
-| Dope -> dose_main: PersistentDataReady
-
-| dose_main: Allow all connections
-
-|======================
-
 ==== One already running (B), another starting (A)
 
 [width="80%",frame="topbot",options="header"]
@@ -654,6 +632,28 @@ This section describes node startup sequences with an emphasis on injection of p
 
 |
 |dose_main: PDComplete received
+
+|======================
+
+==== One starting, alone
+
+[width="40%",frame="topbot",options="header"]
+|======================
+|Node B
+
+| SP~m~ -> Ctrl: SS(B)
+
+| Ctrl -> dose_main: Inject B
+
+| Ctrl -> dose_main: Start
+
+| dose_main: No other nodes, allow -1 connections
+
+| Dope: Connects and injects persistent entities
+
+| Dope -> dose_main: PersistentDataReady
+
+| dose_main: Allow all connections
 
 |======================
 
