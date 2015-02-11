@@ -585,7 +585,7 @@ This section describes node startup sequences with an emphasis on injection of p
 |SP~m~ -> Ctrl: SS(A, B)
 |SP~m~ -> Ctrl: SS(A, B)
 
-|Ctrl -> dose_main: Inject A, B
+|Ctrl -> dose_main: Inject B
 |Ctrl -> dose_main: Inject A
 
 |Ctrl -> dose_main: Start
@@ -597,13 +597,13 @@ This section describes node startup sequences with an emphasis on injection of p
 |dose_main: Send HavePersistanceDataRequest to B
 |
 
-|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (PersistentDataReady is false on this node)
-|dose_main: Receive RequestPoolDistribution. Start pool distribution (PersistentDataReady is true on this node)
+|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (HavePersistence is false on this node)
+|dose_main: Receive RequestPoolDistribution. Start pool distribution (HavePersistence is true on this node)
 
 |
-|dose_main: Send HavePersistanceDataResponse to A, HavePersistence is true
+|dose_main: Send HavePersistanceDataResponse (HavePersistence is true) to A, 
 
-|dose_main: Receive HavePersistanceDataResponse, HavePersistence is true
+|dose_main: Receive HavePersistanceDataResponse (HavePersistence is true) from B
 |
 
 |dose_main: DisallowInitialSet, Allow -1 connections
@@ -612,16 +612,16 @@ This section describes node startup sequences with an emphasis on injection of p
 |Dope: Connects, any persistent entities are discarded
 |
 
-|Dope -> dose_main: PersistentDataReady. Call ignored since InitialSetAllowed is false 
+|Dope -> dose_main: PersistentDataReady. The call is ignored since InitialSetAllowed is false 
 |
 
 |
 |dose_main: Send PDComplete to A
 
-|dose_main: PDComplete received, set PersistentDataReady=true
+|dose_main: PDComplete received, set HavePersistence=true
 |
 
-|dose_main: Start pool distribution (PersistentDataReady is true on this node)
+|dose_main: Start pool distribution (HavePersistence is true on this node)
 |
 
 |dose_main: Allow all connections
@@ -635,7 +635,7 @@ This section describes node startup sequences with an emphasis on injection of p
 
 |======================
 
-==== One starting, alone
+==== One starting, alone, Dope is on this node
 
 [width="40%",frame="topbot",options="header"]
 |======================
@@ -657,6 +657,24 @@ This section describes node startup sequences with an emphasis on injection of p
 
 |======================
 
+==== One starting, alone, Dope is on other (non started) node
+
+[width="40%",frame="topbot",options="header"]
+|======================
+|Node B
+
+| SP~m~ -> Ctrl: SS(B)
+
+| Ctrl -> dose_main: Inject B
+
+| Ctrl -> dose_main: Start
+
+| dose_main: No other nodes, allow -1 connections
+
+| dose_main: Since there is no Dope, a PersistentDataReady notification won't be received and no other connections will be allowed to connect.   
+
+|======================
+
 
 ==== Two starting at the same time, active Dope is on Node B
 
@@ -667,8 +685,8 @@ This section describes node startup sequences with an emphasis on injection of p
 |SP~m~ -> Ctrl: SS(A, B)
 |SP~m~ -> Ctrl: SS(A, B)
 
-|Ctrl -> dose_main: Inject A, B
-|Ctrl -> dose_main: Inject B, A
+|Ctrl -> dose_main: Inject B
+|Ctrl -> dose_main: Inject A
 
 |Ctrl -> dose_main: Start
 |Ctrl -> dose_main: Start
@@ -679,14 +697,14 @@ This section describes node startup sequences with an emphasis on injection of p
 |dose_main: Send HavePersistanceDataRequest to B
 |dose_main: Send HavePersistanceDataRequest to A
 
-|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (PersistentDataReady is false on this node)
-|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (PersistentDataReady is false on this node)
+|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (HavePersistence is false on this node)
+|dose_main: Receive RequestPoolDistribution. Do not start pool distribution (HavePersistence is false on this node)
 
-|dose_main: Send HavePersistanceDataResponse to B, HavePersistence is false
-|dose_main: Send HavePersistanceDataResponse to A, HavePersistence is false
+|dose_main: Send HavePersistanceDataResponse (HavePersistence is false) to B.
+|dose_main: Send HavePersistanceDataResponse (HavePersistence is false) to A.
 
-|dose_main: Receive HavePersistanceDataResponse, HavePersistence is false
-|dose_main: Receive HavePersistanceDataResponse, HavePersistence is false
+|dose_main: Receive HavePersistanceDataResponse (HavePersistence is false) from B.
+|dose_main: Receive HavePersistanceDataResponse (HavePersistence is false) from A.
 
 |dose_main: Allow -1 connections
 |dose_main: Allow -1 connections
@@ -698,7 +716,7 @@ This section describes node startup sequences with an emphasis on injection of p
 |Dope -> dose_main: PersistentDataReady.
 
 |
-|dose_main: Start pool distribution (PersistentDataReady is true on this node)
+|dose_main: Start pool distribution (HavePersistence is true on this node)
 
 |
 |dose_main: All connections are not allowed to connect since there is a node (A) that has not distributed its pool.
@@ -706,13 +724,13 @@ This section describes node startup sequences with an emphasis on injection of p
 |
 |dose_main: Send PDComplete to A
 
-|dose_main: PDComplete received, set PersistentDataReady=true
+|dose_main: PDComplete received, set HavePersistence=true
 |
 
-|dose_main: Start pool distribution (PersistentDataReady is true on this node)
+|dose_main: Start pool distribution (HavePersistence is true on this node)
 |
 
-|dose_main: Allow all connections (PersistentDataReady is true and got pool from all nodes)
+|dose_main: Allow all connections (HavePersistence is true and got pool from all nodes)
 |
 
 |dose_main: Send PDComplete to B
@@ -722,7 +740,7 @@ This section describes node startup sequences with an emphasis on injection of p
 |dose_main: PDComplete received
 
 |
-|dose_main: Allow all connections (PersistentDataReady is true and got pool from all nodes)
+|dose_main: Allow all connections (HavePersistence is true and got pool from all nodes)
 
 |======================
 
