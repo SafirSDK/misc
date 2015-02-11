@@ -930,6 +930,7 @@ Some design decisions/approaches:
  * When a node receives several PoolDistributionRequest:s it distributes its pool to the requesters one by one. This is probably simplier to implement and minimizes the data traffic "peak" from
 the pool distribution.
  * dose_main shall not fill upp the Communication send queue.
+ * The flag OkToSignalPDComplete found in the current code can be removed. This is a leftover from the pre redudant-dope times.
  
 === System Picture
 
