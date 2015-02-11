@@ -922,6 +922,15 @@ A first iteration of Control will probably just launch Safir SDK Core and then l
 
 The current approach is to use Boost.Process to manage system processes. http://www.highscore.de/boost/process0.5/
 
+=== dose_main
+
+Some design decisions/approaches:
+
+ * When a node detects new nodes it sends an explicit PoolDistributionRequest to each new node. Thus, the concept that a node tries to guess what another node think of its status, is removed.
+ * When a node receives several PoolDistributionRequest:s it distributes its pool to the requesters one by one. This is probably simplier to implement and minimizes the data traffic "peak" from
+the pool distribution.
+ * dose_main shall not fill upp the Communication send queue.
+ 
 === System Picture
 
 To be able to provide a system picture ('SP' for short) the System Picture component has to collect communication statistics from Communication. This data consists of timing information and packet loss information, etc. This low level information ('RAW' for short) is collected on all nodes, and distributed to all other nodes. 
