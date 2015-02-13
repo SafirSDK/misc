@@ -4,11 +4,13 @@
 New Distribution Whitepaper
 ==========================
 :Author: Lars Hagström, Anders Widén and Joel Ottosson
-:date: 2014-03-31
+:date: 2015-02-13
 
+:numbered!:
 == Preface
 The purpose of this document is to describe the new distribution mechanism of Safir SDK Core and the related changes. It contains information on the benefits, the requirements and the design.
 
+:numbered:
 == Benefits
 Robust communication::
   Exclusion of misbehaving nodes;;
@@ -1009,14 +1011,15 @@ running nodes around that may be reconnected at a later time.
 Detailed descriptions of the main algorithms in System Picture.
 
 The System Picture in the Control executable is known as the 'master' and the one in the
-dose_main executable is known as the slave.
+dose_main executable is known as the 'slave'.
 
 These algorithms do currently not take Light Nodes into account at all.
 
 ===== Exclusion
 
 System Picture takes two parameters, 'heartbeatInterval' and 'maxLostHeartbeats' that
-govern the exclusion algorithm. These are specified for every node type.
+govern the exclusion algorithm. These are specified for every node type. Heartbeats are
+sent by Communication, and SP is notified on every received data packet or heartbeat.
 
 Both slaves and masters on all nodes are allowed to mark another node as 'dead'. E.g. the
 master can mark a node as dead if no data has been received for ++heartbeatsInterval *
@@ -1043,10 +1046,11 @@ The master cyclically sends its RAW data to all other nodes, so now we need to d
 what the other masters do when they receive RAW data with a dead node in it.
 
 If the node is not the elected Coordinator it can do one of two things:
- - If the node is a node that we've never heard of we need to add it to our list of nodes
+
+ * If the node is a node that we've never heard of we need to add it to our list of nodes
    that we don't want to talk to. (TODO: should we call ExcludeNode or check this list in
    NewNode).
- - If the node is a node that we're talking to we 'ignore' the dead flag, and wait for
+ * If the node is a node that we're talking to we 'ignore' the dead flag, and wait for
    the Coordinator to tell us that the node is dead.
 
 If the node is the elected Coordinator it will call ++ExcludeNode++ and mark the node as dead in the next System State.
