@@ -957,22 +957,43 @@ An advantage of having the RAW and SS data available on all nodes is that it wil
 possible to view all of this data on each node (e.g. in Dobexplorer), instead of having
 to check on each node.
 
+A guiding principle in System Picture is that a node is allowed to act on things that
+happens to itself and to things that the elected Coordinator tells it about. For example,
+a non-coordinator node is not allowed to act on information in another nodes RAW data.
+
 ==== Electing a Coordinator
 
 System Picture uses the Bully Algorithm to elect a coordinator.
 
 ==== Transportation of SS and RAW within a node
 
-Since Control, dose_main and Dobexplorer
-are separate executables the SS and RAW data has to be transported between them. This
-will be achieved using IPC (domain sockets on Linux and named pipes on Windows).
+Since Control, dose_main and Dobexplorer are separate executables the SS and RAW data has
+to be transported between them. This will be achieved using IPC (domain sockets on Linux
+and named pipes on Windows).
 
 So the System Picture in dose_main will publish its RAW data, and the System Picture in
 Control will publish its RAW and SS data through IPC.
 
 [[sp-raw-pub-sub]]
-.System Picture data
+.System Picture data within node
 image::sp_raw_pub_sub.png["System Picture Pub/Sub", width=401, link="sp_raw_pub_sub.png"]
+
+==== Transportation of SS and RAW between nodes
+
+System Picture will only communicate between nodes in the master, i.e. on the control
+channel. So the SS that is sent to the slave in <<sp-raw-pub-sub>> is received from the
+master, regardless of whether the node is the elected coordinator or not.
+
+The RAW data produced by the slave is combined into the masters RAW data before it is
+transmitted to other nodes, so RAW data received by the master is always sent from
+another master, but will contain RAW info from that master's slave.
+
+<<sp-between-nodes>> shows how System Picture data is transmitted between nodes between
+masters and forwarded to slaves.
+
+[[sp-between-nodes]]
+.System Picture data between nodes
+image::sp_between_nodes.png["System Picture between nodes", width=401, link="sp_between_nodes.png"]
 
 ==== Exclusion algorithm
 
@@ -1067,7 +1088,7 @@ the coordinator.
 .Disconnected node exclusion example
 [width="90%",frame="topbot",options="header"]
 |======================
-| A master | A slave | B master | B slave
+| A master | A slave | B master (Coord) | B slave
 
 |
 | C slave timeout
