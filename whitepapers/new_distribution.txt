@@ -17,7 +17,7 @@ Robust communication::
     Current implementation means that one node that is "slow", either temporarily or always, will slow down distribution to all other nodes.
   Support for other topologies;;
     A number of issues with the current implementation will be addressed:
-    - Is really designed and optimized for LAN with TTL=1. It has been made to work with higher TTL. 
+    - Is really designed and optimized for LAN with TTL=1. It has been made to work with higher TTL.
     - Has no support for networks where all nodes cannot see all other nodes via UDP multicast.
     - Does not detect situations where firewalls make communication become "one-way".
 Removal of general "join" will simplify design::
@@ -30,7 +30,7 @@ Addition of specific "join" cases will allow more uses::
   Disconnected node will become empty;;
     An operator console with this setting will still become "empty", i.e. all non-local entities will be deleted (this is the current behavior). When the node is reconnected it will receive all remote entities again.
   TODO;;
-    Add description for server node.  
+    Add description for server node.
 
 Less static configuration::
   We want to provide a "dhcp"-like functionality for configuring nodes, so that instead of configuring the node identities and other details that should be internal you specify a node type, e.g. "operator console" or "Database server", and from that we internally work out what node id a node should have. This would make adding new nodes a lot easier.
@@ -69,8 +69,8 @@ In some distant future we might also want to change the blob format to use an op
 We only need support for C\+\+, since all the data transport and blob packing/unpacking code is C++ code.
 
 Protobuf - http://code.google.com/p/protobuf/::
-  * Google developed data serialization format. 
-  * Used by almost all Google internal RPC and file formats. 
+  * Google developed data serialization format.
+  * Used by almost all Google internal RPC and file formats.
   * Well documented and well supported (by Google).
   * There are also multiple implementations, e.g. SAX-like deserialization libraries are available.
   * Stable and widely used.
@@ -130,7 +130,7 @@ OpenPGM - http://code.google.com/p/openpgm::
   A well-known open source implementation of PGM specification. It
   supports most big platforms such as Windows and Linux and also has a
   beta version for Android.
-  
+
 ZeroMQ - http://www.zeromq.org::
   An open source (LGPL) library that offers lightweight message based
   socket-like communication. It offers different kind of services
@@ -157,10 +157,10 @@ The Spread Toolkit - http://www.spread.org/::
   us from selecting this toolkit while maintaining the license of
   Safir SDK Core:
 
-  All advertising materials (including web pages) mentioning features or use of 
-  this software, or software that uses this software, must display the following 
-  acknowledgment: "This product uses software developed by Spread Concepts LLC 
-  for use in the Spread toolkit. For more information about Spread see 
+  All advertising materials (including web pages) mentioning features or use of
+  this software, or software that uses this software, must display the following
+  acknowledgment: "This product uses software developed by Spread Concepts LLC
+  for use in the Spread toolkit. For more information about Spread see
   http://www.spread.org"
 
 Advanced Message Queuing Protocol (AMQP) - http://www.amqp.org/about/what::
@@ -170,9 +170,9 @@ Advanced Message Queuing Protocol (AMQP) - http://www.amqp.org/about/what::
   negatively. Also scalability will suffer from the central broker
   design.
 
-RabbitMQ - http://www.rabbitmq.com::  
+RabbitMQ - http://www.rabbitmq.com::
   Along with Apache Qpid, RabbitMQ is one of the major implementations of AMQP
-  
+
 Apache Qpid - http://qpid.apache.org::
   Along with RabbitMQ, Apache Qpid is one of the major implementations of AMQP.
 
@@ -214,7 +214,7 @@ A flow controlled socket has a maximum send rate, defined by the node type, that
 
 After writing a few test programs and more evaluation we had to discard ZeroMQ, since it has no reliability guarantees, and no easy way of detecting when data has been lost. This is especially true when using EPGM as the underlying transport. Data can be discarded on the sender side or on the receiver side and it can be lost on the wire. Also, if the sender attempts to send more than ZeroMQ can handle data is discarded silently (see http://lists.zeromq.org/pipermail/zeromq-dev/2011-December/014721.html[] for more information).
 
-We briefly toyed with the idea of improving ZeroMQ to fill in these gaps, but we decided to evaluate "Pure OpenPGM" first. Since ZeroMQ uses OpenPGM for its EPGM transport it was useful to check if we could get OpenPGM to work the way we wanted it to before making any changes to ZeroMQ.  
+We briefly toyed with the idea of improving ZeroMQ to fill in these gaps, but we decided to evaluate "Pure OpenPGM" first. Since ZeroMQ uses OpenPGM for its EPGM transport it was useful to check if we could get OpenPGM to work the way we wanted it to before making any changes to ZeroMQ.
 
 ===== Pure OpenPGM
 
@@ -335,7 +335,7 @@ req_12::
     * A "slow node" is a node that is not able to process incoming data in a timely fashion, either due to a slow network link or due to lacking processing power.
     * "Slowness" does not need to be detected automatically. It is expected to be a configuration issue.
 
- 
+
 req_13::
     Distribution shall automatically discover other nodes in the system.
     * There is no need for a node to have a static list of all other nodes.
@@ -352,7 +352,7 @@ req_15::
 Note that dose_com, the old distribution mechanism, had _Priority_ and _Distribution Channels_. These mechanisms provided some level of Quality of Service configurability on the network level. The problem with these mechanisms is that they did not affect the system all the way up to the application level. These old QoS mechanisms will not be implemented in the first version of the new distribution mechanism. Adding something similar to these mechanisms is possible in the future, but should take into account all levels, all the way up to the applications.
 
 
-req_16:: 
+req_16::
     Distribution shall maintain a list of nodes that are part of the system, and keep it synchronized on all nodes.
 
 req_17::
@@ -438,7 +438,9 @@ Ta med prioriteter i krav och design, men implementera inte. På vilken nivå sk
 
 A node in its very basic form consists of two executables; Control and dose_main. System Picture and Communication are each instantiated in both of these executables.
 
-The System Picture in the Control executable (known as the master) is the one that is able to produce a system picture, and the one in the dose_main executable (known as the slave) just produces statistics and listens to his master.
+The System Picture in the Control executable (known as the master) is the one that is
+able to produce a system picture, and the one in the dose_main executable (known as the
+slave) just produces statistics and listens to his master.
 
 [[node-diagram]]
 .Deployed components in a node
@@ -449,7 +451,7 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 |======================
 | | Explanation
 
-| SP~m~ 
+| SP~m~
 | System Picture Master, i.e. the one that runs in Control
 
 | [SP~m~]
@@ -481,16 +483,16 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 |SP~m~ -> COM~m~: Include A
 
 |SP~m~: Xmit RAW
-|SP~m~: Xmit RAW & SP (101, [B], \{A})
+|SP~m~: Xmit RAW & SS (101, [B], \{A})
 
-|SP~m~ -> Ctrl: SP (101, [B], \{A})
-|[SP~m~] -> Ctrl: SP (101, [B], \{A})
+|SP~m~ -> Ctrl: SS (101, [B], \{A})
+|[SP~m~] -> Ctrl: SS (101, [B], \{A})
 
-|SP~m~ -> SP~s~: SP (101, [B], \{A})
-|[SP~m~] -> SP~s~: SP (101, [B], \{A})
+|SP~m~ -> SP~s~: SS (101, [B], \{A})
+|[SP~m~] -> SP~s~: SS (101, [B], \{A})
 
-|SP~s~ -> dose: SP (101, [B], \{A})
-|SP~s~ -> dose: SP (101, [B], \{A})
+|SP~s~ -> dose: SS (101, [B], \{A})
+|SP~s~ -> dose: SS (101, [B], \{A})
 
 |Ctrl -> SP~m~: Join 101
 |
@@ -499,16 +501,16 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 |
 
 |
-|[SP~m~]: Xmit SP (101, [B], A)
+|[SP~m~]: Xmit SS (101, [B], A)
 
-|SP~m~ -> Ctrl: SP (101, [B], A)
-|[SP~m~] -> Ctrl: SP (101, [B], A)
+|SP~m~ -> Ctrl: SS (101, [B], A)
+|[SP~m~] -> Ctrl: SS (101, [B], A)
 
-|SP~m~ -> SP~s~: SP (101, [B], A)
-|[SP~m~] -> SP~s~: SP (101, [B], A)
+|SP~m~ -> SP~s~: SS (101, [B], A)
+|[SP~m~] -> SP~s~: SS (101, [B], A)
 
-|SP~s~ -> dose: SP (101, [B], A)
-|SP~s~ -> dose: SP (101, [B], A)
+|SP~s~ -> dose: SS (101, [B], A)
+|SP~s~ -> dose: SS (101, [B], A)
 
 |dose -> COM~s~: connect to B
 |dose -> COM~s~: connect to A
@@ -516,7 +518,7 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 |======================
 
 
-*Lemma*: When SP~m~ has new SP it will immediately be sent to Ctrl and SP~s~. As soon as SP~s~ gets a new SP it will be sent to dose_main. I.e. As soon as SP~m~ has a new SP everyone will get it. From now on this will be written as "SP~m~: Updated SP(...)".
+*Lemma*: When SP~m~ has new SS it will immediately be sent to Ctrl and SP~s~. As soon as SP~s~ gets a new SS it will be sent to dose_main. I.e. As soon as SP~m~ has a new SS everyone will get it. From now on this will be written as "SP~m~: Updated SS(...)".
 
 ==== One starting, alone
 
@@ -529,11 +531,11 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 
 | SP~m~: No NewNode in X seconds -> Start election -> Becomes coordinator
 
-| [SP~m~]: Updated SP(null,[B])
+| [SP~m~]: Updated SS(null,[B])
 
 | Ctrl -> [SP~m~]: New incarnation number (101)
 
-| [SP~m~]: Updated SP(101,[B])
+| [SP~m~]: Updated SS(101,[B])
 
 |======================
 
@@ -556,17 +558,17 @@ image::node.png["Node Diagram", width=445, link="node.png"]
 | SP~m~: No coordinator in X seconds, start election (?)
 | SP~m~: No coordinator in X seconds, start election
 
-| 
+|
 | B becomes coordinator
 
 |
-| [SP~m~]: Updated SP (null, [B], \{A})
+| [SP~m~]: Updated SS (null, [B], \{A})
 
 |
 | Ctrl -> [SP~m~]: New incarnation number (102)
 
 |
-| [SP~m~]: Updated SP (102, [B], \{A})
+| [SP~m~]: Updated SS (102, [B], \{A})
 
 |======================
 
@@ -574,7 +576,7 @@ Now we're in the case with one node joining an existing system, see above.
 
 === Pool distribution and persistent data sequences
 
-This section describes node startup sequences with an emphasis on injection of persistent data from Dope and pool distribution.   
+This section describes node startup sequences with an emphasis on injection of persistent data from Dope and pool distribution.
 
 ==== One already running (B), another starting (A)
 
@@ -601,7 +603,7 @@ This section describes node startup sequences with an emphasis on injection of p
 |dose_main: Receive RequestPoolDistribution. Start pool distribution (HavePersistence is true on this node)
 
 |
-|dose_main: Send HavePersistanceDataResponse (HavePersistence is true) to A, 
+|dose_main: Send HavePersistanceDataResponse (HavePersistence is true) to A,
 
 |dose_main: Receive HavePersistanceDataResponse (HavePersistence is true) from B
 |
@@ -612,7 +614,7 @@ This section describes node startup sequences with an emphasis on injection of p
 |Dope: Connects, any persistent entities are discarded
 |
 
-|Dope -> dose_main: PersistentDataReady. The call is ignored since InitialSetAllowed is false 
+|Dope -> dose_main: PersistentDataReady. The call is ignored since InitialSetAllowed is false
 |
 
 |
@@ -671,7 +673,7 @@ This section describes node startup sequences with an emphasis on injection of p
 
 | dose_main: No other nodes, allow -1 connections
 
-| dose_main: Since there is no Dope, a PersistentDataReady notification won't be received and no other connections will be allowed to connect.   
+| dose_main: Since there is no Dope, a PersistentDataReady notification won't be received and no other connections will be allowed to connect.
 
 |======================
 
@@ -709,7 +711,7 @@ This section describes node startup sequences with an emphasis on injection of p
 |dose_main: Allow -1 connections
 |dose_main: Allow -1 connections
 
-|Dope: Does not connect (not active) Note: We have to penetrate the Dope active/not active design in more depth. For instance, there is probably a need for the active Dope to take a DB lock.  
+|Dope: Does not connect (not active) Note: We have to penetrate the Dope active/not active design in more depth. For instance, there is probably a need for the active Dope to take a DB lock.
 |Dope: Connects (active), injects persistent entities
 
 |
@@ -763,7 +765,7 @@ This section describes node startup sequences with an emphasis on injection of p
 . Communication shall automatically retransmit messages that have not been aknowledged for a certain amount of time.
 . Communication shall automatically send keep-alive messages to all other system nodes if it has been quiet certain amount of time.
 . Communication shall use sequence numbers to detect lost messages, duplicated messages, reordered messages etc.
-. Communication shall have a limited send buffer. If the host application 
+. Communication shall have a limited send buffer. If the host application
 * Receiving messages
 . Communication shall deliver messages to the host application in correct order according to sequence numbers without any gaps.
 . Communication shall put together fragmented messages before delivering them to the host application.
@@ -813,11 +815,11 @@ A system can have several node types, and one node is of one and only one node t
 |======================
 | Property Name | Type | Comment
 
-| Name 
-| string 
+| Name
+| string
 | Name of the node type
 
-| IsLight 
+| IsLight
 | boolean
 | Is the node a _light_ node (see below).
 
@@ -827,11 +829,11 @@ A system can have several node types, and one node is of one and only one node t
 
 | MulticastAddressControl
 | string
-| Multicast address and port used for the control channel for nodes of this type. An empty string for this or MulticastAddressData indicates that nodes of this type can't be reached via multicast. 
+| Multicast address and port used for the control channel for nodes of this type. An empty string for this or MulticastAddressData indicates that nodes of this type can't be reached via multicast.
 
 | MulticastAddressData
 | string
-| Multicast address and port used for the data channel for nodes of this type. An empty string for this or MulticastAddressControl indicates that nodes of this type can't be reached via multicast. 
+| Multicast address and port used for the data channel for nodes of this type. An empty string for this or MulticastAddressControl indicates that nodes of this type can't be reached via multicast.
 
 | HeartbeatInterval
 | duration
@@ -898,7 +900,7 @@ The forwarding of registrations will ensure that two light nodes cannot have the
 
 ===== Light nodes and incomplete dou-set
 
-A light can contain only a subset (it must be a consistent subset, of course) of the dou files. 
+A light can contain only a subset (it must be a consistent subset, of course) of the dou files.
 
 If dose_main receives data of a type that it does not know about it will discard it, and for objects that are embedded in other objects the data will be unpacked to the base type, which dots knows about.
 
@@ -910,7 +912,7 @@ This component will be based on the existing Snac component, with a few notable 
  * Dependencies to ACE will be removed
  * Dependencies to non-Core parts of Safir SDK will be removed
  * Since we want Control to start the Dob it will use the new communication mechanism directly, instead of using the Dob.
- * Will have a low level part and a high level part. 
+ * Will have a low level part and a high level part.
    - The low level part does most of the work, but does 'not' depend on Dose and its shared memory, and therefore can not be affected by corrupted shared memory locks. Control uses Dots to read parameters but since Dots shared memory is read-only the risk for a corruption is minimal.
    - The high level part provides Dob objects that behave the same way that the current Snac objects do.
  * Current Master and Slave concepts will most likely be kept.
@@ -926,28 +928,45 @@ The current approach is to use Boost.Process to manage system processes. http://
 
 Some design decisions/approaches:
 
- * When a node detects new nodes it sends an explicit PoolDistributionRequest to each new node. Thus, the concept that a node tries to guess what another node think of its status, is removed.
- * When a node receives several PoolDistributionRequest:s it distributes its pool to the requesters one by one. This is probably simplier to implement and minimizes the data traffic "peak" from
+ * When a node detects new nodes it sends an explicit PoolDistributionRequest to each new
+   node. Thus, the concept that a node tries to guess what another node think of its
+   status, is removed.
+ * When a node receives several PoolDistributionRequest:s it distributes its pool to the
+   requesters one by one. This is probably simpler to implement and minimizes the data
+   traffic "peak" from
 the pool distribution.
- * dose_main shall not fill upp the Communication send queue.
- * The flag OkToSignalPDComplete found in the current code can be removed. This is a leftover from the pre redudant-dope times.
- 
+ * The pool distribution shall not fill upp the Communication send queue, to avoid
+   starvation of the normal traffic. But the PD must not be starved either.
+ * The flag OkToSignalPDComplete found in the current code can be removed. This is a
+   leftover from the pre redudant-dope times.
+
 === System Picture
 
-To be able to provide a system picture ('SP' for short) the System Picture component has to collect communication statistics from Communication. This data consists of timing information and packet loss information, etc. This low level information ('RAW' for short) is collected on all nodes, and distributed to all other nodes. 
+To be able to provide a System State ('SS' for short) the System Picture component has to
+collect communication statistics from Communication. This data consists of timing
+information and packet loss information, etc. This low level information ('RAW' for
+short) is collected on all nodes, and distributed to all other nodes.
 
-From this RAW data System Picture has to produce an SP, that is identical on all nodes. This will be done by having one SP act as _Coordinator_, which is responsible for producing and distributing the SP.
+From this RAW data System Picture has to produce an SS, that is identical on all
+nodes. This will be done by having one SP act as _Coordinator_, which is responsible for
+producing and distributing the SS.
 
-An advantage of having the RAW and SP data available on all nodes is that it will be possible to view all of this data on each node (e.g. in Dobexplorer), instead of having to check on each node.
+An advantage of having the RAW and SS data available on all nodes is that it will be
+possible to view all of this data on each node (e.g. in Dobexplorer), instead of having
+to check on each node.
 
 ==== Electing a Coordinator
 
 System Picture uses the Bully Algorithm to elect a coordinator.
 
-==== Transportation of SP and RAW within a node
-Since Control, dose_main and Dobexplorer are separate executables the SP and RAW data has to be transported between them. This will be achieved using IPC (domain sockets on Linux and named pipes on Windows).
+==== Transportation of SS and RAW within a node
 
-So the System Picture in dose_main will publish its RAW data, and the System Picture in Control will publish its RAW and SP data through IPC.
+Since Control, dose_main and Dobexplorer
+are separate executables the SS and RAW data has to be transported between them. This
+will be achieved using IPC (domain sockets on Linux and named pipes on Windows).
+
+So the System Picture in dose_main will publish its RAW data, and the System Picture in
+Control will publish its RAW and SS data through IPC.
 
 [[sp-raw-pub-sub]]
 .System Picture data
@@ -955,10 +974,149 @@ image::sp_raw_pub_sub.png["System Picture Pub/Sub", width=401, link="sp_raw_pub_
 
 ==== Exclusion algorithm
 
-We have not decided on an algorithm yet, but it will most likely be based on whether a node is "slowing down" the other nodes to an unacceptable degree.
+The basic exclusion algorithm that will be implemented is simply based on connection
+loss. If any node thinks that another node has been quiet for too long (configurable)
+then that node will be excluded by everyone.
 
+Since nodes that have once been excluded from the system will never be let in again this
+will make it necessary to configure the timeouts "just right" for a system, since if they
+are too short nodes may get excluded spuriously, and if the timeouts are too long a node
+that actually fails will cause some of the data distribution to freeze during the whole
+of the timeout.
 
-TODO: Write about the list of node-id:s that can grow very big, and that we want to send cleanup decisions "up" to user or project.
+In the future it is possible to add more criteria for exclusion, such as whether a node
+is "slowing down" the other nodes to an unacceptable degree, or behaving erratically in
+other ways.
+
+===== Cleanup of the list of excluded nodes
+
+To be able to reliably exclude nodes System Picture has to maintain and distribute (as
+part of SS) a list of all nodes that have been excluded from the system.
+
+In a system that is running for a very long time, with nodes being restarted or connected
+and disconnected it is possible for this list to grow very long. There is no way that
+System Picture can clean up this list in any automated way. For example a network cable
+could have been disconnected for a year, and if reconnected could mess up the system with
+bad data if this list was cleared automatically after 10 months.
+
+The solution to this is to push this decision up to business logic in the system
+(i.e. outside of Safir SDK Core), or to a human operator. So, by telling Safir SDK Core
+that it is okay to clear the exclusion lists the operator promises that there are no
+running nodes around that may be reconnected at a later time.
+
+==== Algorithms
+
+Detailed descriptions of the main algorithms in System Picture.
+
+The System Picture in the Control executable is known as the 'master' and the one in the
+dose_main executable is known as the slave.
+
+These algorithms do currently not take Light Nodes into account at all.
+
+===== Exclusion
+
+System Picture takes two parameters, 'heartbeatInterval' and 'maxLostHeartbeats' that
+govern the exclusion algorithm. These are specified for every node type.
+
+Both slaves and masters on all nodes are allowed to mark another node as 'dead'. E.g. the
+master can mark a node as dead if no data has been received for ++heartbeatsInterval *
+maxLostHeartbeats++ seconds from that node on the control channel. Likewise a slave can
+mark a node as dead if no data is being received on the data channel.
+
+When an SP instance marks a node as dead it calls ++ExcludeNode++ in Communication, which
+causes all packets to and from that node to be dropped. This will in turn cause the SP
+instance on the other side to mark this node as dead.
+
+'At this stage only either the data or control channel will have been disconnected, and
+now we need to propagate the "deadness" to the counterpart, so that the other channel can
+be disconnected.'
+
+The slave cyclically sends its RAW data to the master, and this data will contain flags
+on nodes that have been marked as dead. When the master sees that the slave has marked a
+node as dead it marks the node as dead as well, and calls ++ExcludeNode++. The master
+also sends its RAW data to the slave cyclically, so the same happens in the reverse case.
+
+'At this stage both the data and control channel has been disconnected, but now we need
+other nodes to know about the dead node.'
+
+The master cyclically sends its RAW data to all other nodes, so now we need to discuss
+what the other masters do when they receive RAW data with a dead node in it.
+
+If the node is not the elected Coordinator it can do one of two things:
+ - If the node is a node that we've never heard of we need to add it to our list of nodes
+   that we don't want to talk to. (TODO: should we call ExcludeNode or check this list in
+   NewNode).
+ - If the node is a node that we're talking to we 'ignore' the dead flag, and wait for
+   the Coordinator to tell us that the node is dead.
+
+If the node is the elected Coordinator it will call ++ExcludeNode++ and mark the node as dead in the next System State.
+
+Handling and production of System States is described in greater detail below, but in
+short all masters and slaves on all nodes will get the new SS, where the node is marked
+as dead. When an SP instance processes an SS and finds a dead node ++ExcludeNode++ will
+be called and the node will be marked as dead in the next RAW.
+
+Below is an example of node exclusion. The system consists of three nodes - A, B, and C -
+when node C is disconnected. The slave in node A is the first to detect this. Node B is
+the coordinator.
+
+.Disconnected node exclusion example
+[width="90%",frame="topbot",options="header"]
+|======================
+| A master | A slave | B master | B slave
+
+|
+| C slave timeout
+|
+|
+
+|
+| Mark C dead and call ExcludeNode
+|
+|
+
+| Receive RAW
+| Send RAW
+|
+|
+
+| Mark C dead and call ExcludeNode
+|
+|
+|
+
+| Send RAW
+|
+| Receive RAW
+|
+
+|
+|
+| Mark C dead and call ExcludeNode
+|
+
+|
+|
+| Produce new SS with C dead
+|
+
+| Receive SS
+|
+| Send SS
+| Receive SS
+
+| Forward SS
+| Receive SS
+|
+|
+
+| Nothing to do C already dead
+| Nothing to do C already dead
+|
+| Mark C dead and call ExcludeNode
+
+|======================
+
 
 === Communication
 Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to the host (System Picture) who decides which nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
@@ -983,7 +1141,7 @@ An instance of Communication is automatically started when it is constructed and
 |======================
 |Method |Description
 
-|Constructor        
+|Constructor
 |An instance of Communication is automatically started when it is constructed and stopped when it is destructed. There are no methods like start and stop or similair.
 
 |Destructor
@@ -1035,19 +1193,41 @@ The Dob supports three kinds of mechanism: entities, messages and requests (serv
 
 [[uc_messages]]
 === Messages
-In the current Dob implementation there are no guarantees that messages are delivered to all subscribers, but if a message is sent on an acked priority level the Dob guarantees that the message will arrive to the node. But after the message has arrived to the node there are no guarantees that it is delivered to all subscribers (if a subscriber's in queue is full the message will not be delivered to that subscriber). 
-This "delivery-to-node-but-not-to-subscriber-guarantee" is hard to explain and we have not been able to figure out any relevant use case where it could be used. Contrary to this, the new implementation will have two distinct, and hopefully, easy-to-explain concepts; messages that are guaranteed to be delivered to the receiving applications and messages that don't have this guarantee.
+
+In the current Dob implementation there are no guarantees that messages are delivered to
+all subscribers, but if a message is sent on an acked priority level the Dob guarantees
+that the message will arrive to the node. But after the message has arrived to the node
+there are no guarantees that it is delivered to all subscribers (if a subscriber's in
+queue is full the message will not be delivered to that subscriber).
+
+This "delivery-to-node-but-not-to-subscriber-guarantee" is hard to explain and we have
+not been able to figure out any relevant use case where it could be used. Contrary to
+this, the new implementation will have two distinct, and hopefully, easy-to-explain
+concepts; messages that are guaranteed to be delivered to the receiving applications and
+messages that don't have this guarantee.
 
 ==== Messages without guaranteed delivery
-Messages without guaranteed delivery are typically used for cyclic data where a few lost messages are acceptable. For example, messages can be lost due to network failures or if some application cannot keep up with the message rate. There is no way for the sender to know whether or not a message actually has been delivered.
+
+Messages without guaranteed delivery are typically used for cyclic data where a few lost
+messages are acceptable. For example, messages can be lost due to network failures or if
+some application cannot keep up with the message rate. There is no way for the sender to
+know whether or not a message actually has been delivered.
 
 Messages of this type are always sent unacked on the network level.
 
 [[delivered_messages]]
 ==== Messages with guaranteed delivery
-Messages with guaranteed delivery are used when messages must be delivered to all current subscribers. The sender is informed about the outcome of the send operation, i.e. if the message was successfully delivered to all subscribers or if the delivery to one or more subscribers did fail.
 
-The current approach is to use the Foreach mechanism to implement messages with guaranteed delivery. There is a separate article which discusses the details, see the http://safir.sourceforge.net[Safir homepage] for more info. The implementation is based on that service requests are used and that the message subscribers do register service handlers for global service types.
+Messages with guaranteed delivery are used when messages must be delivered to all current
+subscribers. The sender is informed about the outcome of the send operation, i.e. if the
+message was successfully delivered to all subscribers or if the delivery to one or more
+subscribers did fail.
+
+The current approach is to use the Foreach mechanism to implement messages with
+guaranteed delivery. There is a separate article which discusses the details, see the
+http://safir.sourceforge.net[Safir homepage] for more info. The implementation is based
+on that service requests are used and that the message subscribers do register service
+handlers for global service types.
 
 === Entities
 TODO: write about how entities will behave in new implementation. Will we provide unacked entities?
@@ -1072,7 +1252,8 @@ TODO: write about how requests will be implemented.
 
 === How do the subscription queues grow in dose_internal?
 
-The worry was whether a slow node may cause other nodes to start using a large amount of memory to handle its subscription queues. I.e. we want to double check that they do not grow infinitely.
+The worry was whether a slow node may cause other nodes to start using a large amount of
+memory to handle its subscription queues. I.e. we want to double check that they do not
+grow infinitely.
 
 This is not a problem, an already dirty subscription will not be added again to the subscription queue.
-
