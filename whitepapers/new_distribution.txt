@@ -1142,6 +1142,51 @@ the coordinator.
 
 |======================
 
+==== Elections
+
+Elections are perfomed using the Bully Algorithm. There are some things to note with how the
+algorithm is implemented in System Picture:
+
+ 1. The node Id is used to order the nodes, so the node with the highest node id will
+    eventually become Coordinator.
+ 2. A node will wait a certain time to ascertain if it is "alone", i.e. that there are no
+    other running nodes on the network. If it decides that it is alone it will proclaim
+    itself to be the elected Coordinator.
+ 3. Any node that has been discovered can start an election, even if it is not in the SS
+    yet. (However an elected Coordinator will not be allowed to send out a new SS until
+    it has received information from all other nodes.)
+ 4. Each election has a unique identifier, the 'ElectionId'.
+
+==== Production of System States
+
+The elected Coordinator calculates a new System States whenever a new RAW state is
+received from another node. However, the SS is only sent to other nodes once per
+second. In a system with many nodes the constant recalculation might be wasteful, so this
+might need to be adjusted in the future.
+
+A new System State is produced using this algorithm:
+
+ I) *Check Prerequisites:*
+
+  1. Node must be elected
+  2. RAW data must have been received from all discovered nodes.
+  3. RAW data from all other nodes must contain current ElectionId, i.e. the RAW data was
+     sent since the last election took place.
+  4. All live nodes in the RAW from other nodes must have been discovered by us.
+  5. Exclude any node that another node has marked as dead. If this happens we have to start over from step 1.
+
+ II) *Update SS:*
+  1. Add ourselves to SS if we're not in there
+  2. Mark nodes that have died since last SS as dead in new SS.
+  3. Add new nodes to new SS
+    i)   Make a list of all nodes that our node can see that are not already in SS
+    ii)  From this list remove nodes that cannot be seen by all nodes in last SS.
+    iii) Check that all nodes in the list can see each other. Remove any that can't.
+    iv)  Add this list of nodes to new SS.
+  4. Add any dead nodes from any other node's RAW that havent already been added.
+
+ III) *Update RAW:*
+  1. Add any dead nodes that we haven't discovered ourselves to our RAW.
 
 === Communication
 Communication's main responsibilities are to detect new nodes and send and receive messages to/from other nodes. Whenever a new node is detected Communication will report it to the host (System Picture) who decides which nodes are part of the system. Communication shall filter incoming messages and only deliver messages received from other system nodes.
