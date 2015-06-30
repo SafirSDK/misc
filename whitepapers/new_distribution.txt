@@ -4,7 +4,7 @@
 New Distribution Whitepaper
 ==========================
 :Author: Lars Hagström, Anders Widén and Joel Ottosson
-:date: 2015-02-13
+:date: 2015-06-29
 
 :numbered!:
 == Preface
@@ -1327,3 +1327,19 @@ memory to handle its subscription queues. I.e. we want to double check that they
 grow infinitely.
 
 This is not a problem, an already dirty subscription will not be added again to the subscription queue.
+
+=== Boost Asio usage
+
+From the beginning we made the assumption that a boost::asio::io_service::strand has no relation to other
+strands. More specifically, we assumed that when a strand is locked it doesn't make any other strand to lock.
+This assumption is unfortunately not true and if you read the Boost Asio documentation carefully you find
+this statement: _"The implementation makes no guarantee that handlers posted or dispatched through different
+strand objects will be invoked concurrently"_.
+
+Studying the implementation shows that strand instances are fetched from a pool (vector) of size 193. There is
+a pre-processor symbol BOOST_ASIO_ENABLE_SEQUENTIAL_STRAND_ALLOCATION which will make new strands to be allocated
+sequentially from the beginning of the vector instead from the default hashing behaviour.
+
+Since we have written the code under the assumption that strands do *not* affect each other we have decided that
+for the time being we define the pre-processor symbol, thereby making the first 193 strands unique. Since we have
+far less strands than 193 in any single program we will get a behaviour where strands not interfere with each other.   
