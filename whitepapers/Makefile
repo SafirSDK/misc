@@ -17,7 +17,7 @@ all: new_distribution.pdf new_distribution.html messages.pdf messages.html impro
 
 vpath %.dia images
 %.png: %.dia
-	dia --export=$@ -t png-libart $<
+	dia --export=$@ -t png $<
 
 new_distribution.pdf: $(DEPS)
 	echo "Building new_distribution pdf"
