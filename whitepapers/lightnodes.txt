@@ -1,0 +1,253 @@
+// -*- coding: utf-8 -*-
+:encoding: UTF-8
+
+Light Nodes Whitepaper
+=====================
+:Author: Lars Hagström and Joel Ottosson
+:date: 2022-08-26
+
+:numbered!:
+== Preface
+
+The purpose of this document is to describe the _Light Nodes_ feature that is the
+proposed solution to a number issues in current and future Safir SDK Core based systems.
+
+In short this paper proposes that certain Dob nodes can be of a type that has different
+requirements and functionality from other nodes. In a client/server system the clients
+could typically be light nodes, which would simplify some networking requirements and
+make clients easier to manage.
+
+Some of the information in this document was copied from the new_distribution whitepaper,
+but this document superseeds the information about light nodes in that document.
+
+=== Why the name ``Light Nodes''?
+
+The other contender for the name of this feature would be something with ``Client''. But
+this would be slightly misleading, since it would infer that all clients should be of
+this type, and that no servers should be of this type, and that is not necessarily true.
+
+
+:numbered:
+== Light Nodes Proposal
+
+This section gets more technical, describing the features of light nodes and associated
+functionality. If you're looking for more about the benefits of this proposal we suggest
+that you skim this section (to get an idea of what the proposal entails), and then jump
+to <<benefits>>.
+
+=== Light Nodes
+
+.New Node Type Property
+[width="75%",cols="20%,10%,70%",frame="topbot",options="header"]
+|======================
+| Property Name | Type | Comment
+
+| IsLight
+| boolean
+| Is the node a _light_ node.
+
+|======================
+
+
+The main part of this proposal is that a node type property is added; whether a node is a _light_
+node or not. Light nodes are the _only_ kind of nodes that, after it has been disconnected
+(e.g. network cable has been disconnected), can rejoin a system without being
+restarted. A light node is for example only allowed to own any global entities that are
+unique, which means that when it is rejoined into the system there can be no conflicts
+between entity owners.
+
+The properties of a light node are:
+
+* Can only register handlers for services that are marked as local or _limited_ (see below).
+* Can only register handlers for entities that are marked as local or limited.
+* Can (obviously) only own instances of entity types that are marked as local or limited.
+* Can subscribe to everything
+* Will only receive messages, requests and entity instances from nodes that can TalkTo it.
+* Can send messages
+* Can not become system coordinator (the node that decides when nodes are to be kicked out of the system).
+
+When a light node has been disconnected from a system and then reconnected to the same or
+a different system it will start a new Discovery. It may also change its IP address while
+it is disconnected, since the discovery will ensure that the new IP address is known by
+its counterparts.
+
+A light node may connect to a system with a different incarnation number after
+disconnection. I.e. it should not remember incarnation numbers when it is disconnected.
+
+=== Disconnected behaviour and resynchronization
+
+There are two ways that a disconnected node can behave. Either it can wipe all
+registrations and entities, and essentially become ``blank'', or it can keep all
+registrations and entities, but as read-only. This latter mode would of course disallow
+all requests (to non-local handlers). The easy solution to resynchronization of a node
+that used the latter mode would probably be that the node is first wiped completely and
+then a new pool distribution from the other nodes is started.
+
+In the options section below (TODO) there is a description of an Intelligent
+resynchronization method, that could be implemented to optimize this.
+
+=== Limited types
+
+A limited type is an Entity or Service type with a few limitations that make it possible
+for light nodes to register handlers and own instances of them. The limitations are there
+to ensure that a light node can reconnect to a system after it has been disconnected.
+
+* A limited type can have no persistence, i.e. it has neither Volatile, Permanent or Injectable persistence.
+* Pending registrations of a limited type is not allowed.
+* Overregistration of a limited type is considered a programming or configuration error.
+ - An error will be logged if an overregistration is detected.
+ - There is no guarantee that all overregistrations will be detected.
+
+
+=== TalksTo
+
+.New Node Type Property
+[width="75%",cols="20%,10%,70%",frame="topbot",options="header"]
+|======================
+| Property Name | Type | Comment
+
+| TalksTo
+| list of string
+| List of node types that nodes of this type can talk to. \'\*' if all node types. Only for nodes where IsLight is true can this be anything other than \'*'.
+
+|======================
+
+All nodes have the full node type configuration available at startup, and when a node starts it knows of which node type it is.
+
+[[light_nodes]]
+==== Light nodes
+
+
+===== Registrations and ownership of limited types
+
+All regular (i.e. non-light) nodes forward changes in registrations on limited types to
+everyone. This will ensure that everyone gets changes in registration on limited types,
+although it will produce a certain amount of overhead. The overhead is only registration
+states of limited types, so it should be only a small amount of traffic in all sensible
+systems.
+
+The forwarding of registrations will ensure that two light nodes cannot have the same
+type registered, and hence it will ensure that ownership is consistent. Of course it does
+not guarantee that all nodes contain the same information, since some entity instances
+may not be present on all nodes. But that will be obvious to the user because of the
+TalksTo field in the node type.
+
+[[benefits]]
+== Benefits
+
+=== Simplified network requirements when running on a VPN
+
+In systems running on a client/server based VPN (e.g. OpenVPN) it has been observed that
+both the unicast and multicast network configurations scale really badly with increasing
+number of nodes. This is likely because the VPN server has to encrypt and decrypt all
+data from and to all nodes. And since all nodes communicate with all other nodes the
+server node gets very overloaded, especially during startup.
+
+The introduction of Light Nodes would make it possible to make all clients in a
+client/server system into light nodes, which would mean that they do not communicate with
+each other, only with the server. A client in such a system is likely be easy to adapt to the
+``only own limited types'' requirement.
+
+In such a system the negotiation about which node is to be the coordinator (the node that
+decides what nodes are actually part of the system) also becomes much simpler, since a
+light node cannot be the coordinator.
+
+=== Nodes with bad connectivity
+
+Systems where one or more nodes are connected through a less reliable connection will
+become more stable if all the nodes on one side of the bad link are light nodes.
+
+This is due to the fact that again there will be less negotiations about who is to be
+coordinator, and also the fact that the light nodes will be able to rejoin a system after
+losing regaining a lost connection.
+
+Such a ``disconnected client'' can display status information about the fact that it does
+not have up to date information when it is disconnected, or that the information may be
+partially out of date while it is resynchronizing.
+
+For the resynchronization to be ``smooth'' the option intelligent resync below will
+probably have to be implemented.
+
+=== Splitting one client into a standalone configuration
+
+This scenario is when it is desirable to disconnect one client from a system, and have it
+automatically turn into a standalone system. And upon reconnection any changes should
+synchronize, and the standalone system should go back to being a client.
+
+Light nodes are only a small part of the solution to this, but here is a way that it
+could be implemented: The client computer that is to be possible to disconnect in fact
+has both a client and a server software instance running. The server is connected through
+a ``System of systems'' synchronization mechanism (see Safir SDK Core User's guide) over
+an ethernet link to the main server of the system. The client software - while the
+computer is connected - talks to the main server. When the computer is disconnected, the
+client will switch to talking to the local server, which is able to handle all
+changes. If the disconnected computer has a radio it may still be able to synchronize
+with the main system, or other systems nearby. When the computer is then reconnected the
+servers will be able to resynchronize over the ethernet cable (using the System of
+systems synch mechanism), and the client software can switch over to talking to the main
+server.
+
+The part that light nodes help with this solution is that it makes it possible for the
+client to switch servers without needing to be restarted.
+
+
+
+
+== Options
+
+=== WantedTypes och UnwantedTypes
+
+.New Node Type Properties
+[width="75%",cols="20%,10%,70%",frame="topbot",options="header"]
+|======================
+| Property Name | Type | Comment
+
+| Wanted types
+| list of regex
+| All types that match will be sent to the node (unless they also match an Unwanted, below). Only for nodes where IsLight is true can this be anything other than \'.*'.
+
+| Unwanted types
+| list of regex
+| Types that match will not be sent to the node. Must be empty if IsLight is false.
+
+|======================
+
+
+=== Intelligent resync
+Måste komma ihåg inkarnationsnummer för att se om det går att göra smartsync.
+
+=== Forwarding of registrations
+
+Forwardering av registreringar (enl ovan) bör kunna vara en option. Det är (väl?) bara
+för att vi vill kunna ge felmeddelanden vid överregistrering?
+
+
+== Saker att skriva om:
+
+Behöver vi ett sätt att injicera nya "seeds" i en befintlig lightnod, så att den kan byta till en annan server?
+
+Hur synka upp en lightnod som tappat kontakten? Måste vi ha en full pooldistribution,
+eller kan vi göra nåt smart?
+
+Duger det ens att göra en ny pooldistribution? Om vi har en server på andra sidan
+släpring och alla klienter tappar kontakten så kommer alla att vilja ha en ny
+pooldistribution samtidigt. Om släpringen glitchar ofta så kommer det att bli
+dåååååligt. Dessutom kommer listor och kartor att tömmas och återpopuleras varje gång det
+händer.
+
+Vi kanske måste göra en "delta-pooldistribution". Dvs när en lightnod som har en del
+gammalt data kommer upp så får den bara förändringar. En "svår" aspekt är att ta bort
+instanser, eftersom det inte finns kvar några delete-states.
+
+Vi behöver några olika nodstatus:ar: "No pool", "PD complete", "Disconnected", "PD
+redistribution". Den sista är när man har en "gammal" pool, och håller på att
+synkronisera om sig. Då är applikationer osv redan startade, men antagligen vill man vara
+tydlig med operatören att det är osynkat data de ser.
+
+
+Ghostar behöver inte skickas till lightnoder!
+
+Vi ska nog göra TalksTo till en option. Vi kanske kan säga att lightnoder aldrig
+kommunicerar med varandra.  Men om vi inte gör det med en gång så kommer det nog aldrig
+att göras. Och då kommer aldrig lightnoder att kunna dela (limited) entiteter med
+varandra, eller skicka requests till varandra.

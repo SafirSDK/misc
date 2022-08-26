@@ -2,7 +2,7 @@
 .PHONY: all clean
 
 #add dependencies here (.dia files are automatically converted to .png if dia is installed)
-DEPS := safir_logging.txt new_distribution.txt messages.txt improved_olib.txt readonly_install.txt block-diagram.png node.png sp_raw_pub_sub.png sp_between_nodes.png com_pgm.png com_design_overview.png com_design_discover.png Makefile
+DEPS := safir_logging.txt new_distribution.txt messages.txt improved_olib.txt readonly_install.txt block-diagram.png node.png sp_raw_pub_sub.png sp_between_nodes.png com_pgm.png com_design_overview.png com_design_discover.png Makefile lightnodes.txt
 
 default: all
 
@@ -12,7 +12,7 @@ help:
 	echo "   new_distribution.html - build single page html" 
 	echo " Check the Makefile for other targets"
 
-all: new_distribution.pdf new_distribution.html messages.pdf messages.html improved_olib.pdf improved_olib.html readonly_install.pdf readonly_install.html safir_logging.pdf safir_logging.html
+all: new_distribution.pdf new_distribution.html messages.pdf messages.html improved_olib.pdf improved_olib.html readonly_install.pdf readonly_install.html safir_logging.pdf safir_logging.html lightnodes.pdf lightnodes.html
 
 
 vpath %.dia images
@@ -26,6 +26,14 @@ new_distribution.pdf: $(DEPS)
 new_distribution.html: $(DEPS)
 	echo "Building new_distribution html"
 	asciidoc -d book -a toc -a toclevels=4 -a numbered new_distribution.txt
+
+lightnodes.pdf: $(DEPS)
+	echo "Building lightnodes pdf"
+	a2x -L -f pdf -d book --xsltproc-opts="--stringparam section.autolabel 1 --stringparam section.label.includes.component.label 1 --stringparam toc.section.depth 3" --dblatex-opts "-P latex.output.revhistory=0" lightnodes.txt
+
+lightnodes.html: $(DEPS)
+	echo "Building lightnodes html"
+	asciidoc -d book -a toc -a toclevels=4 -a numbered lightnodes.txt
 
 
 messages.pdf: $(DEPS)
