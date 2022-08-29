@@ -80,6 +80,7 @@ A light node may connect to a system with a different incarnation number after
 disconnection. I.e. it should not remember or block incarnation numbers when it is
 disconnected.
 
+[[resynchronization]]
 === Disconnected behaviour and resynchronization
 
 There are two ways that a disconnected node can behave. Either it can wipe all
@@ -227,25 +228,26 @@ nodes.
 [[intelligent_resync_option]]
 === Intelligent resync
 
-Måste komma ihåg inkarnationsnummer för att se om det går att göra smartsync.
+This option is meant to solve the problems with resynchronizations, described in
+<<resynchronization>>.
 
-Duger det ens att göra en ny pooldistribution? Om vi har en server på andra sidan
-släpring och alla klienter tappar kontakten så kommer alla att vilja ha en ny
-pooldistribution samtidigt. Om släpringen glitchar ofta så kommer det att bli
-dåååååligt. Dessutom kommer listor och kartor att tömmas och återpopuleras varje gång det
-händer.
+This would allow a light node that is reconnecting to the same incarnation of a system to
+only get sent new and updated states (a state in this context means a service or entity
+registration or an entity instance) and a list of states that need to be removed.
 
-Vi kanske måste göra en "delta-pooldistribution". Dvs när en lightnod som har en del
-gammalt data kommer upp så får den bara förändringar. En "svår" aspekt är att ta bort
-instanser, eftersom det inte finns kvar några delete-states.
+A light node - when it is connecting to a system after having been disconnected - would
+check if the system has the same incarnation id as the one it was previously connected
+to. If the Ids are the same an intelligent resync is possible. If they are different a
+full resync is needed.
 
 
 [[registration_forwarding_option]]
 === Forwarding of registrations
 
-Forwardering av registreringar (enl ovan) bör kunna vara en option. Det är (väl?) bara
-för att vi vill kunna ge felmeddelanden vid överregistrering?
-
+This option makes all registrations available on light nodes, even those from other light
+nodes that it is not receiving data from. The purpose is to increase the chances of
+overregistrations being detected to facilitate software development and system
+configuration.
 
 All regular (i.e. non-light) nodes forward changes in registrations on limited types to
 everyone. This will ensure that everyone gets changes in registration on limited types,
@@ -256,9 +258,8 @@ systems.
 The forwarding of registrations will ensure that two light nodes cannot have the same
 type registered, and hence it will ensure that ownership is consistent. Of course it does
 not guarantee that all nodes contain the same information, since some entity instances
-may not be present on all nodes. But that will be obvious to the user because of the
-TalksTo field in the node type.
-
+may not be present on all nodes. But that will be obvious to the user since light nodes
+do not communicate (or because of the TalksTo field in the node type)..
 
 == Detailed design
 
@@ -285,4 +286,11 @@ actually contains a jumble of old and new data.
 
 There is no need to send ghosts to light nodes. Persistent entities cannot be owned on a
 light node.
+
+=== Intelligent resync and endstates
+
+Delete states (unregistered handlers and deleted entity instances) are only kept around
+for a short while. So when a lightnode reconnects and wants to do an intelligent resync
+there needs to be a ``negotiation'' of some kind so that the light node can work out what
+entities need to be deleted.
 
