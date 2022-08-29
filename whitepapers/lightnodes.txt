@@ -18,7 +18,7 @@ could typically be light nodes, which would simplify some networking requirement
 make clients easier to manage.
 
 Some of the information in this document was copied from the new_distribution whitepaper,
-but this document superseeds the information about light nodes in that document.
+but this document supercedes the information about light nodes in that document.
 
 === Why the name ``Light Nodes''?
 
@@ -26,6 +26,12 @@ The other contender for the name of this feature would be something with ``Clien
 this would be slightly misleading, since it would infer that all clients should be of
 this type, and that no servers should be of this type, and that is not necessarily true.
 
+=== Node Type Properties
+
+In this document a few new _Node Type Properties_ are introduced. In the Dob all nodes
+are of a certain _Node Type_. There can be any number of Node Types. Each Node Type has a
+bunch of parameters that describe how it works. The new properties proposed in this
+document are new such parameters.
 
 :numbered:
 == Light Nodes Proposal
@@ -36,6 +42,13 @@ that you skim this section (to get an idea of what the proposal entails), and th
 to <<benefits>>.
 
 === Light Nodes
+
+The main part of this proposal is that a node type property is added; whether a node is a _light_
+node or not. Light nodes are the _only_ kind of nodes that, after it has been disconnected
+(e.g. network cable has been disconnected), can rejoin a system without being
+restarted. A light node is for example only allowed to own any global entities that are
+unique, which means that when it is rejoined into the system there can be no conflicts
+between entity owners.
 
 .New Node Type Property
 [width="75%",cols="20%,10%,70%",frame="topbot",options="header"]
@@ -48,22 +61,14 @@ to <<benefits>>.
 
 |======================
 
-
-The main part of this proposal is that a node type property is added; whether a node is a _light_
-node or not. Light nodes are the _only_ kind of nodes that, after it has been disconnected
-(e.g. network cable has been disconnected), can rejoin a system without being
-restarted. A light node is for example only allowed to own any global entities that are
-unique, which means that when it is rejoined into the system there can be no conflicts
-between entity owners.
-
 The properties of a light node are:
 
-* Can only register handlers for services that are marked as local or _limited_ (see below).
+* Can only register handlers for services that are marked as local or _limited_ (see <<limited_types, below>>)
 * Can only register handlers for entities that are marked as local or limited.
-* Can (obviously) only own instances of entity types that are marked as local or limited.
+* Can only own instances of entity types that are marked as local or limited.
 * Can subscribe to everything
-* Will only receive messages, requests and entity instances from nodes that can TalkTo it.
-* Can send messages
+* Will only receive messages, requests and entity instances from non-light nodes (the <<talksto_option, TalksTo option>> provides more flexibility).
+* Can send messages, that will reach non-light nodes.
 * Can not become system coordinator (the node that decides when nodes are to be kicked out of the system).
 
 When a light node has been disconnected from a system and then reconnected to the same or
@@ -72,7 +77,8 @@ it is disconnected, since the discovery will ensure that the new IP address is k
 its counterparts.
 
 A light node may connect to a system with a different incarnation number after
-disconnection. I.e. it should not remember incarnation numbers when it is disconnected.
+disconnection. I.e. it should not remember or block incarnation numbers when it is
+disconnected.
 
 === Disconnected behaviour and resynchronization
 
@@ -83,9 +89,11 @@ all requests (to non-local handlers). The easy solution to resynchronization of 
 that used the latter mode would probably be that the node is first wiped completely and
 then a new pool distribution from the other nodes is started.
 
-In the options section below (TODO) there is a description of an Intelligent
-resynchronization method, that could be implemented to optimize this.
+In the options section <<intelligent_resync, below>> there is a description of an
+Intelligent resynchronization method, that could be implemented to optimize this, which
+would reduce the network load in a system where resynchronizations are frequent.
 
+[[limited_types]]
 === Limited types
 
 A limited type is an Entity or Service type with a few limitations that make it possible
@@ -98,39 +106,13 @@ to ensure that a light node can reconnect to a system after it has been disconne
  - An error will be logged if an overregistration is detected.
  - There is no guarantee that all overregistrations will be detected.
 
+[[side_effects]]
+=== Side effects
 
-=== TalksTo
-
-.New Node Type Property
-[width="75%",cols="20%,10%,70%",frame="topbot",options="header"]
-|======================
-| Property Name | Type | Comment
-
-| TalksTo
-| list of string
-| List of node types that nodes of this type can talk to. \'\*' if all node types. Only for nodes where IsLight is true can this be anything other than \'*'.
-
-|======================
-
-All nodes have the full node type configuration available at startup, and when a node starts it knows of which node type it is.
-
-[[light_nodes]]
-==== Light nodes
-
-
-===== Registrations and ownership of limited types
-
-All regular (i.e. non-light) nodes forward changes in registrations on limited types to
-everyone. This will ensure that everyone gets changes in registration on limited types,
-although it will produce a certain amount of overhead. The overhead is only registration
-states of limited types, so it should be only a small amount of traffic in all sensible
-systems.
-
-The forwarding of registrations will ensure that two light nodes cannot have the same
-type registered, and hence it will ensure that ownership is consistent. Of course it does
-not guarantee that all nodes contain the same information, since some entity instances
-may not be present on all nodes. But that will be obvious to the user because of the
-TalksTo field in the node type.
+Some side effects of this proposal is that light nodes may not be aware of each other at
+all. For example, looking at the Safir.Dob.NodeInfo entity on one light node will not
+show instances for all nodes, but only for the light node itself and all the non-light
+nodes.
 
 [[benefits]]
 == Benefits
@@ -165,8 +147,8 @@ Such a ``disconnected client'' can display status information about the fact tha
 not have up to date information when it is disconnected, or that the information may be
 partially out of date while it is resynchronizing.
 
-For the resynchronization to be ``smooth'' the option intelligent resync below will
-probably have to be implemented.
+For the resynchronization to be ``smooth'' the option <<intelligent_resync, intelligent
+resync> will probably have to be implemented.
 
 === Splitting one client into a standalone configuration
 
@@ -190,11 +172,35 @@ server.
 The part that light nodes help with this solution is that it makes it possible for the
 client to switch servers without needing to be restarted.
 
-
-
-
 == Options
 
+[[talksto_option]]
+=== TalksTo
+
+.New Node Type Property
+[width="75%",cols="20%,10%,70%",frame="topbot",options="header"]
+|======================
+| Property Name | Type | Comment
+
+| TalksTo
+| list of string
+| List of node types that nodes of this type can talk to. \'\*' if all node types.
+  Only for nodes where IsLight is true can this be anything other than \'*'.
+
+|======================
+
+This option allows for light nodes to talk to each other. For example they will see each
+other's registered types and entities (of Limited Types) and be able to send entity and
+service requests and messages.
+
+The benefit of this option is that software on the clients can be more aware of each
+other, for example the issue described in <<side_effects>> will disappear if all light
+nodes are able to talk to each other.
+
+Of course configuring light nodes to be able to talk to each other still requires network
+connectivity between them. No forwarding is performed.
+
+[[wanted_types_option]]
 === WantedTypes och UnwantedTypes
 
 .New Node Type Properties
@@ -204,7 +210,8 @@ client to switch servers without needing to be restarted.
 
 | Wanted types
 | list of regex
-| All types that match will be sent to the node (unless they also match an Unwanted, below). Only for nodes where IsLight is true can this be anything other than \'.*'.
+| All types that match will be sent to the node (unless they also match an Unwanted, below).
+  Only for nodes where IsLight is true can this be anything other than \'.*'.
 
 | Unwanted types
 | list of regex
@@ -212,22 +219,15 @@ client to switch servers without needing to be restarted.
 
 |======================
 
+This option allows for filtering of data sent to certain node types. For example a set of
+light nodes can be set up to not receive any instances of a certain set of entities. This
+can be used to reduce the network traffic, or to reduce the memory use on some light
+nodes.
 
+[[intelligent_resync_option]]
 === Intelligent resync
+
 Måste komma ihåg inkarnationsnummer för att se om det går att göra smartsync.
-
-=== Forwarding of registrations
-
-Forwardering av registreringar (enl ovan) bör kunna vara en option. Det är (väl?) bara
-för att vi vill kunna ge felmeddelanden vid överregistrering?
-
-
-== Saker att skriva om:
-
-Behöver vi ett sätt att injicera nya "seeds" i en befintlig lightnod, så att den kan byta till en annan server?
-
-Hur synka upp en lightnod som tappat kontakten? Måste vi ha en full pooldistribution,
-eller kan vi göra nåt smart?
 
 Duger det ens att göra en ny pooldistribution? Om vi har en server på andra sidan
 släpring och alla klienter tappar kontakten så kommer alla att vilja ha en ny
@@ -239,15 +239,50 @@ Vi kanske måste göra en "delta-pooldistribution". Dvs när en lightnod som har
 gammalt data kommer upp så får den bara förändringar. En "svår" aspekt är att ta bort
 instanser, eftersom det inte finns kvar några delete-states.
 
-Vi behöver några olika nodstatus:ar: "No pool", "PD complete", "Disconnected", "PD
-redistribution". Den sista är när man har en "gammal" pool, och håller på att
-synkronisera om sig. Då är applikationer osv redan startade, men antagligen vill man vara
-tydlig med operatören att det är osynkat data de ser.
+
+[[registration_forwarding_option]]
+=== Forwarding of registrations
+
+Forwardering av registreringar (enl ovan) bör kunna vara en option. Det är (väl?) bara
+för att vi vill kunna ge felmeddelanden vid överregistrering?
 
 
-Ghostar behöver inte skickas till lightnoder!
+All regular (i.e. non-light) nodes forward changes in registrations on limited types to
+everyone. This will ensure that everyone gets changes in registration on limited types,
+although it will produce a certain amount of overhead. The overhead is only registration
+states of limited types, so it should be only a small amount of traffic in all sensible
+systems.
 
-Vi ska nog göra TalksTo till en option. Vi kanske kan säga att lightnoder aldrig
-kommunicerar med varandra.  Men om vi inte gör det med en gång så kommer det nog aldrig
-att göras. Och då kommer aldrig lightnoder att kunna dela (limited) entiteter med
-varandra, eller skicka requests till varandra.
+The forwarding of registrations will ensure that two light nodes cannot have the same
+type registered, and hence it will ensure that ownership is consistent. Of course it does
+not guarantee that all nodes contain the same information, since some entity instances
+may not be present on all nodes. But that will be obvious to the user because of the
+TalksTo field in the node type.
+
+
+== Detailed design
+
+This section contains some ideas and thoughts on details in the design and implementation
+of this proposal.
+
+=== Manual injection of seeds
+
+We need an API for injecting new seeds into a disconnected light node. This is needed to
+make it possible for a light node to switch servers upon reconnection.
+
+We probably also want an API for manually disconnecting a light node from a system
+too. And for switching to another server.
+
+=== More node statuses
+
+More node statuses need to be added, for example so that a UI can reflect the status of
+the node. Something like _NoPool_, _PdComplete_, _Disconnected_ and _PdResynchronizing_
+are useful states (with better names). PdResynchronizing is especially important if we
+implement <<intelligent_resync>>, since the state where resynchronization is in progress
+actually contains a jumble of old and new data.
+
+=== Ghosts and light nodes
+
+There is no need to send ghosts to light nodes. Persistent entities cannot be owned on a
+light node.
+
