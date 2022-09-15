@@ -294,3 +294,12 @@ for a short while. So when a lightnode reconnects and wants to do an intelligent
 there needs to be a ``negotiation'' of some kind so that the light node can work out what
 entities need to be deleted.
 
+=== System incarnations and blacklisting
+
+A light node that has been detached with the intention of connecting to another system, must
+write the detached system incarnation number to the blacklist. This is to avoid automatic 
+reconnection to the same system again. Light nodes must also be able to whitelist previously
+blacklisted incarnations again. 
+
+Maybe in the future there may be a need to be able to select which system to connect to.
+
