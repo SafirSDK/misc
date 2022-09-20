@@ -303,3 +303,18 @@ blacklisted incarnations again.
 
 Maybe in the future there may be a need to be able to select which system to connect to.
 
+=== System State creation, lightnodes, and exclusion
+
+When creating the System State the Coordinator will ignore what lightnodes think of the
+other nodes' ``aliveness''.
+
+For normal nodes the Coordinator will assume that a node that anyone thinks is dead is
+actually dead and exclude it and tell everyone else to exclude it. This behaviour will
+not apply to lightnodes for two reasons; First, the lightnode has no idea about other
+lightnodes, and second, the lightnode is more likely to have been placed on the other
+side of a shaky communications link.
+
+A lightnode is however allowed to exclude other nodes when it thinks that they are
+misbehaving. One obvious reason for this is that this is the only way for a lightnode to
+become detached from the rest of the system.
+
